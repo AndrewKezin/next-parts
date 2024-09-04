@@ -1,0 +1,203 @@
+//  сгенерировать эту схему для prisma-client для JS
+generator client {
+    provider = "prisma-client-js"
+}
+
+// указать призме, с какой базой данных нужно работать
+datasource db {
+    provider = "postgresql"
+    url = env("POSTGRES_URL")
+    // directUrl = env("POSTGRES_URL_NON_POOLING")
+}
+
+// создать таблицу User
+model User {
+    // поле: id     тип: число      уникальный идентификатор    автоинкремент id при создании нового пользователя
+    id Int @id @default(autoincrement())
+
+    fullName String
+    // поле email будет уникальным. Сама база данных будет это проверять при создании пользователя
+    email String @unique
+    password String
+    // тип пользователя. По умолчанию USER
+    role UserRole @default(USER)
+    // когда был верифицирован пользователь
+    verified DateTime
+
+    // через какую социальную сеть авторизовался пользователь (опционально, если он не авторизован по логину и паролю)
+    provider String?
+    providerId String?
+
+    // связи
+    // у пользователя может не быть корзины (если он не авторизовался)
+    cart Cart?
+    orders Order[]
+    // у пользователя может не быть кода верификации (если он не авторизовался)
+    verificationCode VerificationCode?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// создать таблицу Category
+model Category {
+    id Int @id @default(autoincrement())
+
+    name String @unique
+
+    // связь One to Many с продуктами (одна категория к множеству продуктов)
+    products Product[]
+}
+
+// создать таблицу Product
+model Product {
+    id Int @id @default(autoincrement())
+
+    name String
+    imageUrl String
+
+    // связь Many to Many с таблицей Ingredient
+    ingredients Ingredient[]
+
+    // связь One to Many с таблицей ProductItem
+    items ProductItem[]
+
+    // связь с таблицей Category. Поле categoryId будет хранить id категории, с которой этот продукт связан
+    category Category @relation(fields: [categoryId], references: [id])
+    categoryId Int
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// таблица ProductItem (вариации продукта)
+model ProductItem {
+    id Int @id @default(autoincrement())
+
+    price Int
+    // cвойства "толщина" и "количество зубьев" опциональные
+    thickness Int?
+    quantityOfTeeth Int?
+    volume Int?
+
+    // связь с таблицей CartItem
+    cartItems CartItem[]
+
+    // связь с таблицей Product
+    product Product @relation(fields: [productId], references: [id])
+    productId Int
+}
+
+// создать таблицу Ingredient
+model Ingredient {
+    id Int @id @default(autoincrement())
+
+    name String
+    price Int
+    imageUrl String
+
+    // связь Many to Many с таблицей Product
+    products Product[]
+
+    cartItems CartItem[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// таблица Cart
+model Cart {
+    id Int @id @default(autoincrement())
+
+    // связь One to One с таблицей User (опционально, поскольку пользователь может быть не зарегистрирован. Тогда, при добавлении товара в корзину, пользователю будет выдан токен)
+    user User? @relation(fields: [userId], references: [id])
+    userId Int? @unique
+
+    // если пользователь не зарегистрирован, то у него не будет записи а таблице User, но у него будет свой токен, по которому он будет идентифицирован
+    token String?
+
+    // связь One to Many с таблицей CartItem
+    items CartItem[]
+
+    totalAmount Int @default(0)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// таблица CartItem (конкретные товары, которые есть в этой корзине)
+model CartItem {
+    id Int @id @default(autoincrement())    
+
+    cart Cart @relation(fields: [cartId], references: [id])
+    cartId Int
+
+    productItem ProductItem @relation(fields: [productItemId], references: [id])
+    productItemId Int
+
+    quantity Int
+
+    ingredients Ingredient[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}
+
+// таблица Order
+model Order {
+    id Int @id @default(autoincrement())
+
+    // для авторизованного пользователя
+    user User? @relation(fields: [userId], references: [id])
+    userId Int
+    // для неавторизованного пользователя
+    token String?
+    // стоимость заказа
+    totalAmount Int
+    // статус заказа
+    status OrderStatus
+    // id оплаты
+    paymentId String?
+    // список товаров в заказе
+    items Json
+
+    // информация о покупателе (т.к. заказ может быть оформлен для другого человека)
+    fullName String
+    phone String
+    address String
+    email String
+    comment String?
+    
+    createdAt DateTime @default(now())  
+    updatedAt DateTime @updatedAt
+}
+
+// таблица кода верификации (подтверждения)
+model VerificationCode {
+    id Int @id @default(autoincrement())
+
+    // один код верификации есть у одного пользователя
+    user User @relation(fields: [userId], references: [id])
+    userId Int @unique
+
+    code String
+
+    createdAt DateTime @default(now())
+
+    // групповая уникальность. При создании нового кода верификации, будет проверяться на уникальность этот код у пользователя. Т.е. у одного пользователя не может быть одного и того же кода. Но у разных пользователей код может быть одинаковым.
+    @@unique([userId, code])
+}
+
+enum OrderStatus {
+    // заказ создан, ожидает оплаты
+    PENDING
+    // заказ создан и оплачен
+    SUCCESSED
+    // заказ отменен
+    CANCELLED
+}
+
+enum UserRole {
+    USER
+    ADMIN   
+}
