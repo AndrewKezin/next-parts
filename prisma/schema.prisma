@@ -75,8 +75,8 @@ model ProductItem {
     id Int @id @default(autoincrement())
 
     price Int
-    // cвойства "толщина" и "количество зубьев" опциональные
-    thickness Int?
+    // cвойства "толщина", "количество зубьев" и объем опциональные
+    thickness Float?
     quantityOfTeeth Int?
     volume Int?
 

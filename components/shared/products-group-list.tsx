@@ -2,15 +2,14 @@
 
 import React, { useEffect, useRef } from 'react';
 import { useIntersection } from 'react-use';
-
 import { Title } from './title';
 import { cn } from '@/lib/utils';
 import { ProductCard } from './product-card';
 import { useCategoryStore } from '@/store/category';
+import { transliterate } from '@/lib/transliterate';
 
 interface Props {
   title: string;
-  engName: string;
   items: any[];
   categoryId: number;
   classname?: string;
@@ -19,14 +18,13 @@ interface Props {
 
 export const ProductsGroupList: React.FC<Props> = ({
   title,
-  engName,
   items,
   categoryId,
   classname,
   listClassName,
 }) => {
   // сохраняем id активной категории в глобальный стейт zustand
-  const setActiveCategoryId = useCategoryStore((state) => state.setActiveId)
+  const setActiveCategoryId = useCategoryStore((state) => state.setActiveId);
 
   // ref для intersection observer. Нужен для слежения за положением блока контента
   const intersectionRef = useRef(null);
@@ -34,19 +32,16 @@ export const ProductsGroupList: React.FC<Props> = ({
   const intersection = useIntersection(intersectionRef, {
     threshold: 0.1,
   });
-  
+
   useEffect(() => {
     // если блок контента находится в зоне видимости, то устанавливаем активную категорию
     if (intersection?.isIntersecting) {
       setActiveCategoryId(categoryId);
     }
-    
   }, [intersection?.isIntersecting]);
 
-  
-
   return (
-    <div className={classname} id={engName} ref={intersectionRef}>
+    <div className={classname} id={transliterate(title)} ref={intersectionRef}>
       <Title text={title} size="lg" className="font-extrabold mb-5" />
 
       {/* Сетка товаров */}
@@ -56,7 +51,7 @@ export const ProductsGroupList: React.FC<Props> = ({
             key={i}
             id={product.id}
             name={product.name}
-            imageUrl={product.image}
+            imageUrl={product.imageUrl}
             price={product.items[0].price}
           />
         ))}

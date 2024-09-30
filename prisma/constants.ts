@@ -33,7 +33,7 @@ export const ingredients = [
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg'
   },
   {
-    name: 'Жидкость для металлообрабатывающих операций',
+    name: 'Жидкость для разверток',
     price: 1200,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465bt_1.jpg'
   },
