@@ -8,3 +8,4 @@ export {Drawer} from './drawer';
 export {Popover} from './popover'; 
 export {Slider} from './slider'; 
 export {Tooltip} from './tooltip'; 
+export {Textarea} from './textarea';

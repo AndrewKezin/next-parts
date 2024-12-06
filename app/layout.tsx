@@ -1,5 +1,8 @@
+'use client';
+
 import { Nunito } from 'next/font/google';
 import './globals.css';
+import { Providers } from '@/components/shared';
 
 const nunito = Nunito({
   subsets: ['cyrillic'],
@@ -19,7 +22,9 @@ export default function RootLayout({
         {/* favicon */}
         <link data-rh="true" rel="icon" href="/logo.png" />
       </head>
-      <body className={nunito.className}>{children}</body>
+      <body className={nunito.className}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

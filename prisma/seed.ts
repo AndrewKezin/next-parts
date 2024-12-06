@@ -235,7 +235,7 @@ async function up() {
     // в созданные корзины помещаем тестовые товары
     await prisma.cartItem.create({
         data: {
-                productItemId: 1,
+                productItemId: 3,
                 cartId: 1,
                 quantity: 2,
                 ingredients: {

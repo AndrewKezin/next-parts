@@ -3,3 +3,8 @@ export { calcTotalOilPrice } from './calc-total-oil-price';
 export { getAvailableDiscThickness } from './get-available-disc-thickness';
 export { getMapDiscVariants } from './get-map-disc-variants';
 export { findAvailableDiscVariants } from './find-available-disc-variants';
+export { getCartItemDetails } from './get-cart-item-details';
+export { getCartDetails} from './get-cart-details';
+export { calcCartItemTotalPrice } from './calc-cart-item-total-price';
+export { sendEmail } from './send-email';
+export { createPayment } from './create-payment';

@@ -1,4 +1,3 @@
-import { OilVolume } from '@/constants/oil';
 import { Ingredient, ProductItem } from '@prisma/client';
 
 /**
@@ -15,7 +14,7 @@ export const calcTotalOilPrice = (
   items: ProductItem[],
   ingredients: Ingredient[],
   selectedIngredients: Set<number>,
-  oilCanVolume: OilVolume,
+  oilCanVolume: Number,
 ) => {
   const productPrice = items.find((item) => item.volume === oilCanVolume)?.price || 0;
   const totalIngredientsPrice = ingredients

@@ -7,10 +7,11 @@ import { cn } from '@/lib/utils';
 import { ProductCard } from './product-card';
 import { useCategoryStore } from '@/store/category';
 import { transliterate } from '@/lib/transliterate';
+import { ProductWithRelations } from '@/@types/prisma';
 
 interface Props {
   title: string;
-  items: any[];
+  items: ProductWithRelations[];
   categoryId: number;
   classname?: string;
   listClassName?: string;

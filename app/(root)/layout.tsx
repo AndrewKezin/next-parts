@@ -3,7 +3,7 @@ import { Header } from '@/components/shared';
 
 // Здесь уже можно размещать метаданные (инфо о заголовке и т.д.)
 export const metadata: Metadata = {
-  title: 'Next learning project',
+  title: 'Next Parts | learning project',
   // description: 'This is a learning project',
 };
 

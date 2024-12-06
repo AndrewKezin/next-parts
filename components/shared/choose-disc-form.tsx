@@ -13,26 +13,29 @@ interface Props {
   name: string;
   ingredients: Ingredient[];
   items: ProductItem[];
-  onClickAddCart?: VoidFunction;
+  loading?: boolean;
+  onSubmit: (itemId: number, ingredients: number[]) => void;
   className?: string;
 }
 
+/** Форма выбора диска */
 export const ChooseDiscForm: React.FC<Props> = ({
   imageUrl,
   name,
   ingredients,
   items,
-  onClickAddCart,
+  loading,
+  onSubmit,
   className,
 }) => {
-
-  // Получить список всех возможных вариантов толщины диска и количества зубьев диска. Схема работы такая: получить все доступные варианты количества зубьев диска. Отрендерить их в компоненте GroupVariants. По ним же с помощью хука useDiscOptions определить доступные варианты толщины диска и выбрать первый доступный вариант. Недоступные варианты сделать disabled. 
+  // Получить список всех возможных вариантов толщины диска и количества зубьев диска. Схема работы такая: получить все доступные варианты количества зубьев диска. Отрендерить их в компоненте GroupVariants. По ним же с помощью хука useDiscOptions определить доступные варианты толщины диска и выбрать первый доступный вариант. Недоступные варианты сделать disabled.
   const { mapDiscQuantityOfTeethObj, mapDiscThicknessObj } = useDiscAllVariants(items);
-  
+
   // Хук, который возвращает список доступных вариантов толщины диска для рендера в компоненте GroupVariants. Сохраняет выбранные ингредиенты в хранилище.
   const {
     thickness,
     quantityOfTeeth,
+    currentItemId,
     selectedIngredients,
     availableDiscThicknesses,
     setThickness,
@@ -40,9 +43,8 @@ export const ChooseDiscForm: React.FC<Props> = ({
     addIngredient,
   } = useDiscOptions(items, mapDiscThicknessObj);
 
-
   const textDetails = `${thickness} мм, ${quantityOfTeeth} зуб.`;
-  
+
   const totalPrice = calcTotalDiscPrice(
     items,
     ingredients,
@@ -52,11 +54,9 @@ export const ChooseDiscForm: React.FC<Props> = ({
   );
 
   const handleClickAdd = () => {
-    onClickAddCart?.();
-    console.log(
-      `thickness: ${thickness}, quantityOfTeeth: ${quantityOfTeeth}, ingredients: `,
-      selectedIngredients,
-    );
+    if (currentItemId) {
+      onSubmit(currentItemId, Array.from(selectedIngredients));
+    }
   };
 
   return (
@@ -86,7 +86,7 @@ export const ChooseDiscForm: React.FC<Props> = ({
         {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
         {ingredients.length > 0 && (
           /* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/
-          <div className="bg-gray-50 p-5 rounded-md h-[420px] overflow-auto scrollbar">
+          <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
             <div className="grid grid-cols-3 gap-3">
               {ingredients?.map((ingredients) => (
                 <IngredientItem
@@ -105,6 +105,7 @@ export const ChooseDiscForm: React.FC<Props> = ({
         )}
 
         <Button
+          loading={loading}
           onClick={handleClickAdd}
           className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
           Добавить в корзину за {totalPrice} ₽

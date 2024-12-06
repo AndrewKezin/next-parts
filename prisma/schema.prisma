@@ -135,7 +135,7 @@ model CartItem {
     productItem ProductItem @relation(fields: [productItemId], references: [id])
     productItemId Int
 
-    quantity Int
+    quantity Int @default(1)
 
     ingredients Ingredient[]
 
@@ -149,9 +149,9 @@ model Order {
 
     // для авторизованного пользователя
     user User? @relation(fields: [userId], references: [id])
-    userId Int
+    userId Int?
     // для неавторизованного пользователя
-    token String?
+    token String
     // стоимость заказа
     totalAmount Int
     // статус заказа

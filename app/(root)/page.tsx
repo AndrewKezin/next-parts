@@ -1,19 +1,10 @@
 import { Container, Filters, Title, TopBar } from '@/components/shared';
 import { ProductsGroupList } from '@/components/shared/products-group-list';
-import { prisma } from '@/prisma/prisma-client';
+import { findParts, GetSearchParams } from '@/lib/find-parts';
+import { Suspense } from 'react';
 
-export default async function Home() {
-  // призма выдаст все категории, из них вытащит продукты, из которых, в свою очередь, вытащит ингредиенты и items
-  const categories = await prisma.category.findMany({
-    include: {
-      products: {
-        include: {
-          ingredients: true,
-          items: true,
-        },
-      },
-    },
-  });
+export default async function Home({searchParams}: {searchParams: GetSearchParams}) {
+  const categories = await findParts(searchParams);
 
   return (
     <>
@@ -21,14 +12,17 @@ export default async function Home() {
         <Title text="Все запчасти" size="lg" className="font-extrabold" />
       </Container>
 
-    {/* Верхняя часть с категориями */}
+      {/* Верхняя часть с категориями */}
       <TopBar categories={categories.filter((category) => category.products.length > 0)} />
 
       <Container>
         <div className="flex gap-[80px]">
           {/* Фильтрация (левая часть окна) */}
           <div className="w-[250px]">
-            <Filters />
+            {/* Компонент Suspense необходим для рендеринга html на сервере */}
+            <Suspense>
+              <Filters />
+            </Suspense>
           </div>
 
           {/* Список товаров (правая часть окна) */}

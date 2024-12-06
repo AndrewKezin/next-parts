@@ -1,10 +1,27 @@
-import { Container, ProductImage, Title } from '@/components/shared';
-import { GroupVariants } from '@/components/shared/group-variants';
+import { Container, ProductForm } from '@/components/shared';
 import { prisma } from '@/prisma/prisma-client';
 import { notFound } from 'next/navigation';
 
 export default async function ProductPage({ params: { id } }: { params: { id: string } }) {
-  const product = await prisma.product.findFirst({ where: { id: Number(id) } });
+  const product = await prisma.product.findFirst({
+    where: { id: Number(id) },
+    include: {
+      // запрос на ингредиенты
+      ingredients: true,
+      // ниже запрос категории для рекомендованных товаров. Его лучше вынести в отдельный useEffect, т.к. в нём происходят 3 запроса, которыемогут затормозить загрузку основного контента
+      category: {
+        include: {
+          products: {
+            include: {
+              items: true,
+            },
+          },
+        },
+      },
+      // запрос на items
+      items: true,
+    },
+  });
 
   if (!product) {
     return notFound();
@@ -12,34 +29,7 @@ export default async function ProductPage({ params: { id } }: { params: { id: st
 
   return (
     <Container className="flex flex-col my-10">
-      <div className="flex flex-1">
-        <ProductImage imageUrl={product.imageUrl} />
-
-        <div className="w-[490px] bg-[#fcfcfc] p-7">
-          <Title text={product.name} size="md" className="font-extrabold mb-1" />
-
-          <p className="text-gray-400">Lorem ipsum dolor sit, amet consectetur adipisicing elit.</p>
-
-          <GroupVariants
-            selectedValue='2'
-            items={[
-                {
-                    name: '1.5 мм',
-                    value: '1',
-                },
-                {
-                    name: '1.7 мм',
-                    value: '2',
-                },
-                {
-                    name: '1.8 мм',
-                    value: '3',
-                    disabled: true,
-                },
-            ]}
-          />
-        </div>
-      </div>
+      <ProductForm product={product} />
     </Container>
   );
 }

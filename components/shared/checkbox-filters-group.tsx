@@ -67,7 +67,7 @@ export const CheckboxFiltersGroup: React.FC<Props> = ({
     <div className={classname}>
       <p className="font-bold mb-3">{title}</p>
 
-      {/* поиск */}
+      {/* поиск, если есть раскрывающийся список чекбоксов */}
       {showAll && (
         <div className="mb-5">
           <Input

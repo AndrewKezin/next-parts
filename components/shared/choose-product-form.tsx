@@ -11,23 +11,34 @@ interface Props {
   name: string;
   ingredients: Ingredient[];
   items: ProductItem[];
-  onClickAddCart?: VoidFunction;
+  loading?: boolean;
+  onSubmit: VoidFunction;
   className?: string;
 }
 
+/** Форма выбора товара */
 export const ChooseProductForm: React.FC<Props> = ({
   imageUrl,
   name,
-  onClickAddCart,
+  onSubmit,
   ingredients,
   items,
+  loading,
   className,
 }) => {
   // Кастомный хук useSet для хранения выбранных id ингредиентов
   const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<number>([]));
 
   const textDetails = 'Детали уточняйте у менеджера';
-  const totalPrice = 500;
+
+  const totalIngredientsPrice = ingredients
+    .filter((ingredient) => selectedIngredients.has(ingredient.id))
+    .reduce((acc, ingredient) => acc + ingredient.price, 0);
+  const totalPrice = items[0].price + totalIngredientsPrice;
+
+  const handleClickAdd = () => {
+    onSubmit();
+  };
 
   return (
     <div className={cn(className, 'flex flex-1')}>
@@ -50,7 +61,7 @@ export const ChooseProductForm: React.FC<Props> = ({
 
         {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
         {ingredients.length > 0 && (
-          <div className="bg-gray-50 p-5 rounded-md h-[420px] overflow-auto scrollbar">
+          <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
             <div className="grid grid-cols-3 gap-3">
               {ingredients?.map((ingredients) => (
                 <IngredientItem
@@ -68,7 +79,10 @@ export const ChooseProductForm: React.FC<Props> = ({
           </div>
         )}
 
-        <Button className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
+        <Button
+          loading={loading}
+          className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10"
+          onClick={handleClickAdd}>
           Добавить в корзину за {totalPrice} ₽
         </Button>
       </div>

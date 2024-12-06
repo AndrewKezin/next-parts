@@ -2,7 +2,9 @@ import { Api } from '@/services/api-client';
 import { Ingredient } from '@prisma/client';
 import { useEffect, useState } from 'react';
 
-// хук, получающий список ингредиентов и статус их загрузки
+/**
+ * Хук, получающий с бэкенда список ингредиентов и статус их загрузки
+ */
 export const useIngredients = () => {
   const [ingredients, setIngredients] = useState<Ingredient[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,45 +1,50 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { Button } from '../ui';
-import { OilVolume, oilVolume } from '@/constants/oil';
-import { useSet } from 'react-use';
 import { ProductImage, GroupVariants, IngredientItem, Title } from '@/components/shared';
 import { Ingredient, ProductItem } from '@prisma/client';
 import { calcTotalOilPrice } from '@/lib';
+import { useOilOptions } from '@/hooks';
 
 interface Props {
   imageUrl: string;
   name: string;
   ingredients: Ingredient[];
   items: ProductItem[];
-  onClickAddCart?: VoidFunction;
+  loading?: boolean;
+  onSubmit: (itemId: number, ingredients: number[]) => void;
   className?: string;
 }
 
+/** Форма выбора масла */
 export const ChooseOilForm: React.FC<Props> = ({
   imageUrl,
   name,
   ingredients,
   items,
-  onClickAddCart,
+  loading,
+  onSubmit,
   className,
 }) => {
-  const [oilCanVolume, setOilCanVolume] = React.useState<OilVolume>(1);
-
-  // Кастомный хук useSet для хранения выбранных id ингредиентов
-  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<number>([]));
+  const {
+    oilCanVolume,
+    currentItemId,
+    selectedIngredients,
+    availableOilCansVolume,
+    setOilCanVolume,
+    addIngredient,
+  } = useOilOptions(items);
 
   const textDetails = `Канистра ${oilCanVolume} л.`;
 
-  // const productPrice = items.find((item) => item.volume === oilCanVolume)?.price || 0;
-  // const totalIngredientsPrice = ingredients
-  //   .filter((ingredient) => selectedIngredients.has(ingredient.id))
-  //   .reduce((acc, ingredient) => acc + ingredient.price, 0);
   const totalPrice = calcTotalOilPrice(items, ingredients, selectedIngredients, oilCanVolume);
 
   const handleClickAdd = () => {
-    onClickAddCart?.();
-    console.log(`volume: ${oilCanVolume}, ingredients: `, selectedIngredients);
+    if (currentItemId) {
+      onSubmit(currentItemId, Array.from(selectedIngredients));
+    }
   };
 
   return (
@@ -52,14 +57,14 @@ export const ChooseOilForm: React.FC<Props> = ({
         <p className="text-gray-400 mb-5">{textDetails}</p>
 
         <GroupVariants
-          items={oilVolume}
+          items={availableOilCansVolume}
           value={String(oilCanVolume)}
-          onClick={(value) => setOilCanVolume(Number(value) as OilVolume)}
+          onClick={(value) => setOilCanVolume(Number(value))}
         />
 
         {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
         {ingredients.length > 0 && (
-          <div className="bg-gray-50 p-5 rounded-md h-[420px] overflow-auto scrollbar">
+          <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
             <div className="grid grid-cols-3 gap-3">
               {ingredients?.map((ingredients) => (
                 <IngredientItem
@@ -78,6 +83,7 @@ export const ChooseOilForm: React.FC<Props> = ({
         )}
 
         <Button
+          loading={loading}
           onClick={handleClickAdd}
           className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
           Добавить в корзину за {totalPrice} ₽
