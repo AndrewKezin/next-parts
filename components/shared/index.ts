@@ -27,6 +27,8 @@ export {ClearButton} from './clear-button';
 export {AddressInput} from './address-input';
 export {Providers} from './providers';
 export {ProfileButton} from './profile-button';
+export {InfoBlock} from './info-block';
+export {ProfileForm} from './profile-form';
 export * from './email-templates';
 export * from '../form'
 export * from './modals';

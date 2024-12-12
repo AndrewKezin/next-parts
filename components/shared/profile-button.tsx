@@ -1,7 +1,8 @@
-import { CircleUser, Link, User } from 'lucide-react';
+import { CircleUser, User } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import { Button } from '../ui';
+import Link from 'next/link';
 
 interface Props {
   // эта функция будет открывать модальное окно авторизации
@@ -21,12 +22,12 @@ export const ProfileButton: React.FC<Props> = ({ className, onClickSignIn }) => 
           Войти
         </Button>
       ) : (
-        // <Link href="/profile">
-        <Button variant="secondary" className="flex items-center gap-2">
-          <CircleUser size={18} />
-          Профиль
-        </Button>
-        // </Link>
+        <Link href="/profile">
+          <Button variant="secondary" className="flex items-center gap-2">
+            <CircleUser size={18} />
+            Профиль
+          </Button>
+        </Link>
       )}
     </div>
   );

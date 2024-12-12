@@ -8,13 +8,19 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { checkoutFormSchema, CheckoutFormValues } from '@/components/checkout/checkout-form-schema';
 import { createOrder } from '@/app/actions';
 import toast from 'react-hot-toast';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useTestPayStore } from '@/store';
+import { Api } from '@/services/api-client';
+import { useSession } from 'next-auth/react';
+import { User } from '@prisma/client';
 
 export default function CheckoutPage() {
   const { totalAmount, items, updateItemQuantity, removeCartItem, loading } = useCart();
   const [submitting, setSubmitting] = useState(false);
+  
+  const session = useSession();
 
+  // стор для тестового платежа
   const payStore = useTestPayStore((state) => state);
 
   const form = useForm<CheckoutFormValues>({
@@ -28,6 +34,25 @@ export default function CheckoutPage() {
       comment: '',
     },
   });
+
+  // вшить в поля формы данные о пользователе, когда придут данные о сессии
+  useEffect(() => {
+    async function fetchUserInfo() {
+      const data: User = await Api.auth.getMe();
+      
+      const [firstName, lastName] = data.fullName.split(' ');
+
+      form.setValue('firstName', firstName);
+      form.setValue('lastName', lastName);
+      form.setValue('email', data.email);
+      if (data.phone) {form.setValue('phone', data.phone)};
+      if (data.address) {form.setValue('address', data.address)};
+    }
+
+    if (session) {
+      fetchUserInfo();
+    }
+  }, [session]);
  
   const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
     try {
@@ -86,7 +111,7 @@ export default function CheckoutPage() {
 
               <CheckoutPersonalForm className={loading ? 'opacity-40 cursor-pointer-none' : ''} />
 
-              <CheckoutAddressForm className={loading ? 'opacity-40 cursor-pointer-none' : ''} />
+              <CheckoutAddressForm inputValue={form.getValues('address')} className={loading ? 'opacity-40 cursor-pointer-none' : ''}  />
             </div>
 
             {/* Правая часть */}
