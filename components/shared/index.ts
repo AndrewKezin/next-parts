@@ -29,6 +29,7 @@ export {Providers} from './providers';
 export {ProfileButton} from './profile-button';
 export {InfoBlock} from './info-block';
 export {ProfileForm} from './profile-form';
+export {LegalInfo} from './legal-info';
 export * from './email-templates';
 export * from '../form'
 export * from './modals';
