@@ -1,4 +1,4 @@
-import { Ingredient, Product, ProductItem } from "@prisma/client";
+import { GearboxManufacturer, Ingredient, Product, ProductItem } from "@prisma/client";
 
 // тип, который объединяет Product c items и ингредиентами
-export type ProductWithRelations = Product & {items: ProductItem[]; ingredients: Ingredient[]};
+export type ProductWithRelations = Product & {items: ProductItem[]; ingredients: Ingredient[], gearboxesManufacturers: GearboxManufacturer[]};

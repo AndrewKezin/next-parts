@@ -20,6 +20,7 @@ export const formRegisterSchema = formLoginSchema
         .min(4, 'Имя должно содержать не менее 2 символов')
         .max(20, 'Имя должно содержать не более 20 символов'),
       confirmPassword: passwordSchema,
+      privacyconfirm: z.literal(true),
     }),
   )
   .refine((data) => data.password === data.confirmPassword, {

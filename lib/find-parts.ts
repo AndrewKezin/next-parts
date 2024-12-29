@@ -80,6 +80,7 @@ export const findParts = async (params: GetSearchParams) => {
                             price: 'asc'
                         }
                     },
+                    gearboxesManufacturers: true,
                 },
             },
         },

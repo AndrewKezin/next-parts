@@ -6,7 +6,7 @@ import { Product } from '@prisma/client';
 import { Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useClickAway, useDebounce } from 'react-use';
 
 interface Props {
@@ -28,7 +28,7 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
   useDebounce(
     async () => {
       try {
-        const response = await Api.products.search(searchQuery);
+        const response = await Api.products.search(searchQuery.toLocaleLowerCase());
           setProducts(response);
       } catch(error) {
         console.log(error); 

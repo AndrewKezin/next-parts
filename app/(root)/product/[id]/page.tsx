@@ -8,7 +8,7 @@ export default async function ProductPage({ params: { id } }: { params: { id: st
     include: {
       // запрос на ингредиенты
       ingredients: true,
-      // ниже запрос категории для рекомендованных товаров. Его лучше вынести в отдельный useEffect, т.к. в нём происходят 3 запроса, которыемогут затормозить загрузку основного контента
+      // ниже запрос категории для рекомендованных товаров. Его лучше вынести в отдельный useEffect, т.к. в нём происходят 3 запроса, которые могут затормозить загрузку основного контента
       category: {
         include: {
           products: {
@@ -20,6 +20,8 @@ export default async function ProductPage({ params: { id } }: { params: { id: st
       },
       // запрос на items
       items: true,
+      // запрос на производителей трансмиссий
+      gearboxesManufacturers: true,
     },
   });
 

@@ -31,7 +31,7 @@ export const AuthModal: React.FC<Props> = ({ open, onClose }) => {
       <div className='hidden'>
         <DialogTitle>{type === 'login' ? 'Вход в аккаунт' : 'Регистрация'}</DialogTitle>
       </div>
-      <DialogContent aria-describedby={undefined} className="w-[450px] bg-white p-10">
+      <DialogContent aria-describedby={undefined} className="w-[450px] h-[calc(100vh-50px)] invisible-scrollbar bg-white p-10 overflow-y-auto">
         {type === 'login' ? (
           <LoginForm onClose={handleClose} />
         ) : (

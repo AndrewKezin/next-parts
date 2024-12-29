@@ -31,6 +31,23 @@ export async function GET(req: NextRequest) {
       },
     });
 
+    // вытаскиваем email и пароль пользователя, чтобы авторизовать пользователя
+    const findUser = await prisma.user.findFirst({
+      where: {
+        id: verificationCode.userId,
+      },
+      select: {
+        email: true,
+        password: true,
+      }
+    });
+
+    if (!findUser) {
+      return NextResponse.json({ error: 'Пользователь не найден' }, { status: 400 });
+    }
+
+    
+
     // удаление кода из БД
     await prisma.verificationCode.delete({
       where: {

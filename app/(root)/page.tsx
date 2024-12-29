@@ -1,9 +1,9 @@
-import { Container, Filters, Title, TopBar } from '@/components/shared';
+import { Container, CookieBar, Filters, Title, TopBar } from '@/components/shared';
 import { ProductsGroupList } from '@/components/shared/products-group-list';
 import { findParts, GetSearchParams } from '@/lib/find-parts';
 import { Suspense } from 'react';
 
-export default async function Home({searchParams}: {searchParams: GetSearchParams}) {
+export default async function Home({ searchParams }: { searchParams: GetSearchParams }) {
   const categories = await findParts(searchParams);
 
   return (
@@ -43,6 +43,9 @@ export default async function Home({searchParams}: {searchParams: GetSearchParam
           </div>
         </div>
       </Container>
+
+      {/* всплывашка согласия на куки */}
+      <CookieBar />
     </>
   );
 }

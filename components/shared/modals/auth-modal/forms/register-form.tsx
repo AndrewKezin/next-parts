@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 import { FormInput, Title } from '@/components/shared';
 import { registerUser } from '@/app/actions';
 import { Eye, EyeOff } from 'lucide-react';
+import Link from 'next/link';
 
 interface Props {
   onClose?: VoidFunction;
@@ -72,6 +73,13 @@ export const RegisterForm: React.FC<Props> = ({ onClose, onClickLogin }) => {
             {isVisible ? <EyeOff className="text-gray-500" /> : <Eye className="text-gray-500" />}
           </div>
           <FormInput name="confirmPassword" label="Подтвердите пароль" type={type} required />
+          <div className="flex items-center gap-5 mt-5">
+            <input {...form.register('privacyconfirm')} required type="checkbox" id="privacyconfirm" className="w-6 h-6" />
+            <label htmlFor="privacyconfirm" className="text-primary">
+              Я соглашаюсь на <Link href="/legal/consentprivacy" target='_blank' className='underline'>обработку моих персональных данных</Link>
+              <span className="text-red-500">*</span>
+            </label>
+          </div>
         </div>
 
         <Button loading={form.formState.isSubmitting} className="h-12 text-base" type="submit">

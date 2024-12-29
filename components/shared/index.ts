@@ -30,6 +30,8 @@ export {ProfileButton} from './profile-button';
 export {InfoBlock} from './info-block';
 export {ProfileForm} from './profile-form';
 export {LegalInfo} from './legal-info';
+export {CookieBar} from './cookie-bar';
+export {Footer} from './footer';
 export * from './email-templates';
 export * from '../form'
 export * from './modals';

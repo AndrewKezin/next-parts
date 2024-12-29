@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import { Header } from '@/components/shared';
+import { Suspense } from 'react';
 
 // Здесь уже можно размещать метаданные (инфо о заголовке и т.д.)
 export const metadata: Metadata = {
@@ -17,8 +18,11 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="min-h-screen">
-      <Header />
+    <main className="min-h-[calc(100vh-130px)]">
+      {/* внутри Header есть хук useSearchParams, поэтому нужен Suspense (для ожидания отработки этого хука) */}
+      <Suspense>
+        <Header />
+      </Suspense>
       {modal}
       {children}
     </main>

@@ -12,6 +12,7 @@ export default async function ProductModalPage({params: {id}}: {params: {id: str
     include: {
       ingredients: true,
       items: true,
+      gearboxesManufacturers: true,
     }
   })
 

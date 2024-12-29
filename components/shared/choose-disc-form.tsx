@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { Button } from '../ui';
-import { Ingredient, ProductItem } from '@prisma/client';
+import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
 import { ProductImage, GroupVariants, IngredientItem, Title } from '@/components/shared';
 import { calcTotalDiscPrice } from '@/lib';
 import { useDiscOptions, useDiscAllVariants } from '@/hooks';
@@ -13,6 +13,7 @@ interface Props {
   name: string;
   ingredients: Ingredient[];
   items: ProductItem[];
+  manufacturer: GearboxManufacturer[];
   loading?: boolean;
   onSubmit: (itemId: number, ingredients: number[]) => void;
   className?: string;
@@ -24,6 +25,7 @@ export const ChooseDiscForm: React.FC<Props> = ({
   name,
   ingredients,
   items,
+  manufacturer,
   loading,
   onSubmit,
   className,
@@ -44,6 +46,7 @@ export const ChooseDiscForm: React.FC<Props> = ({
   } = useDiscOptions(items, mapDiscThicknessObj);
 
   const textDetails = `${thickness} мм, ${quantityOfTeeth} зуб.`;
+  const textManufacturer = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')}`;
 
   const totalPrice = calcTotalDiscPrice(
     items,
@@ -66,7 +69,9 @@ export const ChooseDiscForm: React.FC<Props> = ({
       <div className="w-[490px] bg-[#f7f6f5] p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
 
-        <p className="text-gray-400 mb-5">{textDetails}</p>
+        <p className="text-gray-400 mb-2">{textDetails}</p>
+
+        <p className="text-gray-400 mb-5">{textManufacturer}</p>
 
         {/* Группа вариантов */}
         <div className="flex flex-col gap-4 mt-5 mb-3">

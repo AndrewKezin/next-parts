@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import Image from 'next/image';
 import { Button } from '../ui';
-import { Ingredient, ProductItem } from '@prisma/client';
+import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
 import { useSet } from 'react-use';
 import { IngredientItem, Title } from '@/components/shared';
 
@@ -11,6 +11,7 @@ interface Props {
   name: string;
   ingredients: Ingredient[];
   items: ProductItem[];
+  manufacturer: GearboxManufacturer[];
   loading?: boolean;
   onSubmit: VoidFunction;
   className?: string;
@@ -23,13 +24,18 @@ export const ChooseProductForm: React.FC<Props> = ({
   onSubmit,
   ingredients,
   items,
+  manufacturer,
   loading,
   className,
 }) => {
   // Кастомный хук useSet для хранения выбранных id ингредиентов
   const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<number>([]));
 
-  const textDetails = 'Детали уточняйте у менеджера';
+  let textDetails
+  manufacturer.length > 0 ?
+    textDetails = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')} ` :
+    textDetails = 'Детали уточняйте у менеджера';
+  
 
   const totalIngredientsPrice = ingredients
     .filter((ingredient) => selectedIngredients.has(ingredient.id))

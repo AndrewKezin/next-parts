@@ -66,6 +66,26 @@ html {
   background: #dbdadd;
 }
 
+
+.invisible-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.invisible-scrollbar::-webkit-scrollbar-track {
+  border-radius: 6px;
+  background: #fff;
+}
+
+.invisible-scrollbar::-webkit-scrollbar-thumb {
+  background: #dbdadd;
+  border-radius: 6px;
+}
+
+.invisible-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #dbdadd;
+}
+
+
 @layer utilities {
   .text-balance {
     text-wrap: balance;

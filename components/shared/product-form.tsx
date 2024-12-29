@@ -51,6 +51,7 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
         name={product.name}
         ingredients={product.ingredients}
         items={product.items}
+        manufacturer={product.gearboxesManufacturers}
         onSubmit={onSubmit}
         loading={loading}
       />
@@ -64,6 +65,7 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
         name={product.name}
         ingredients={product.ingredients}
         items={product.items}
+        manufacturer={product.gearboxesManufacturers}
         onSubmit={onSubmit}
         loading={loading}
       />
@@ -76,6 +78,7 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
       name={product.name}
       ingredients={product.ingredients}
       items={product.items}
+      manufacturer={product.gearboxesManufacturers}
       onSubmit={onSubmit}
       loading={loading}
     />

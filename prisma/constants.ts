@@ -112,7 +112,7 @@ export const products = [
     categoryId: 5,
   },
   {
-    name: 'Датчик переключения передач (NIssan, тип 1)',
+    name: 'Датчик переключения передач (Nissan, тип 1)',
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2024/04/07/D663410A_1.jpg',
     categoryId: 5,
   },
@@ -120,6 +120,7 @@ export const products = [
     name: 'Гидравлический блок управления (99-up, без блока соленоидов, восстановленный)',
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/f030_1.jpg',
     categoryId: 6,
+    gearboxesManufacturers: { connect: [{ id: 15 }] },
   },
   {
     name: 'Гидравлический блок управления (тип 1, Opel)',
@@ -147,3 +148,24 @@ export const products = [
     categoryId: 8,
   },
 ]
+
+
+export const gearboxManufacturers = [
+  {name: 'Aisin Warner'},
+  {name: 'Borg Warner'},
+  {name: 'China manuf.'},
+  {name: 'Ford'},
+  {name: 'Getrag'},
+  {name: 'GM'},
+  {name: 'Honda'},
+  {name: 'Kia/Hundai'},
+  {name: 'Mercedes-Benz'},
+  {name: 'Mitsubishi'},
+  {name: 'Nissan/Jatco'},
+  {name: 'Other manuf.'},
+  {name: 'PSA (France manuf.)'},
+  {name: 'Subaru'},
+  {name: 'Toyota'},
+  {name: 'VAG'},
+  {name: 'ZF'},
+];

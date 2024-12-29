@@ -6,16 +6,20 @@ import React from 'react';
 import { Title } from './title';
 import { Button } from '../ui';
 import { Plus } from 'lucide-react';
+import { GearboxManufacturer } from '@prisma/client';
 
 interface Props {
   id: number;
   name: string;
   price: number;
   imageUrl: string;
+  manufacturer: GearboxManufacturer[];
   classname?: string;
 }
 
-export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, classname }) => {
+export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, manufacturer, classname }) => {
+  const textManufacturer = manufacturer.map((item) => item.name).join(', ');
+
   return (
     <div className={classname}>
       <Link href={`product/${id}`}>
@@ -28,7 +32,7 @@ export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, classn
         <Title text={name} size="sm" className="mb-1 mt-3 font-bold" />
 
         {/* Применимость */}
-        <p className="text-sm text-grey-400">ZF, Aisin, GM</p>
+        <p className="text-sm text-grey-400">{textManufacturer}</p>
 
         {/* Цена */}
         <div className="flex justify-between items-center mt-4">
