@@ -21,6 +21,7 @@ export const useQueryFilters = (filters: Filters) => {
         quantityOfTeeth: Array.from(filters.quantityOfTeeth),
         volume: Array.from(filters.volume),
         ingredients: Array.from(filters.selectedIngredients),
+        gearboxManufacturers: Array.from(filters.selectedManufacturers),
       };
   
       const query = qs.stringify(params, {

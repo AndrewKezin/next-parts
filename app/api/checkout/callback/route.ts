@@ -1,4 +1,4 @@
-import { PaymentCallbackData, PaymentData } from '@/@types/onlinekassa';
+import { PaymentData } from '@/@types/onlinekassa';
 import { OrderSuccessTemplate } from '@/components/shared';
 import { sendEmail } from '@/lib';
 import { prisma } from '@/prisma/prisma-client';

@@ -13,6 +13,7 @@ export const useIngredients = () => {
     async function fetchIngredients() {
       try {
         setLoading(true);
+        // отправить GET запрос на localhost:3000/api/ingredients чтобы через призму получить из БД список ингредиентов
         const ingredients = await Api.ingredients.getAll();
         setIngredients(ingredients);
       } catch (err) {

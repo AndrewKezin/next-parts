@@ -1,11 +1,11 @@
 'use client';
 
-import React, { use } from 'react';
+import React from 'react';
 import { Title } from './title';
 import { Button, Input } from '../ui';
 import { RangeSlider } from './range-slider';
 import { CheckboxFiltersGroup } from './checkbox-filters-group';
-import { useFilters, useIngredients, useQueryFilters } from '@/hooks';
+import { useFilters, useIngredients, useManufacturers, useQueryFilters } from '@/hooks';
 
 interface Props {
   classname?: string;
@@ -14,13 +14,19 @@ interface Props {
 export const Filters: React.FC<Props> = ({ classname }) => {
   // кастомный хук для ингредиантов
   const { ingredients, loading } = useIngredients();
+  // кастомный хук для получения списка производителей трансмиссии
+  const { manufacturers, loading: loadingManufacturers } = useManufacturers(); 
   // кастомный хук для фильтров
   const filters = useFilters();
   // кастомный хук, вшивающий фильтрацию в url
   useQueryFilters(filters);
+  // ФИЛЬТРАЦИЯ ПО ПАРАМЕТРАМ ИЗ АДРЕСНОЙ СТРОКИ В ПРИЗМЕ ПРОИСХОДИТ В ФУНКЦИИ findParts
 
-  // список ингредиантов для отображения
+  // список ингредиентов для отображения
   const items = ingredients.map((item) => ({ value: String(item.id), text: item.name }));
+
+  // список производителей трансмиссии для отображения
+  const manufacturersItems = manufacturers.map((item) => ({ value: String(item.id), text: item.name }));
 
   // функция обновления фильтра цен по слайдеру
   const updatePrices = (prices: number[]) => {
@@ -28,7 +34,6 @@ export const Filters: React.FC<Props> = ({ classname }) => {
     filters.setPrices('priceTo', prices[1]);
   };
 
-  // const clearFilters = useClearFilters();
   return (
     <div className={classname}>
       <Title text="Фильтры" size="sm" className="mb-5 font-bold" />
@@ -110,9 +115,22 @@ export const Filters: React.FC<Props> = ({ classname }) => {
         />
       </div>
 
-      {/* Фильтр ингредиентов */}
+      {/* Фильтр производителей */}
       <CheckboxFiltersGroup
         title="Применимость"
+        name="gearboxManufacturers"
+        classname="mt-5"
+        limit={6}
+        defaultItems={manufacturersItems.slice(0, 6)}
+        items={manufacturersItems}
+        loading={loadingManufacturers}
+        onClickCheckbox={filters.setSelectedManufacturers}
+        selected={filters.selectedManufacturers}
+      />
+
+      {/* Фильтр ингредиентов */}
+      <CheckboxFiltersGroup
+        title="Дополнительно"
         name="ingredients"
         classname="mt-5"
         limit={6}

@@ -149,7 +149,7 @@ export const products = [
   },
 ]
 
-
+// список производителей трансмиссий
 export const gearboxManufacturers = [
   {name: 'Aisin Warner'},
   {name: 'Borg Warner'},

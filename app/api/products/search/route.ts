@@ -1,6 +1,5 @@
 import { prisma } from '@/prisma/prisma-client';
 import { NextRequest, NextResponse } from 'next/server';
-import { title } from 'process';
 
 //  поиск по продуктам (api/products/search?query=qweqwe)
 // типизация запроса - NextRequest

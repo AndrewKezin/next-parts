@@ -20,6 +20,10 @@ export default async function ProfilePage() {
     if (!user) {
         return redirect('/not-auth');
     }
+
+    if (user.role === 'ADMIN') {
+        return redirect('/admin');
+    }
     
     return <ProfileForm data={user} />
 }

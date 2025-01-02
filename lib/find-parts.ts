@@ -7,6 +7,7 @@ export interface GetSearchParams {
     quantityOfTeeth?: string;
     volume?: string;
     ingredients?: string;
+    gearboxManufacturers?: string;
     priceFrom?: string;
     priceTo?: string;
 }
@@ -23,6 +24,7 @@ export const findParts = async (params: GetSearchParams) => {
     const quantityOfTeeth = params.quantityOfTeeth?.split(',').map(Number);
     const volume = params.volume?.split(',').map(Number);
     const ingredientsIdArr = params.ingredients?.split(',').map(Number);
+    const gearboxesManufacturersIdArr = params.gearboxManufacturers?.split(',').map(Number);
 
     const minPrice = Number(params.priceFrom) || DEFAULT_MIN_PRICE;
     const maxPrice = Number(params.priceTo) || DEFAULT_MAX_PRICE;
@@ -63,6 +65,16 @@ export const findParts = async (params: GetSearchParams) => {
                             }
                         },
                     },
+                    // поиск по производителю
+                    gearboxesManufacturers: gearboxesManufacturersIdArr
+                    ? {
+                        some: {
+                            id: {
+                                in: gearboxesManufacturersIdArr,
+                            },
+                        },
+                    }
+                    : undefined,
                 },
                 include: {
                     ingredients: true,

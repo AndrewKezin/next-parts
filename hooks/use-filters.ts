@@ -12,22 +12,27 @@ interface QueryFilters extends PriceProps {
   quantityOfTeeth: string;
   volume: string;
   ingredients: string;
+  gearboxesManufacturers: string;
 }
 
+// возвращаемые фильтры
 export interface Filters {
   thickness: Set<string>;
   quantityOfTeeth: Set<string>;
   volume: Set<string>;
   selectedIngredients: Set<string>;
+  selectedManufacturers: Set<string>;
   prices: PriceProps;
 }
 
+// возвращаемые методы для выбора фильтров
 interface ReturnProps extends Filters {
   setPrices: (name: keyof PriceProps, value: number) => void;
   setDiscThinkness: (value: string) => void;
   setDiscQuantityOfTeeth: (value: string) => void;
   setVolume: (value: string) => void;
   setSelectedIngredients: (value: string) => void;
+  setSelectedManufacturers: (value: string) => void
 }
 
 /**
@@ -39,6 +44,11 @@ export const useFilters = (): ReturnProps => {
   // Фильтр ингредиентов
   const [selectedIngredients, { toggle: toggleIngredients }] = useSet(
     new Set<string>(searchParams.get('ingredients')?.split(',') || []),
+  );
+
+  // фильтр производителей
+  const [selectedManufacturers, { toggle: toggleManufacturers }] = useSet(
+    new Set<string>(searchParams.get('gearboxesManufacturers')?.split(',') || []),
   );
 
   // Фильтр толщины дисков
@@ -57,10 +67,6 @@ export const useFilters = (): ReturnProps => {
   const [volume, { toggle: toggleVolume }] = useSet(
     new Set<string>(searchParams.has('volume') ? searchParams.get('volume')?.split(',') : []),
   );
-
-  // const [volume, { toggle: toggleVolume }] = useSet(
-  //   new Set<string>(searchParams.get('volume')?.split(',') || []),
-  // );
 
   // Фильтр стоимости
   const [prices, setPrices] = useState<PriceProps>({
@@ -82,13 +88,15 @@ export const useFilters = (): ReturnProps => {
       quantityOfTeeth,
       volume,
       selectedIngredients,
+      selectedManufacturers,
       prices,
       setPrices: updatePrice,
       setDiscThinkness: toggleThickness,
       setDiscQuantityOfTeeth: toggleQuantityOfTeeth,
       setVolume: toggleVolume,
+      setSelectedManufacturers: toggleManufacturers,
       setSelectedIngredients: toggleIngredients,
     }),
-    [thickness, quantityOfTeeth, volume, selectedIngredients, prices],
+    [thickness, quantityOfTeeth, volume, selectedIngredients, selectedManufacturers, prices],
   );
 };

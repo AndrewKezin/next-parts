@@ -173,7 +173,7 @@ async function up() {
     },
   });
 
-  const d666740a = await prisma.product.create({
+  const d665740a = await prisma.product.create({
     data: {
       name: 'Гидравлический блок управления (Nissan, тип 1)',
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/13/d666740a_1.jpg',
