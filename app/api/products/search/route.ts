@@ -7,21 +7,19 @@ import { NextRequest, NextResponse } from 'next/server';
 export async function GET(req: NextRequest) {
     // вытащить значение параметра query из адресной строки. Если нет параметра query, вернет пустую строку
   const query = req.nextUrl.searchParams.get('query') || '';
-  // тот же запрос, но с заглавной буквы
-  const titleQuery = query[0].toUpperCase() + query.slice(1);
 
   // получить список всех товаров
   const products = await prisma.product.findMany({
     where: {
         name: {
-            // содержит строку query или начинается с заглавной буквы (это очень дурацкий код чтобы хоть как-то обойти неспособность Vercel с регистром в поисковых запросах на кириллице)
-            contains: titleQuery && query.length > 1 ? query.slice(1) : titleQuery,
+            // содержит строку query или, если начинается с заглавной буквы, то искать со 2-го символа (это очень дурацкий код чтобы хоть как-то обойти неспособность Vercel с регистром в поисковых запросах на кириллице)
+            contains: query.length > 1 ? query.slice(1) : query,
             // не учитывает регистр
-            // mode: 'insensitive',
+            mode: 'insensitive',
         },
     },
     // вернуть первые 5 товаров
-    take: 5,
+    // take: 5,
   });
 
   // вернуть список найденных товаров

@@ -4,20 +4,26 @@ import crypto from 'crypto';
 import { findOrCreateCart } from '@/lib/find-or-create-cart';
 import { CreateCartItemValues } from '@/services/dto/cart.dto';
 import { updateCartTotalAmount } from '@/lib/update-cart-total-amount';
+import { getUserSession } from '@/lib/get-user-session';
 
 // GET-запрос на получение корзины
 export async function GET(req: NextRequest) {
   try {
+    const currentUser = await getUserSession();
+    const userId = Number(currentUser?.id);
     const token = req.cookies.get('cartToken')?.value;
 
-    if (!token) {
+    if (!userId && !token) {
       return NextResponse.json({ totalAmount: 0, items: [] });
     }
 
-    // найти корзину, у которой есть такой токен
+    // найти корзину, у которой есть такой токен или userId
     const userCart = await prisma.cart.findFirst({
       where: {
         OR: [
+          {
+            userId,
+          },
           {
             token,
           },
@@ -51,14 +57,18 @@ export async function GET(req: NextRequest) {
 // POST-запрос на добавление товара в корзину (и создание корзины, если её нет)
 export async function POST(req: NextRequest) {
   try {
+    const currentUser = await getUserSession();
+    const userId = Number(currentUser?.id);
     let token = req.cookies.get('cartToken')?.value;
 
-    if (!token) {
-      token = crypto.randomUUID();
-    }
+    // if (!userId) {
+    //   if (!token) {
+    //     token = crypto.randomUUID();
+    //   }
+    // }
 
     // найти корзину по токену или создать её
-    const userCart = await findOrCreateCart(token);
+    const userCart = await findOrCreateCart(userId, token);
 
     // вытащить данные товара из запроса
     const data = (await req.json()) as CreateCartItemValues;
@@ -139,17 +149,15 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    
     // затем, обновить корзину
-    const updatedUserCart = await updateCartTotalAmount(token);
+    const updatedUserCart = await updateCartTotalAmount(userCart.token as string);
 
     // генерируем ответ
     const resp = NextResponse.json(updatedUserCart);
     // добавить в ответ токен
-    resp.cookies.set('cartToken', token, {
+    resp.cookies.set('cartToken', userCart.token as string, {
       httpOnly: true,
-      sameSite: 'strict',
-      secure: true,
+      path: '/',
       maxAge: 60 * 60 * 24 * 30,
     });
     // возвращаем ответ

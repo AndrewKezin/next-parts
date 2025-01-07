@@ -71,7 +71,7 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
         {products.length > 0 && (
           <div
             className={cn(
-              'absolute w-full bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30',
+              'absolute w-full h-[calc(100vh-100px)] overflow-y-auto invisible-scrollbar bg-white rounded-xl py-2 top-14 shadow-md transition-all duration-200 invisible opacity-0 z-30',
               focused && 'visible opacity-100 top-12',
             )}>
             {/* Список найденных товаров */}

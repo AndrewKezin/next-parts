@@ -27,7 +27,7 @@ export default function TestPayOrderPage() {
           Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
         testpayData.setId(id);
         testpayData.setPaid(true);
-        testpayData.setStatus('SUCCESSED');
+        testpayData.setStatus('SUCCESS');
         testpayData.setCreatedAt(new Date().toISOString());
   
         const { data } = await axios.post<PaymentData>(
@@ -35,7 +35,7 @@ export default function TestPayOrderPage() {
           testpayData,
         );
 
-        if (data.status !== 'SUCCESSED') {
+        if (data.status !== 'SUCCESS') {
           toast.error(' Ошибка оплаты', {
             icon: '❌',
           });

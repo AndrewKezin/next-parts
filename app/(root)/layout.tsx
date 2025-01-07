@@ -18,7 +18,7 @@ export default function HomeLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <main className="min-h-[calc(100vh-130px)]">
+    <main className="min-h-[calc(100vh-130px)] mb-3">
       {/* внутри Header есть хук useSearchParams, поэтому нужен Suspense (для ожидания отработки этого хука) */}
       <Suspense>
         <Header />

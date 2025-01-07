@@ -6,16 +6,16 @@ import React from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { formProfileSchema, TFormProfileValues } from './modals/auth-modal/forms/schemas';
 import toast from 'react-hot-toast';
-import { signOut } from 'next-auth/react';
 import { Container } from './container';
 import { Title } from './title';
 import { FormInput } from '../form';
 import { Button } from '../ui';
 import { Eye, EyeOff } from 'lucide-react';
-import { deleteUserAccount, updateUserInfo } from '@/app/actions';
+import { deleteUserAccount, logoutUser, updateUserInfo } from '@/app/actions';
 import { AddressInput } from './address-input';
 import { ErrorText } from './error-text';
 import { cn } from '@/lib/utils';
+import logOut from '@/lib/log-out';
 
 interface Props {
   data: User;
@@ -65,9 +65,7 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
 
   // Выход их аккаунта
   const onClickSignOut = () => {
-    signOut({
-      callbackUrl: '/',
-    });
+    logOut();
   };
 
   // Показать/скрыть пароль
@@ -103,7 +101,9 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
           icon: '✅',
           duration: 5000,
         });
-        onClickSignOut();
+
+        // Выход из аккаунта
+        logOut();
       } else {
         toast.error('Неверный пароль', {
           icon: '❌',

@@ -7,6 +7,7 @@ import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
 import { OrderStatus, Prisma } from '@prisma/client';
 import { compareSync, hashSync } from 'bcrypt';
+import { signOut } from 'next-auth/react';
 import { cookies } from 'next/headers';
 
 // серверные экшены
@@ -24,6 +25,9 @@ export async function createOrder(data: CheckoutFormValues) {
 
     // найти корзину по токену
     const userCart = await prisma.cart.findFirst({
+      where: {
+        token: cartToken,
+      },
       include: {
         user: true,
         items: {
@@ -36,9 +40,6 @@ export async function createOrder(data: CheckoutFormValues) {
             },
           },
         },
-      },
-      where: {
-        token: cartToken,
       },
     });
 
@@ -55,6 +56,7 @@ export async function createOrder(data: CheckoutFormValues) {
     // Создать заказ
     const order = await prisma.order.create({
       data: {
+        userId: userCart.user?.id,
         token: cartToken,
         fullName: data.firstName + ' ' + data.lastName,
         email: data.email,
@@ -254,3 +256,14 @@ export async function deleteUserAccount({password}: {password: string}) {
   console.log('[DeleteUserInfo] error: ',err);
   };
 };
+
+// Выход из аккаунта
+export async function logoutUser() {
+  try {
+    const cookieStore = cookies();
+    cookieStore.delete('cartToken');
+    cookieStore.delete('privacy-consent');
+  } catch (err) {
+    console.log('[LogoutUser] error: ', err);
+  }
+}

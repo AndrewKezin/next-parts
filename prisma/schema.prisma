@@ -126,11 +126,19 @@ model GearboxManufacturer {
 
 enum OrderStatus {
   PENDING
-  SUCCESSED
+  SUCCESS
   CANCELLED
 }
 
 enum UserRole {
   USER
   ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  INACTIVE
+  INDEBTED
+  BANNED
+  DELETED
 }

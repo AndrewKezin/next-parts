@@ -28,11 +28,11 @@ export async function POST(req: NextRequest) {
         id: order.id,
       },
       data: {
-        status: OrderStatus.SUCCESSED,
+        status: OrderStatus.SUCCESS,
       },
     });
 
-    body.status = 'SUCCESSED';
+    body.status = 'SUCCESS';
 
     // найти товары в заказе
     const items = JSON.parse(order?.items as string) as CartItemDTO[];

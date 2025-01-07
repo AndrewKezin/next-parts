@@ -22,7 +22,7 @@ export default async function ProfilePage() {
     }
 
     if (user.role === 'ADMIN') {
-        return redirect('/admin');
+        return redirect('/dashboard');
     }
     
     return <ProfileForm data={user} />

@@ -8,7 +8,7 @@ interface Props {
 
 export const Footer: React.FC<Props> = ({ className }) => {
   return (
-    <div className="w-full mt-8 min-h-[100px] bg-[#4D5053] flex items-center">
+    <div className="w-full py-5 min-h-[100px] bg-[#4D5053] flex items-center">
       <Container>
         <div className="w-full flex items-center justify-between py-5 px-5 gap-5">
           <p className="text-white text-base">NEXT PARTS © {new Date().getFullYear()}</p>
