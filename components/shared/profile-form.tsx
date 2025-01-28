@@ -10,12 +10,15 @@ import { Container } from './container';
 import { Title } from './title';
 import { FormInput } from '../form';
 import { Button } from '../ui';
-import { Eye, EyeOff } from 'lucide-react';
-import { deleteUserAccount, logoutUser, updateUserInfo } from '@/app/actions';
+import { Eye, EyeOff, LogOut, PackageSearch, Save, UserRoundX } from 'lucide-react';
+import { updateUserInfo } from '@/app/actions';
 import { AddressInput } from './address-input';
 import { ErrorText } from './error-text';
 import { cn } from '@/lib/utils';
 import logOut from '@/lib/log-out';
+import { ConfirmPassword } from '.';
+import { axiosInstance } from '@/services/instance';
+import { redirect, useRouter } from 'next/navigation';
 
 interface Props {
   data: User;
@@ -27,6 +30,8 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
   const [required, setRequired] = React.useState(false);
   const [isVisibleDeleteBlock, setIsVisibleDeleteBlock] = React.useState(false);
   const [password, setPassword] = React.useState('');
+
+  const router = useRouter();
 
   const form = useForm({
     resolver: zodResolver(formProfileSchema),
@@ -95,21 +100,30 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
   // Кнопка подтверждения удаления аккаунта
   const handleConfirmDelete = async () => {
     try {
-      const isDeleted = await deleteUserAccount({ password });
-      if (isDeleted) {
-        toast.error('Ваш аккаунт удален', {
-          icon: '✅',
-          duration: 5000,
+      // const isDeleted = await deleteUserAccount({ password });
+      const { data } = await axiosInstance.delete('/users', { data: { password } });
+
+      console.log(data);
+
+      if (data.error) {
+        toast.error(data.error, {
+          icon: '❌',
+          duration: 7000,
         });
 
-        // Выход из аккаунта
-        logOut();
-      } else {
-        toast.error('Неверный пароль', {
-          icon: '❌',
-          duration: 5000,
-        });
+        onClickCancel();
+        return;
       }
+
+      toast.error('Ваш аккаунт удален', {
+        icon: '✅',
+        duration: 5000,
+      });
+
+      // Выход из аккаунта
+      setTimeout(() => {
+        logOut();
+      }, 5000);
     } catch (err) {
       console.log(err);
     }
@@ -119,6 +133,10 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
   const onClickCancel = () => {
     setIsVisibleDeleteBlock(false);
     setPassword('');
+  };
+
+  const onClickViewOrders = () => {
+    router.push('/profile/orders');
   };
 
   return (
@@ -162,45 +180,44 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
 
           <Button disabled={form.formState.isSubmitting} className="text-base mt-10" type="submit">
             Сохранить
+            <Save size={23} className="ml-2" />
           </Button>
         </form>
       </FormProvider>
 
       <div className="flex flex-col gap-5 w-96 mt-3 mb-5">
         <Button
-          onClick={onClickSignOut}
-          variant="secondary"
-          disabled={form.formState.isSubmitting}
-          className="text-base mb-7"
+          onClick={onClickViewOrders}
+          variant="outline"
+          className="text-base mb-2"
           type="submit">
-          Выйти из аккаунта
+          Просмотр заказов
+          <PackageSearch size={23} className="ml-2" />
         </Button>
 
-        <div
-          className="text-grey-500 cursor-pointer underline w-fit"
-          onClick={onClickAccountDelete}>
-          Удалить аккаунт
-        </div>
-        <div className={cn(isVisibleDeleteBlock ? 'flex flex-col gap-2' : 'hidden')}>
-          <p>Чтобы подтвердить удаление аккаунта, введите пароль от аккаунта</p>
-          <div className="flex gap-2">
-            <input
-              placeholder="Введите пароль"
-              className="w-1/3 border px-1 border-red-500"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            />
-            <Button
-              className="w-fit  bg-white border border-grey-500 text-black"
-              onClick={handleConfirmDelete}>
-              Подтвердить
-            </Button>
-            <Button
-              className="w-fit bg-white border border-grey-500 text-black"
-              onClick={onClickCancel}>
-              Отмена
-            </Button>
+        <Button onClick={onClickSignOut} variant="outline" className="text-base mb-7" type="submit">
+          Выйти из аккаунта
+          <LogOut size={23} className="ml-2" />
+        </Button>
+
+          <div
+            className="flex gap-1 text-grey-500 cursor-pointer underline w-fit"
+            onClick={onClickAccountDelete}>
+            Удалить аккаунт
+            <UserRoundX size={23} className="ml-2" />
           </div>
+          
+        <div className={cn(isVisibleDeleteBlock ? 'flex flex-col gap-2' : 'hidden')}>
+          <p>Чтобы подтвердить удаление учетной записи, введите ваш пароль</p>
+
+          <ConfirmPassword
+            inputText="Введите пароль"
+            password={password}
+            setPassword={setPassword}
+            handleConfirm={handleConfirmDelete}
+            onClickCancel={onClickCancel}
+            className="flex gap-2"
+          />
         </div>
       </div>
     </Container>

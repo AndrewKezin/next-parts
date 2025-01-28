@@ -2,11 +2,15 @@ import { Api } from '@/services/api-client';
 import { GearboxManufacturer } from '@prisma/client';
 import { useEffect, useState } from 'react';
 
+interface ReturnProps {
+  manufacturers: GearboxManufacturer[];
+  loading: boolean;
+}
 /**
  * Хук для получения с бэкенда списка производителей трансмиссий
  * @returns Возвращает список производителей и статус загрузки
  */
-export const useManufacturers = () => {
+export const useManufacturers = (): ReturnProps => {
   const [manufacturers, setManufacturers] = useState<GearboxManufacturer[]>([]);
   const [loading, setloading] = useState(true);
 

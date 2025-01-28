@@ -1,4 +1,5 @@
 import { prisma } from '@/prisma/prisma-client';
+import { UserStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -28,6 +29,7 @@ export async function GET(req: NextRequest) {
       },
       data: {
         verified: new Date(),
+        status: UserStatus.ACTIVE,
       },
     });
 
@@ -46,8 +48,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: 'Пользователь не найден' }, { status: 400 });
     }
 
-    
+    // !!!доделать автоматическую авторизацию пользователя после подтверждения кода
 
+    
     // удаление кода из БД
     await prisma.verificationCode.delete({
       where: {

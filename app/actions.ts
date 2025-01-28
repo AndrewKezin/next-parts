@@ -5,9 +5,8 @@ import { DeleteUserTemplate, PayOrderTemplate, VerificationUserTemplate } from '
 import { createPayment, sendEmail } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
-import { OrderStatus, Prisma } from '@prisma/client';
+import { OrderStatus, Prisma, UserRole, UserStatus } from '@prisma/client';
 import { compareSync, hashSync } from 'bcrypt';
-import { signOut } from 'next-auth/react';
 import { cookies } from 'next/headers';
 
 // серверные экшены
@@ -204,6 +203,7 @@ export async function registerUser(body: Prisma.UserCreateInput) {
         userId: createdUser.id,
       },
     });
+    
     // отправить письмо подтверждения регистрации на почту
     await sendEmail(
       createdUser.email,
@@ -216,48 +216,53 @@ export async function registerUser(body: Prisma.UserCreateInput) {
   }
 }
 
-// Удаление пользователя
-export async function deleteUserAccount({password}: {password: string}) {
-  try {
-    const currentUser = await getUserSession();
+// Удаление пользователя (вместо серверного экшена используется DELETE-запрос на роут api/users)
+// export async function deleteUserAccount({password}: {password: string}) {
+//   try {
+//     const currentUser = await getUserSession();
 
-    if (!currentUser) {
-      throw new Error('Пользователь не найден');
-    }
+//     if (!currentUser) {
+//       throw new Error('Пользователь не найден');
+//     }
 
-    const findUser = await prisma.user.findFirst({
-      where: {
-        id: Number(currentUser.id),
-      },
-    });
+//     const findUser = await prisma.user.findFirst({
+//       where: {
+//         id: Number(currentUser.id),
+//       },
+//     });
 
-    if (!findUser) {
-      throw new Error('Пользователь не найден');
-    }
+//     if (!findUser) {
+//       throw new Error('Пользователь не найден');
+//     }
 
-    if (!compareSync(password, findUser.password)) {
-      throw new Error('Неверный пароль');
-    }
+//     if (!compareSync(password, findUser.password)) {
+//       throw new Error('Неверный пароль');
+//     }
 
-    await prisma.user.delete({
-      where: {
-        id: Number(currentUser.id),
-      }
-    })
+//     await prisma.user.update({
+//       where: {
+//         id: Number(currentUser.id),
+//       },
+//       data: {
+//         status: UserStatus.DELETED,
+//         email: '',
+//         password: '',
+//       }
+//     })
 
-    await sendEmail(
-      findUser.email,
-      'NEXT PARTS - Удаление аккаунта',
-      DeleteUserTemplate({})
-    );
+//     await sendEmail(
+//       findUser.email,
+//       'NEXT PARTS - Удаление аккаунта',
+//       DeleteUserTemplate({})
+//     );
 
-    return true;
-  } catch(err) {
-  console.log('[DeleteUserInfo] error: ',err);
-  };
-};
+//     return true;
+//   } catch(err) {
+//   console.log('[DeleteUserInfo] error: ',err);
+//   };
+// };
 
-// Выход из аккаунта
+// Удаление cookies при выходе из аккаунта
 export async function logoutUser() {
   try {
     const cookieStore = cookies();
@@ -266,4 +271,126 @@ export async function logoutUser() {
   } catch (err) {
     console.log('[LogoutUser] error: ', err);
   }
+}
+
+// вспомогательная функция для поиска в БД пользователя и администратора
+const findUserAndAdmin = async (id: number, password: string) => {
+  try {
+    const currentUser = await getUserSession();
+
+    if (!currentUser) {
+      throw new Error('Пользователь не найден');
+    }
+
+    const admin = await prisma.user.findFirst({
+      where: {
+        id: Number(currentUser.id), 
+      },
+      })
+
+    if (!admin) {
+      throw new Error('Пользователь не найден');
+    }
+    
+    if (admin.role !== 'ADMIN') {
+      throw new Error('Необходимы права администратора');
+    }
+
+    const changedUser = await prisma.user.findFirst({
+      where: {
+        id: Number(id),
+      }})
+
+    if (!changedUser) {
+      throw new Error('Пользователь, у которого изменяются данные, не найден');
+    }
+      
+    if (!compareSync(password, admin.password as string)) {
+      throw new Error('Неверный пароль');
+    }
+
+    return changedUser;
+  } catch(err) {
+    console.log('[FindUserAndAdmin] error: ', err);
+  };
+}
+
+// Изменение Role пользователя через админпанель
+export async function changeUserRole(id: number, password: string, changedRole: string) {
+  try {
+    const changedUser = await findUserAndAdmin(id, password);
+
+    if (!changedUser) {
+      throw new Error('Пользователь, у которого изменяются данные, не найден');
+    }
+
+    await prisma.user.update({
+      where: {
+        id: Number(changedUser.id),
+      },
+      data: {
+        role: changedRole as UserRole,
+      }
+    })
+
+    return true;
+  } catch(err) {
+  console.log('[ChangeUserRole] error: ', err);
+  return false;
+  };
+}
+
+// Изменение статуса пользователя через админпанель
+export async function changeUserStatus(id: number, password: string, changedStatus: string) {
+  try {
+    const changedUser = await findUserAndAdmin(id, password);
+
+    if (!changedUser) {
+      throw new Error('Пользователь, у которого изменяются данные, не найден');
+    }
+
+    await prisma.user.update({
+      where: {
+        id: Number(changedUser.id),
+      },
+      data: {
+        status: changedStatus as UserStatus,
+      }
+    })
+
+    return true;
+  } catch(err) {
+  console.log('[ChangeUserStatus] error: ', err);
+  return false;
+  };
+}
+
+// Подтверждение регистрации пользователя вручную через админпанель
+export async function setUserVerified(id: number, password: string) {
+  try {
+    const changedUser = await findUserAndAdmin(id, password);
+
+    if (!changedUser) {
+      throw new Error('Пользователь, у которого изменяются данные, не найден');
+    }
+
+    if (changedUser.verified) {
+      throw new Error('Пользователь уже подтвержден');
+    }
+
+    if (!changedUser.email) {
+      throw new Error('Пользователь не имеет почты');
+    }
+
+    await prisma.user.update({
+      where: {
+        id: Number(changedUser.id),
+      },
+      data: {
+        verified: new Date(),
+      }
+    });
+  } catch(err) {
+  console.log('[SetUserVerified] error: ', err);
+  };
 }

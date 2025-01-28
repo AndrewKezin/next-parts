@@ -9,3 +9,5 @@ export {Popover} from './popover';
 export {Slider} from './slider'; 
 export {Tooltip} from './tooltip'; 
 export {Textarea} from './textarea';
+export {SimpleSelect} from './simple-select';
+export {DatePickerWithRange} from './date-picker-with-range';

@@ -1,6 +1,5 @@
 import { prisma } from '@/prisma/prisma-client';
 import { NextRequest, NextResponse } from 'next/server';
-import crypto from 'crypto';
 import { findOrCreateCart } from '@/lib/find-or-create-cart';
 import { CreateCartItemValues } from '@/services/dto/cart.dto';
 import { updateCartTotalAmount } from '@/lib/update-cart-total-amount';
@@ -123,12 +122,14 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // поиск одинаковых товаров. Если есть ингредиенты, то они должны совпадать. Если ингредиентов нет, то productItemId должен совпадать
     const findCartItemWithSameIngredients = findCartItemId.find(
       (item) =>
-        item.ingredients.length === data.ingredients?.length &&
-        item.ingredients.every((ingredient) => data.ingredients?.includes(ingredient.id)),
+        (item.ingredients.length === data.ingredients?.length &&
+        item.ingredients.every((ingredient) => data.ingredients?.includes(ingredient.id))) || (item.ingredients.length === 0 && item.productItemId === data.productItemId),
     );
 
+    // если одинаковый товар нашелся, то прибавить его количество. Если такого нет, то добавить его в корзину
     if (findCartItemWithSameIngredients) {
       await prisma.cartItem.update({
         where: {

@@ -47,7 +47,6 @@ export async function PATCH(req: NextRequest, { params }: { params: { id: string
 // Запрос на удаление товара из корзины
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const id = Number(params.id);
     const token = req.cookies.get('cartToken')?.value;
 
     if (!token) {
