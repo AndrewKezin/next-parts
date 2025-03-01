@@ -5,7 +5,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { OrderStatus } from '@prisma/client';
 
 // запрос на получение всех заказов для админки
-//  поиск по заказам (api/orders/search?query=qweqwe)
+//  поиск по заказам (api/orders?query=qweqwe)
 // типизация запроса - NextRequest
 // Vercel не обрабатывает регистры символов в посковых запросах на кириллице
 
@@ -31,51 +31,54 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
     }
 
-    const orders = await prisma.order.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      where: {
-        OR: query
-          ? [
-              {
-                phone: {
-                  contains: modifiedQuery,
-                },
-              },
-              {
-                fullName: {
-                  contains: modifiedQuery,
-                  mode: 'insensitive',
-                },
-              },
-              {
-                email: {
-                  contains: modifiedQuery,
-                  mode: 'insensitive',
-                },
-              },
-              {
-                address: {
-                  contains: modifiedQuery,
-                  mode: 'insensitive',
-                },
-              },
-            ]
-          : undefined,
-        status: orderStatus
-          ? {
-              equals: orderStatus as OrderStatus,
-            }
-          : undefined,
-        createdAt: {
-          gte: dateFrom ? new Date(dateFrom) : undefined,
-          lte: dateTo ? new Date(dateTo) : undefined,
+    const [orders, totalCount] = await prisma.$transaction([
+      prisma.order.findMany({
+        orderBy: {
+          createdAt: 'desc',
         },
-      },
-    });
+        where: {
+          OR: query
+            ? [
+                {
+                  phone: {
+                    contains: modifiedQuery,
+                  },
+                },
+                {
+                  fullName: {
+                    contains: modifiedQuery,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  email: {
+                    contains: modifiedQuery,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  address: {
+                    contains: modifiedQuery,
+                    mode: 'insensitive',
+                  },
+                },
+              ]
+            : undefined,
+          status: orderStatus
+            ? {
+                equals: orderStatus as OrderStatus,
+              }
+            : undefined,
+          createdAt: {
+            gte: dateFrom ? new Date(dateFrom) : undefined,
+            lte: dateTo ? new Date(dateTo) : undefined,
+          },
+        },
+      }),
+      prisma.order.count(),
+    ])
 
-    return NextResponse.json(orders);
+    return NextResponse.json({ orders, totalCount });
   } catch (err) {
     console.log('[GET_ORDERS] Error', err);
     return NextResponse.json({ message: '[GET_ORDERS] Error' }, { status: 500 });

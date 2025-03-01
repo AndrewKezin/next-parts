@@ -29,19 +29,24 @@ export default function DashboardOrders() {
   //   to: new Date(Date.now()),
   // });
   const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+  const [isInputClear, setIsInputClear] = React.useState(false);
 
+  // получение списка заказов с учетом фильтров
   const { orders, loading } = useOrders(
-    orderId,
-    autoUpdate,
-    interval,
-    searchQuery,
-    currentOrderStatus,
-    date,
+    {
+      orderId,
+      isInterval: autoUpdate,
+      intervalTime,
+      searchQuery,
+      orderStatus: currentOrderStatus,
+      date,
+    }
   );
 
   const handleClearSearch = () => {
     setOrderId('');
     setSearchQuery('');
+    setIsInputClear(true);
     setCurrentOrderStatus('');
     setDate(undefined);
   };
@@ -64,8 +69,6 @@ export default function DashboardOrders() {
     return <p className="text-xl text-center">Загрузка заказов...</p>;
   }
 
-  console.log(date);
-
   return (
     <div className="flex flex-col items-center w-full">
       <h1 className="text-4xl font-bold mt-10 mb-7">Администрирование заказов</h1>
@@ -78,39 +81,49 @@ export default function DashboardOrders() {
         autoUpdatePeriod={autoUpdatePeriod}
         setAutoUpdatePeriod={setAutoUpdatePeriod}
       />
-      <div className="flex w-full justify-around gap-2 border border-gray-500 rounded px-2 py-2 mb-5">
-        <AdminSearchInput
-          searchQuery={orderId}
-          setSearchQuery={setOrderId}
-          title="Поиск по номеру заказа"
-          className="w-[300px] px-6"
-        />
-        <AdminSearchInput
-          searchQuery={searchQuery}
-          setSearchQuery={setSearchQuery}
-          title="Поиск по: клиенту, адресу, телефону"
-          className="w-[300px] px-6"
-        />
-        <AdminSearchSelect
-          defaultValue={currentOrderStatus}
-          setQuery={handleSelectStatus}
-          title="Выбор статуса заказа"
-          className="w-[300px] px-6"
-        />
-        <AdminDatePicker
-          title="Выбор даты (от-) или диапазона дат (от-до)"
-          date={date}
-          setDate={setDate}
-          className="w-[300px]"
-        />
+      <div className="flex flex-col border border-gray-500 rounded px-2 py-2 mb-5">
+        <div className="flex w-full justify-around gap-2 border border-gray-500 rounded px-2 py-2 mb-5">
+          <AdminSearchInput
+            searchQuery={orderId}
+            title="Поиск по номеру заказа"
+            className="w-[300px] px-6"
+            isClearInput={isInputClear}
+            setIsClearInput={setIsInputClear}
+            setSearchQuery={setOrderId}
+          />
+          <AdminSearchInput
+            searchQuery={searchQuery}
+            title="Поиск по: клиенту, адресу, телефону"
+            className="w-[300px] px-6"
+            isClearInput={isInputClear}
+            setIsClearInput={setIsInputClear}
+            setSearchQuery={setSearchQuery}
+            />
+          <AdminSearchSelect
+            list={OrderStatus}
+            value={currentOrderStatus}
+            setQuery={handleSelectStatus}
+            title="Выбор статуса заказа"
+            className="w-[300px] px-6"
+          />
+          <AdminDatePicker
+            title="Выбор даты (от-) или диапазона дат (от-до)"
+            date={date}
+            setDate={setDate}
+            className="w-[300px]"
+          />
+        </div>
+
+        <Button
+          variant={'outline'}
+          className="w-[250px] mb-5 border-black text-black bg-slate-100"
+          onClick={handleClearSearch}>
+          <X className="mr-2" />
+          Сбросить параметры поиска
+        </Button>
       </div>
 
-      <Button variant={'outline'} className="w-[250px] mb-5 border-black text-black" onClick={handleClearSearch}>
-      <X className='mr-2' />
-        Сбросить параметры поиска
-      </Button>
-
-      <AdminOrdersView orders={orders} handleClearSearch={handleClearSearch} />
+      <AdminOrdersView fetchOrders={orders} handleClearSearch={handleClearSearch} />
 
       <Link href="/dashboard" className="text-primary font-bold text-2xl mb-3">
         Вернуться в панель администратора

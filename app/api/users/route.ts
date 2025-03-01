@@ -2,7 +2,7 @@ import { DeleteUserTemplate } from '@/components/shared';
 import { sendEmail } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
-import { UserStatus } from '@prisma/client';
+import { UserRole, UserStatus } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
@@ -10,7 +10,18 @@ import { authOptions } from '../auth/[...nextauth]/route';
 
 // роутами мы отлавливаем запросы на api/users
 // GET-запрос на получение всех пользователей для админки
-export async function GET() {
+export async function GET(req: NextRequest) {
+  // вытащить значения параметров из адресной строки. Если нет параметра, то вернет пустую строку
+  const searchQuery = req.nextUrl.searchParams.get('searchQuery') || '';
+  const currentUserStatus = req.nextUrl.searchParams.get('currentUserStatus') || '';
+  const currentUserRole = req.nextUrl.searchParams.get('currentUserRole') || '';
+  const dateFrom = req.nextUrl.searchParams.get('date[from]') || '';
+  const dateTo = req.nextUrl.searchParams.get('date[to]') || '';
+
+  // переменная modifiedQuery - это попытка обойти косяк Vercel с регистром в поисковых запросах на кириллице
+  let modifiedQuery: string;
+  searchQuery.length > 1 ? (modifiedQuery = searchQuery.slice(1)) : (modifiedQuery = searchQuery);
+
   try {
     const session = await getServerSession(authOptions);
 
@@ -22,28 +33,56 @@ export async function GET() {
       return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
     }
 
-    const users = await prisma.user.findMany({
-      orderBy: {
-        createdAt: 'desc',
-      },
-      select: {
-        id: true,
-        email: true,
-        fullName: true,
-        role: true,
-        status: true,
-        createdAt: true,
-      },
-    });
+    const [users, totalCount] = await prisma.$transaction([
+      prisma.user.findMany({
+        orderBy: {
+          createdAt: 'desc',
+        },
+        where: {
+          OR: searchQuery
+            ? [
+                {
+                  email: { contains: modifiedQuery, mode: 'insensitive' },
+                },
+                {
+                  fullName: { contains: modifiedQuery, mode: 'insensitive' },
+                },
+              ]
+            : undefined,
+          status: currentUserStatus 
+            ? {
+              equals: currentUserStatus as UserStatus,
+            } : undefined,
+          role: currentUserRole
+            ? {
+              equals: currentUserRole as UserRole,
+            } : undefined,
+          createdAt: {
+            gte: dateFrom ? new Date(dateFrom) : undefined,
+            lte: dateTo ? new Date(dateTo) : undefined,
+          }
+        },
+        select: {
+          id: true,
+          email: true,
+          fullName: true,
+          role: true,
+          status: true,
+          createdAt: true,
+        },
+      }),
+      prisma.user.count(),
+    ]);
 
-    return NextResponse.json(users);
+    return NextResponse.json({users, totalCount});
   } catch (err) {
     console.log(err);
-    return NextResponse.json({message: '[GET_USERS] Error'}, {status: 500});
+    return NextResponse.json({ message: '[GET_USERS] Error' }, { status: 500 });
   }
 }
 
 // POST-запрос на создание пользователя. Вытаскиваем запрос, он типизируется с помощью NextRequest
+// !!!!!!!!!!!!!! СДЕЛАТЬ ЗАЩИТУ ОТ НЕСАНКЦИОНИРОВАННОГО ДОСТУПА !!!!!!!!!!!!!
 export async function POST(req: NextRequest) {
   // вытвскиваем данные из запроса
   const data = await req.json();
@@ -56,6 +95,7 @@ export async function POST(req: NextRequest) {
 }
 
 // DELETE-запрос на удаление своего аккаунта пользователем
+// удалить аккаунт может только сам пользователь (админу недоступна эта возможность, админ может заблокировать аккаунт)
 export async function DELETE(req: NextRequest) {
   const data = (await req.json()) as { password: string };
 
