@@ -18,6 +18,7 @@ interface Props {
   id?: string;
   isMulti?: boolean;
   loading?: boolean;
+  isDisabled?: boolean;
   placeholder?: string;
   className?: string;
 }
@@ -31,6 +32,7 @@ export const AdminProductSelect: React.FC<Props> = ({
   id,
   isMulti = true,
   loading,
+  isDisabled,
   placeholder,
   className,
 }) => {
@@ -60,6 +62,7 @@ export const AdminProductSelect: React.FC<Props> = ({
         placeholder={placeholder}
         options={options}
         onChange={handleChange}
+        isDisabled={isDisabled}
         className="basic-multi-select"
         classNamePrefix="select"
       />

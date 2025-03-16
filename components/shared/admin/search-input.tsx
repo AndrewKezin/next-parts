@@ -10,7 +10,9 @@ interface Props {
   isClearInput: boolean;
   setIsClearInput: React.Dispatch<React.SetStateAction<boolean>>;
   placeholder?: string;
+  isDisabled?: boolean;
   className?: string;
+  inputClassName?: string;
 }
 
 export const AdminSearchInput: React.FC<Props> = ({
@@ -20,7 +22,9 @@ export const AdminSearchInput: React.FC<Props> = ({
   isClearInput,
   setIsClearInput,
   placeholder='Поиск',
+  isDisabled=false,
   className,
+  inputClassName='w-full h-[30px] rounded-[3px] outline outline-1 bg-gray-100 pl-8 pr-3',
 }) => {
   const [query, setQuery] = React.useState('');
 
@@ -43,7 +47,7 @@ export const AdminSearchInput: React.FC<Props> = ({
   return (
     <div className={cn('flex flex-col gap-2 items-center', className)}>
       <p className="text-gray-600 text-sm ">{title}</p>
-      <div className="flex rounded-xl flex-1 justify-between relative mb-3">
+      <div className="flex rounded-xl flex-1 justify-between relative">
         {/* Lucide-значок поиска */}
         <Search className="absolute top-1/2 translate-y-[-50%] left-1 h-5 text-gray-400" />
         <X className='absolute top-1/2 translate-y-[-50%] right-1 h-5 text-gray-400 cursor-pointer' onClick={() => setQuery('')} />
@@ -51,10 +55,11 @@ export const AdminSearchInput: React.FC<Props> = ({
         {/* Поле ввода */}
         <input
           type="text"
-          className="w-full h-[30px] rounded-[3px] outline outline-1 bg-gray-100 pl-8 pr-3"
+          className={cn(inputClassName, {'bg-[#f1f1f1]': isDisabled})}
           placeholder={placeholder}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
+          disabled={isDisabled}
         />
       </div>
     </div>

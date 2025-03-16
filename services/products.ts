@@ -18,6 +18,10 @@ export const getProduct = async (id: string): Promise<ProductDTO> => {
   return (await axiosInstance.get<ProductDTO>(ApiRoutes.PRODUCTS + '/' + id)).data;
 };
 
+export const getProductItem = async (id: string): Promise<ProductDTO> => {
+  return (await axiosInstance.get<ProductDTO>(ApiRoutes.PRODUCTITEMS + '/' + id)).data;
+};
+
 // метод для получения всех товаров по фильтрам (из админки)
 export const getFilteredProducts = async (
   productName: string,

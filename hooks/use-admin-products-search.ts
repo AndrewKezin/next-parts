@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 
 interface Props {
   productId: string;
+  productItemId: string;
   productName: string;
   prodManufIds: string[];
   prodIngredIds: string[];
@@ -33,6 +34,7 @@ export interface FetchProducts {
  */
 export const useAdminProductsSearch = ({
   productId,
+  productItemId,
   productName,
   prodManufIds,
   prodIngredIds,
@@ -53,20 +55,24 @@ export const useAdminProductsSearch = ({
       try {
         setLoading(true);
         // отправить GET запрос на localhost:3000/api/products чтобы через призму получить из БД список продуктов
-        productId
-          ? setFetchedProducts({ products: [await Api.products.getProduct(productId)] })
-          : setFetchedProducts(
-              await Api.products.getFilteredProducts(
-                productName,
-                prodManufIds,
-                prodIngredIds,
-                prodCatIds,
-                productPrice,
-                prodQuantVariants,
-                prodThicknVariants,
-                prodVolumeVariants,
-              ),
-            );
+        if (productId) {
+          setFetchedProducts({ products: [await Api.products.getProduct(productId)] });
+        } else if (productItemId) {
+          setFetchedProducts({ products: [await Api.products.getProductItem(productItemId)] });
+        } else {
+          setFetchedProducts(
+            await Api.products.getFilteredProducts(
+              productName,
+              prodManufIds,
+              prodIngredIds,
+              prodCatIds,
+              productPrice,
+              prodQuantVariants,
+              prodThicknVariants,
+              prodVolumeVariants,
+            ),
+          );
+        }
       } catch (err) {
         console.log(err);
       } finally {
@@ -82,6 +88,7 @@ export const useAdminProductsSearch = ({
     isInterval,
     intervalTime,
     productId,
+    productItemId,
     productName,
     prodManufIds,
     prodIngredIds,

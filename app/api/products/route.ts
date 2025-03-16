@@ -337,18 +337,19 @@ export async function GET(req: NextRequest) {
         },
         ingredients: true,
         gearboxesManufacturers: true,
+        category: true,
       },
     });
 
-    console.log('[GET_PRODUCTS 257] nameInPriceRange', nameInPriceRange);
-    console.log('[GET_PRODUCTS 258] manufInPriceRange', manufInPriceRange);
-    console.log('[GET_PRODUCTS 259] ingredInPriceRange', ingredInPriceRange);
-    console.log('[GET_PRODUCTS 260] catInPriceRange', catInPriceRange);
-    console.log('[GET_PRODUCTS 261] quantInPriceRange', quantInPriceRange);
-    console.log('[GET_PRODUCTS 262] thicknInPriceRange', thicknInPriceRange);
-    console.log('[GET_PRODUCTS 263] volumeInPriceRange', volumeInPriceRange);
-    console.log('[GET_PRODUCTS 264] resultArr', resultArr);
-    console.log('[GET_PRODUCTS 265] fetchedProducts', products);
+    // console.log('[GET_PRODUCTS 257] nameInPriceRange', nameInPriceRange);
+    // console.log('[GET_PRODUCTS 258] manufInPriceRange', manufInPriceRange);
+    // console.log('[GET_PRODUCTS 259] ingredInPriceRange', ingredInPriceRange);
+    // console.log('[GET_PRODUCTS 260] catInPriceRange', catInPriceRange);
+    // console.log('[GET_PRODUCTS 261] quantInPriceRange', quantInPriceRange);
+    // console.log('[GET_PRODUCTS 262] thicknInPriceRange', thicknInPriceRange);
+    // console.log('[GET_PRODUCTS 263] volumeInPriceRange', volumeInPriceRange);
+    // console.log('[GET_PRODUCTS 264] resultArr', resultArr);
+    // console.log('[GET_PRODUCTS 265] fetchedProducts', products);
 
     return NextResponse.json({ products, totalCount });
   } catch (err) {

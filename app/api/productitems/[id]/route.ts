@@ -15,21 +15,31 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
     }
 
-    const product = await prisma.product.findFirst({
+    const productItem = await prisma.productItem.findFirst({
       where: {
         id: Number(params.id),
       },
-      include: {
-        category: true,
-        ingredients: true,
-        items: true,
-        gearboxesManufacturers: true,
+      select: {
+          product: {
+            include: {
+              category: true,
+              ingredients: true,
+              items: {
+                where: {
+                    id: Number(params.id),
+                }
+              },
+              gearboxesManufacturers: true,
+            }
+          },
       },
     });
 
+    const product = productItem?.product;
+
     return NextResponse.json(product);
   } catch (err) {
-    console.log('[GET_PRODUCT] Error', err);
-    return NextResponse.json({ message: '[GET_PRODUCT] Error' }, { status: 500 });
+    console.log('[GET_PRODUCTITEMS] Error', err);
+    return NextResponse.json({ message: '[GET_PRODUCTITEMS] Error' }, { status: 500 });
   }
 }

@@ -15,8 +15,12 @@ import { X } from 'lucide-react';
 
 export default function DashboardProducts() {
   const [productId, setProductId] = React.useState<string>('');
+  const [productItemId, setProductItemId] = React.useState<string>('');
   const [productName, setProductName] = React.useState<string>('');
-  const [productPrice, setProductPrice] = React.useState<[priceFrom: string, priceTo: string]>(['', '']);
+  const [productPrice, setProductPrice] = React.useState<[priceFrom: string, priceTo: string]>([
+    '',
+    '',
+  ]);
   const [prodQuantVariants, setProdQuantVariants] = React.useState<string[]>([]);
   const [prodThicknVariants, setProdThicknVariants] = React.useState<string[]>([]);
   const [prodVolumeVariants, setProdVolumeVariants] = React.useState<string[]>([]);
@@ -24,6 +28,7 @@ export default function DashboardProducts() {
   const [prodIngredIds, setProdIngredIds] = React.useState<string[]>([]);
   const [prodCatIds, setProdCatIds] = React.useState<string[]>([]);
   const [isClearInput, setIsClearInput] = React.useState(false);
+  const [isDisabled, setIsDisabled] = React.useState(false);
 
   const { manufacturers: prodManuf, loading: prodManufLoading } = useManufacturers();
   const manufOptions = prodManuf.map((item) => {
@@ -56,9 +61,17 @@ export default function DashboardProducts() {
     return { value: String(item), label: String(item) };
   });
 
+  React.useEffect(() => {
+    if (productId || productItemId) {
+      setIsDisabled(true);
+    } else {
+      setIsDisabled(false);
+    }
+  }, [productId, productItemId]);
 
   const handleClearSearch = () => {
     setProductId('');
+    setProductItemId('');
     setProductName('');
     setProdManufIds([]);
     setProdIngredIds([]);
@@ -72,6 +85,7 @@ export default function DashboardProducts() {
 
   const { fetchedProducts, loading } = useAdminProductsSearch({
     productId,
+    productItemId,
     productName,
     prodManufIds,
     prodIngredIds,
@@ -85,134 +99,166 @@ export default function DashboardProducts() {
   const { products, totalCount } = fetchedProducts;
 
   console.log(products);
-  
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <h1 className="text-4xl font-bold mt-10 mb-8">Панель управления товарами</h1>
 
       {/* Фильтр товаров */}
-      <div className="w-full flex-col items-center justify-between mb-5 border border-gray-300 p-3">
-        {/* Поиск по артикулу (id товара) */}
-        <AdminSearchInput
-          searchQuery={productId}
-          setSearchQuery={setProductId}
-          title="Артикул (id) товара"
-          isClearInput={isClearInput}
-          setIsClearInput={setIsClearInput}
-          className="w-[200px]"
-        />
+      <div className="w-full flex-col items-center justify-between border border-gray-300 p-3">
+        <div className="flex items-center justify-between gap-3 p-2 w-full mb-3 border border-gray-300">
 
-        {/* Поиск по названию */}
-        <AdminSearchInput
-          searchQuery={productName}
-          setSearchQuery={setProductName}
-          title="Название товара"
-          isClearInput={isClearInput}
-          setIsClearInput={setIsClearInput}
-          className="w-[200px]"
-        />
-
-        {/* Селект по производителям */}
-        <AdminProductSelect
-          name="productManufacturer"
-          id="productManufacturer"
-          title="Производитель товара"
-          value={prodManufIds}
-          options={manufOptions}
-          setValue={setProdManufIds}
-          loading={prodManufLoading}
-          placeholder="Производитель товара"
-          className="w-[600px]"
-        />
-
-        {/* Селект по ингредиентам */}
-        <AdminProductSelect
-          name="productIngredients"
-          id="productIngredients"
-          title="Дополнительно к товару"
-          value={prodIngredIds}
-          options={ingredOptions}
-          setValue={setProdIngredIds}
-          loading={prodIngLoading}
-          placeholder="Дополнительно к товару"
-          className="w-[600px]"
-        />
-
-        {/* Селект по категориям */}
-        <AdminProductSelect
-          name="productCategories"
-          id="productCategories"
-          title="Категории товара"
-          value={prodCatIds}
-          options={categOptions}
-          setValue={setProdCatIds}
-          loading={prodCatLoading}
-          placeholder="Категории товара"
-          className="w-[600px]"
-        />
-
-        {/* Поиск по цене */}
-        <div className="flex items-center justify-center w-full border border-gray-300 gap-3">
+          {/* Поиск по id товара */}
           <AdminSearchInput
-            searchQuery={String(productPrice[0])}
-            setSearchQuery={(value) => setProductPrice([String(value), productPrice[1]])}
-            title="Цена товара, min"
+            searchQuery={productId}
+            setSearchQuery={setProductId}
+            title="ID товара"
             isClearInput={isClearInput}
             setIsClearInput={setIsClearInput}
-            placeholder="min"
-            className="w-[150px]"
+            className="w-full mb-3"
+            inputClassName="w-full h-[38px] rounded-[5px] border border-gray-300 bg-white pl-8 pr-3"
           />
 
+          {/* Поиск по артикулу товара (productItemId) */}
           <AdminSearchInput
-            searchQuery={String(productPrice[1])}
-            setSearchQuery={(value) => setProductPrice([productPrice[0], String(value)])}
-            title="Цена товара, max"
+            searchQuery={productItemId}
+            setSearchQuery={setProductItemId}
+            title="Артикул товара"
             isClearInput={isClearInput}
             setIsClearInput={setIsClearInput}
-            placeholder="max"
-            className="w-[150px]"
+            className="w-full mb-3"
+            inputClassName="w-full h-[38px] rounded-[5px] border border-gray-300 bg-white pl-8 pr-3"
           />
         </div>
 
-        {/* Селект по толщине дисков */}
-        <AdminProductSelect
-          name="productThickness"
-          id="productThickness"
-          title="Толщина диска"
-          value={prodThicknVariants}
-          options={prodThicknOptions}
-          setValue={setProdThicknVariants}
-          loading={prodItemsLoading}
-          placeholder="Толщина диска"
-          className="w-[300px]"
-        />
+        <div className="flex items-center justify-between gap-3 p-2 w-full mb-3 border border-gray-300 ">
+          {/* Поиск по названию */}
+          <AdminSearchInput
+            searchQuery={productName}
+            setSearchQuery={setProductName}
+            title="Название товара"
+            isClearInput={isClearInput}
+            setIsClearInput={setIsClearInput}
+            className="w-full"
+            inputClassName="w-full h-[38px] rounded-[5px] border border-gray-300 bg-white pl-8 pr-3"
+            isDisabled={isDisabled}
+          />
 
-        {/* Селект по количеству зубьев */}
-        <AdminProductSelect
-          name="productTeeth"
-          id="productTeeth"
-          title="Количество зубьев"
-          value={prodQuantVariants}
-          options={prodTeethOptions}
-          setValue={setProdQuantVariants}
-          loading={prodItemsLoading}
-          placeholder="Количество зубьев"
-          className="w-[300px]"
-        />
+          {/* Селект по производителям */}
+          <AdminProductSelect
+            name="productManufacturer"
+            id="productManufacturer"
+            title="Производитель товара"
+            value={prodManufIds}
+            options={manufOptions}
+            setValue={setProdManufIds}
+            loading={prodManufLoading}
+            isDisabled={isDisabled}
+            placeholder="Производитель товара"
+            className="w-full"
+          />
 
-        {/* Селект по объему канистры масла */}
-        <AdminProductSelect
-          name="productVolume"
-          id="productVolume"
-          title="Объем канистры масла"
-          value={prodVolumeVariants}
-          options={prodVolOptions}
-          setValue={setProdVolumeVariants}
-          loading={prodItemsLoading}
-          placeholder="Объем канистры масла"
-          className="w-[300px]"
-        />
+          {/* Селект по категориям */}
+          <AdminProductSelect
+            name="productCategories"
+            id="productCategories"
+            title="Категории товара"
+            value={prodCatIds}
+            options={categOptions}
+            setValue={setProdCatIds}
+            loading={prodCatLoading}
+            isDisabled={isDisabled}
+            placeholder="Категории товара"
+            className="w-full"
+          />
+        </div>
+
+        <div className="flex items-center justify-between gap-3 p-2 border border-gray-300 w-full mb-3">
+          {/* Селект по ингредиентам */}
+          <AdminProductSelect
+            name="productIngredients"
+            id="productIngredients"
+            title="Дополнительно к товару"
+            value={prodIngredIds}
+            options={ingredOptions}
+            setValue={setProdIngredIds}
+            loading={prodIngLoading}
+            isDisabled={isDisabled}
+            placeholder="Дополнительно к товару"
+            className="w-full"
+          />
+
+          {/* Поиск по цене */}
+          <div className="flex items-center justify-center w-full gap-5">
+            <AdminSearchInput
+              searchQuery={String(productPrice[0])}
+              setSearchQuery={(value) => setProductPrice([String(value), productPrice[1]])}
+              title="Цена товара, min"
+              isClearInput={isClearInput}
+              setIsClearInput={setIsClearInput}
+              placeholder="min"
+              className="w-[150px]"
+              inputClassName="w-full h-[38px] rounded-[5px] border border-gray-300 bg-white pl-8 pr-3"
+              isDisabled={isDisabled}
+            />
+
+            <AdminSearchInput
+              searchQuery={String(productPrice[1])}
+              setSearchQuery={(value) => setProductPrice([productPrice[0], String(value)])}
+              title="Цена товара, max"
+              isClearInput={isClearInput}
+              setIsClearInput={setIsClearInput}
+              placeholder="max"
+              className="w-[150px]"
+              inputClassName="w-full h-[38px] rounded-[5px] border border-gray-300 bg-white pl-8 pr-3"
+              isDisabled={isDisabled}
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center justify-between gap-3 p-2 w-full mb-3 border border-gray-300">
+          {/* Селект по толщине дисков */}
+          <AdminProductSelect
+            name="productThickness"
+            id="productThickness"
+            title="Толщина диска"
+            value={prodThicknVariants}
+            options={prodThicknOptions}
+            setValue={setProdThicknVariants}
+            loading={prodItemsLoading}
+            isDisabled={isDisabled}
+            placeholder="Толщина диска"
+            className="w-[300px]"
+          />
+
+          {/* Селект по количеству зубьев */}
+          <AdminProductSelect
+            name="productTeeth"
+            id="productTeeth"
+            title="Количество зубьев"
+            value={prodQuantVariants}
+            options={prodTeethOptions}
+            setValue={setProdQuantVariants}
+            loading={prodItemsLoading}
+            isDisabled={isDisabled}
+            placeholder="Количество зубьев"
+            className="w-[300px]"
+          />
+
+          {/* Селект по объему канистры масла */}
+          <AdminProductSelect
+            name="productVolume"
+            id="productVolume"
+            title="Объем канистры масла"
+            value={prodVolumeVariants}
+            options={prodVolOptions}
+            setValue={setProdVolumeVariants}
+            loading={prodItemsLoading}
+            isDisabled={isDisabled}
+            placeholder="Объем канистры масла"
+            className="w-[300px]"
+          />
+        </div>
 
         <Button
           variant={'outline'}
@@ -224,49 +270,15 @@ export default function DashboardProducts() {
       </div>
 
       {/* Список товаров */}
-      {products && products.length > 0 && (
-      //   <table className="table w-full mb-5 border-collapse border border-black bg-slate-100">
-      //   <thead className="bg-slate-200 border border-black">
-      //     <tr>
-      //       <th className="border border-black">ID</th>
-      //       <th className="border border-black">Название</th>
-      //       <th className="border border-black">Производитель</th>
-      //       <th className="border border-black">Цена</th>
-      //       <th className="border border-black">Категория</th>
-      //       <th className="border border-black">Ингредиенты</th>
-      //       <th className="border border-black">Толщина диска</th>
-      //       <th className="border border-black">Количество зубьев</th>
-      //       <th className="border border-black">Объем канистры масла</th>
-      //     </tr>
-      //   </thead>
-      //   <tbody>
-      //     {loading ? (
-      //       <tr>
-      //         <td className="border border-black">Загрузка...</td>
-      //       </tr>
-      //     ) : (
-      //       fetchedProducts.products.map((product) => (
-      //         <tr key={product.id}>
-      //           <td className="border border-black">{product.id}</td>
-      //           <td className="border border-black">{product.name}</td>
-      //           <td className="border border-black">{product.gearboxesManufacturers.map((manuf) => (manuf.name)).join(', ')}</td>
-      //           <td className="border border-black"> руб.</td>
-      //           {/* <td className="border border-black">{product.category}</td>
-      //           <td className="border border-black">{product.ingredients}</td>
-      //           <td className="border border-black">{product.thickness}</td>
-      //           <td className="border border-black">{product.teeth}</td>
-      //           <td className="border border-black">{product.volume}</td> */}
-      //         </tr>
-      //       ))
-      //     )}
-      //   </tbody>
-      // </table>
-
-        products.map((product) => (
-          <AdminProductCard key={product.id} product={product} />
-        ))
+      {loading && <p className="text-2xl p-5">Загрузка...</p>}
+      {!loading && products[0] === null && (
+        <p className="text-2xl p-5">Товары по выбранным параметрам не найдены</p>
       )}
-      
+      {!loading &&
+        products &&
+        products.length > 0 &&
+        products[0] !== null &&
+        products.map((product) => <AdminProductCard key={product.id} product={product} />)}
 
       <Link href="/dashboard" className="text-primary font-bold text-2xl mb-3">
         Вернуться в панель администратора
