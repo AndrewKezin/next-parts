@@ -8,3 +8,4 @@ export { AdminDatePicker } from './admin-date-picker';
 export { AdminUsersView } from './admin-users-view';
 export { AdminProductSelect } from './admin-product-select';
 export { AdminProductCard } from './admin-product-card';
+export { AdminNewProduct } from './admin-new-product';

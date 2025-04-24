@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
   const prodQuantVariants = req.nextUrl.searchParams.get('quantityOfTeeth');
   const prodThicknVariants = req.nextUrl.searchParams.get('thickness');
   const prodVolumeVariants = req.nextUrl.searchParams.get('volume');
+  const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
+  const startIndex = req.nextUrl.searchParams.get('startIndex');
 
   // переменная modifiedQuery - это попытка обойти косяк Vercel с регистром в поисковых запросах на кириллице
   let modifiedQuery: string;
@@ -73,6 +75,8 @@ export async function GET(req: NextRequest) {
           category: true,
           gearboxesManufacturers: true,
         },
+        take: Number(itemsPerPage),
+        skip: Number(startIndex),
       });
 
       return NextResponse.json({products: res, totalCount});

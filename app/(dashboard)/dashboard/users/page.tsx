@@ -71,7 +71,7 @@ export default function DashboardUsers() {
             list={UserStatus}
             value={currentUserStatus}
             setQuery={handleSelectUserStatus}
-            title="Выбор статуса заказа"
+            title="Статус пользователя"
             className="w-[200px] px-6"
           />
           <AdminSearchInput
@@ -86,7 +86,7 @@ export default function DashboardUsers() {
             list={UserRole}
             value={currentUserRole}
             setQuery={handleSelectUserRole}
-            title="Выбор статуса заказа"
+            title="Роль пользователя"
             className="w-[200px] px-6"
           />
           <AdminDatePicker

@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import Select, { OnChangeValue } from 'react-select';
 
-type Option = {
+export type TOption = {
   value: string;
   label: string;
 };
@@ -12,7 +12,7 @@ type Option = {
 interface Props {
   name: string;
   title: string;
-  options: Option[];
+  options: TOption[];
   value: string[];
   setValue: React.Dispatch<React.SetStateAction<string[]>>;
   id?: string;
@@ -36,11 +36,11 @@ export const AdminProductSelect: React.FC<Props> = ({
   placeholder,
   className,
 }) => {
-  const [selected, setSelected] = React.useState<Option[]>([]);
+  const [selected, setSelected] = React.useState<TOption[]>([]);
 
-  const handleChange = (selectedOptions: OnChangeValue<Option, boolean>) => {
-    setSelected(selectedOptions as Option[]);
-    setValue((selectedOptions as Option[]).map((option) => option.value));
+  const handleChange = (selectedOptions: OnChangeValue<TOption, boolean>) => {
+    setSelected(selectedOptions as TOption[]);
+    setValue((selectedOptions as TOption[]).map((option) => option.value));
   };
 
   const getValues = () => {

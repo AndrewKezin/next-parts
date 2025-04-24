@@ -32,6 +32,8 @@ export const getFilteredProducts = async (
   prodQuantVariants: string[],
   prodThicknVariants: string[],
   prodVolumeVariants: string[],
+  startIndex: number,
+  itemsPerPage: number,
 ) => {
   const manufacturers = prodManufIds.join(',');
   const ingredients = prodIngredIds.join(',');
@@ -54,6 +56,8 @@ export const getFilteredProducts = async (
         quantityOfTeeth,
         thickness,
         volume,
+        startIndex,
+        itemsPerPage,
       },
     })
   ).data;

@@ -13,6 +13,8 @@ interface Props {
   prodQuantVariants: string[];
   prodThicknVariants: string[];
   prodVolumeVariants: string[];
+  startIndex: number;
+  itemsPerPage: number;
   isInterval?: boolean;
   intervalTime?: number;
 }
@@ -43,6 +45,8 @@ export const useAdminProductsSearch = ({
   prodQuantVariants,
   prodThicknVariants,
   prodVolumeVariants,
+  startIndex,
+  itemsPerPage,
   isInterval = false,
   intervalTime = 60000,
 }: Props): ReturnProps => {
@@ -70,6 +74,8 @@ export const useAdminProductsSearch = ({
               prodQuantVariants,
               prodThicknVariants,
               prodVolumeVariants,
+              startIndex,
+              itemsPerPage,
             ),
           );
         }
@@ -97,6 +103,8 @@ export const useAdminProductsSearch = ({
     prodQuantVariants,
     prodThicknVariants,
     prodVolumeVariants,
+    startIndex,
+    itemsPerPage,
   ]);
 
   return { fetchedProducts, loading };

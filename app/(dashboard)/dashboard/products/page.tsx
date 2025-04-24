@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { AdminProductCard, AdminProductSelect, AdminSearchInput } from '@/components/shared';
+import { AdminNewProduct, AdminProductCard, AdminProductSelect, AdminSearchInput } from '@/components/shared';
 import {
   useAdminProductsSearch,
   useCategories,
@@ -11,7 +11,10 @@ import {
 } from '@/hooks';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
-import { X } from 'lucide-react';
+import { PackagePlus, X } from 'lucide-react';
+import Select, { OnChangeValue } from 'react-select';
+import { set } from 'lodash';
+import { TOption } from '@/components/shared/admin/admin-product-select';
 
 export default function DashboardProducts() {
   const [productId, setProductId] = React.useState<string>('');
@@ -29,6 +32,16 @@ export default function DashboardProducts() {
   const [prodCatIds, setProdCatIds] = React.useState<string[]>([]);
   const [isClearInput, setIsClearInput] = React.useState(false);
   const [isDisabled, setIsDisabled] = React.useState(false);
+  const [isNewProduct, setIsNewProduct] = React.useState(false);
+  const [page, setPage] = React.useState(1);
+  const [goToPage, setGoToPage] = React.useState(1);
+  
+  const [itemsPerPage, setitemsPerPage] = React.useState<TOption>({value: "10", label: "10"});
+  const pagesOptions: TOption[] = [{value: "10", label: "10"}, {value: "15", label: "15"}, {value: "50", label: "50"}, {value: "100", label: "100"}];
+  
+  const startIndex = (page - 1) * Number(itemsPerPage.value);
+  const endIndex = page * Number(itemsPerPage.value);
+  
 
   const { manufacturers: prodManuf, loading: prodManufLoading } = useManufacturers();
   const manufOptions = prodManuf.map((item) => {
@@ -94,20 +107,38 @@ export default function DashboardProducts() {
     prodQuantVariants,
     prodThicknVariants,
     prodVolumeVariants,
+    startIndex,
+    itemsPerPage: Number(itemsPerPage.value),
   });
 
   const { products, totalCount } = fetchedProducts;
 
   console.log(products);
 
+  const totalPages = totalCount ? totalCount : 1;
+  const maxPages = Math.ceil(totalPages / Number(itemsPerPage.value));
+  const currentPageProducts = products.slice(startIndex, endIndex);
+
+  const handleAddProduct = () => {
+    setIsNewProduct(!isNewProduct);
+  };
+
+  const handlePageChange = (page: number) => {
+    setPage(page);
+  };
+
+  const handlePageOptionsChange = (selectedOptions: OnChangeValue<TOption, boolean>) => {
+    setitemsPerPage(selectedOptions as TOption );
+    handlePageChange(1);
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <h1 className="text-4xl font-bold mt-10 mb-8">Панель управления товарами</h1>
 
       {/* Фильтр товаров */}
-      <div className="w-full flex-col items-center justify-between border border-gray-300 p-3">
+      <div className="w-full flex-col items-center justify-between border border-gray-300 p-3 mb-5">
         <div className="flex items-center justify-between gap-3 p-2 w-full mb-3 border border-gray-300">
-
           {/* Поиск по id товара */}
           <AdminSearchInput
             searchQuery={productId}
@@ -216,7 +247,7 @@ export default function DashboardProducts() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between gap-3 p-2 w-full mb-3 border border-gray-300">
+        <div className="flex items-center justify-between gap-3 p-2 w-full mb-5 border border-gray-300">
           {/* Селект по толщине дисков */}
           <AdminProductSelect
             name="productThickness"
@@ -259,15 +290,26 @@ export default function DashboardProducts() {
             className="w-[300px]"
           />
         </div>
+        <div className="flex flex-col items-start">
+          <Button
+            variant={'outline'}
+            className="w-[250px] mb-5 border-black text-black bg-slate-100"
+            onClick={handleClearSearch}>
+            <X className="mr-2" />
+            Сбросить параметры поиска
+          </Button>
 
-        <Button
-          variant={'outline'}
-          className="w-[250px] mb-5 border-black text-black bg-slate-100"
-          onClick={handleClearSearch}>
-          <X className="mr-2" />
-          Сбросить параметры поиска
-        </Button>
+          <Button
+            variant={'outline'}
+            className="w-[250px] mb-3 border-black text-black bg-slate-100"
+            onClick={handleAddProduct}>
+            <PackagePlus className="mr-2" />
+            Добавить новый товар
+          </Button>
+        </div>
       </div>
+
+      {isNewProduct && <AdminNewProduct />}
 
       {/* Список товаров */}
       {loading && <p className="text-2xl p-5">Загрузка...</p>}
@@ -275,10 +317,68 @@ export default function DashboardProducts() {
         <p className="text-2xl p-5">Товары по выбранным параметрам не найдены</p>
       )}
       {!loading &&
+      !isNewProduct &&
         products &&
         products.length > 0 &&
         products[0] !== null &&
         products.map((product) => <AdminProductCard key={product.id} product={product} />)}
+
+      {/* Пагинация */}
+      <div className="flex items-center justify-center w-full gap-3 p-3 border border-gray-300 mb-5">
+        <Button
+          variant={'outline'}
+          className="border-black text-black bg-slate-100"
+          onClick={() => handlePageChange(page - 1)}
+          disabled={page === 1}>
+          &lt;
+        </Button>
+        <p className="text-xl">
+          {page} из {maxPages}
+        </p>
+        <Button
+          variant={'outline'}
+          className="border-black text-black bg-slate-100"
+          onClick={() => handlePageChange(page + 1)}
+          disabled={page === maxPages}>
+          &gt;
+        </Button>
+
+        <label htmlFor="pageOptions">Показывать по:</label>
+        <Select
+          isMulti={false}
+          name='pageOptions'
+          id='pageOptions'
+          value={itemsPerPage}
+          options={pagesOptions}
+          onChange={handlePageOptionsChange}
+        />
+        <p>товаров</p>
+
+        <form
+          className="flex items-center gap-3"
+          onSubmit={(e) => {
+            e.preventDefault();
+            if (page > 0 && page <= maxPages) {
+              setPage(goToPage);
+            }
+          }}
+        >
+          <label htmlFor="goToPage">К странице:</label>
+          <input
+            type="text"
+            name="goToPage"
+            value={goToPage}
+            onChange={(e) => setGoToPage(Number(e.target.value))}
+            className="border border-gray-300 rounded p-2 w-[50px]"
+          />
+          <button
+            type="submit"
+            className="bg-primary text-white px-4 py-2 rounded"
+          >
+            Перейти
+          </button>
+        </form>
+      </div>
 
       <Link href="/dashboard" className="text-primary font-bold text-2xl mb-3">
         Вернуться в панель администратора
