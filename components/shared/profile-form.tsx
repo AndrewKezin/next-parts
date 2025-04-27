@@ -18,7 +18,7 @@ import { cn } from '@/lib/utils';
 import logOut from '@/lib/log-out';
 import { ConfirmPassword } from '.';
 import { axiosInstance } from '@/services/instance';
-import { redirect, useRouter } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 interface Props {
   data: User;
@@ -200,13 +200,13 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
           <LogOut size={23} className="ml-2" />
         </Button>
 
-          <div
-            className="flex gap-1 text-grey-500 cursor-pointer underline w-fit"
-            onClick={onClickAccountDelete}>
-            Удалить аккаунт
-            <UserRoundX size={23} className="ml-2" />
-          </div>
-          
+        <div
+          className="flex gap-1 text-grey-500 cursor-pointer underline w-fit"
+          onClick={onClickAccountDelete}>
+          Удалить аккаунт
+          <UserRoundX size={23} className="ml-2" />
+        </div>
+
         <div className={cn(isVisibleDeleteBlock ? 'flex flex-col gap-2' : 'hidden')}>
           <p>Чтобы подтвердить удаление учетной записи, введите ваш пароль</p>
 

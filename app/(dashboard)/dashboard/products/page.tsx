@@ -1,7 +1,12 @@
 'use client';
 
 import React from 'react';
-import { AdminNewProduct, AdminProductCard, AdminProductSelect, AdminSearchInput } from '@/components/shared';
+import {
+  AdminNewProduct,
+  AdminProductCard,
+  AdminProductSelect,
+  AdminSearchInput,
+} from '@/components/shared';
 import {
   useAdminProductsSearch,
   useCategories,
@@ -35,26 +40,30 @@ export default function DashboardProducts() {
   const [isNewProduct, setIsNewProduct] = React.useState(false);
   const [page, setPage] = React.useState(1);
   const [goToPage, setGoToPage] = React.useState(1);
-  
-  const [itemsPerPage, setitemsPerPage] = React.useState<TOption>({value: "10", label: "10"});
-  const pagesOptions: TOption[] = [{value: "10", label: "10"}, {value: "15", label: "15"}, {value: "50", label: "50"}, {value: "100", label: "100"}];
-  
+
+  const [itemsPerPage, setitemsPerPage] = React.useState<TOption>({ value: '10', label: '10' });
+  const pagesOptions: TOption[] = [
+    { value: '10', label: '10' },
+    { value: '15', label: '15' },
+    { value: '50', label: '50' },
+    { value: '100', label: '100' },
+  ];
+
   const startIndex = (page - 1) * Number(itemsPerPage.value);
   const endIndex = page * Number(itemsPerPage.value);
-  
 
   const { manufacturers: prodManuf, loading: prodManufLoading } = useManufacturers();
-  const manufOptions = prodManuf.map((item) => {
+  const manufOptions: TOption[] = prodManuf.map((item) => {
     return { value: String(item.id), label: item.name };
   });
 
   const { ingredients: prodIng, loading: prodIngLoading } = useIngredients();
-  const ingredOptions = prodIng.map((item) => {
+  const ingredOptions: TOption[] = prodIng.map((item) => {
     return { value: String(item.id), label: item.name };
   });
 
   const { categories: prodCat, loading: prodCatLoading } = useCategories();
-  const categOptions = prodCat.map((item) => {
+  const categOptions: TOption[] = prodCat.map((item) => {
     return { value: String(item.id), label: item.name };
   });
 
@@ -64,13 +73,13 @@ export default function DashboardProducts() {
     volumeArr,
     loading: prodItemsLoading,
   } = useProductItemsVariants();
-  const prodThicknOptions = thicknessArr.map((item) => {
+  const prodThicknOptions: TOption[] = thicknessArr.map((item) => {
     return { value: String(item), label: String(item) };
   });
-  const prodTeethOptions = quantityOfTeethArr.map((item) => {
+  const prodTeethOptions: TOption[] = quantityOfTeethArr.map((item) => {
     return { value: String(item), label: String(item) };
   });
-  const prodVolOptions = volumeArr.map((item) => {
+  const prodVolOptions: TOption[] = volumeArr.map((item) => {
     return { value: String(item), label: String(item) };
   });
 
@@ -128,9 +137,9 @@ export default function DashboardProducts() {
   };
 
   const handlePageOptionsChange = (selectedOptions: OnChangeValue<TOption, boolean>) => {
-    setitemsPerPage(selectedOptions as TOption );
+    setitemsPerPage(selectedOptions as TOption);
     handlePageChange(1);
-  }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
@@ -309,7 +318,13 @@ export default function DashboardProducts() {
         </div>
       </div>
 
-      {isNewProduct && <AdminNewProduct />}
+      {isNewProduct && (
+        <AdminNewProduct
+          categOptions={categOptions}
+          manufOptions={manufOptions}
+          ingredOptions={ingredOptions}
+        />
+      )}
 
       {/* Список товаров */}
       {loading && <p className="text-2xl p-5">Загрузка...</p>}
@@ -317,68 +332,72 @@ export default function DashboardProducts() {
         <p className="text-2xl p-5">Товары по выбранным параметрам не найдены</p>
       )}
       {!loading &&
-      !isNewProduct &&
+        !isNewProduct &&
         products &&
         products.length > 0 &&
         products[0] !== null &&
         products.map((product) => <AdminProductCard key={product.id} product={product} />)}
 
       {/* Пагинация */}
-      <div className="flex items-center justify-center w-full gap-3 p-3 border border-gray-300 mb-5">
-        <Button
-          variant={'outline'}
-          className="border-black text-black bg-slate-100"
-          onClick={() => handlePageChange(page - 1)}
-          disabled={page === 1}>
-          &lt;
-        </Button>
-        <p className="text-xl">
-          {page} из {maxPages}
-        </p>
-        <Button
-          variant={'outline'}
-          className="border-black text-black bg-slate-100"
-          onClick={() => handlePageChange(page + 1)}
-          disabled={page === maxPages}>
-          &gt;
-        </Button>
+      {!isNewProduct && (
+        <div className="flex items-center justify-center w-full gap-7 p-3 mb-5">
+          <div className="flex items-center justify-center gap-1">
+            <Button
+              variant={'outline'}
+              className="border-black text-black bg-slate-100"
+              onClick={() => handlePageChange(page - 1)}
+              disabled={page === 1}>
+              &lt;
+            </Button>
+            <p className="text-xl">
+              {page} из {maxPages}
+            </p>
+            <Button
+              variant={'outline'}
+              className="border-black text-black bg-slate-100"
+              onClick={() => handlePageChange(page + 1)}
+              disabled={page === maxPages}>
+              &gt;
+            </Button>
+          </div>
 
-        <label htmlFor="pageOptions">Показывать по:</label>
-        <Select
-          isMulti={false}
-          name='pageOptions'
-          id='pageOptions'
-          value={itemsPerPage}
-          options={pagesOptions}
-          onChange={handlePageOptionsChange}
-        />
-        <p>товаров</p>
+          <div className="flex items-center justify-center gap-1">
+            <label htmlFor="pageOptions">Показывать по:</label>
+            <Select
+              isMulti={false}
+              name="pageOptions"
+              id="pageOptions"
+              value={itemsPerPage}
+              options={pagesOptions}
+              onChange={handlePageOptionsChange}
+            />
+            <p>товаров</p>
+          </div>
 
-        <form
-          className="flex items-center gap-3"
-          onSubmit={(e) => {
-            e.preventDefault();
-            if (page > 0 && page <= maxPages) {
-              setPage(goToPage);
-            }
-          }}
-        >
-          <label htmlFor="goToPage">К странице:</label>
-          <input
-            type="text"
-            name="goToPage"
-            value={goToPage}
-            onChange={(e) => setGoToPage(Number(e.target.value))}
-            className="border border-gray-300 rounded p-2 w-[50px]"
-          />
-          <button
-            type="submit"
-            className="bg-primary text-white px-4 py-2 rounded"
-          >
-            Перейти
-          </button>
-        </form>
-      </div>
+          <div className="flex items-center justify-center gap-1">
+            <form
+              className="flex items-center gap-3"
+              onSubmit={(e) => {
+                e.preventDefault();
+                if (goToPage > 0 && goToPage <= maxPages) {
+                  setPage(goToPage);
+                }
+              }}>
+              <label htmlFor="goToPage">К странице:</label>
+              <input
+                type="text"
+                name="goToPage"
+                value={goToPage}
+                onChange={(e) => setGoToPage(Number(e.target.value))}
+                className="border border-gray-300 rounded p-2 w-[50px]"
+              />
+              <button type="submit" className="bg-primary text-white px-4 py-2 rounded">
+                Перейти
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       <Link href="/dashboard" className="text-primary font-bold text-2xl mb-3">
         Вернуться в панель администратора
