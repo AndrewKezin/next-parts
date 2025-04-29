@@ -181,7 +181,7 @@ export const AdminNewProduct = ({ categOptions, manufOptions, ingredOptions }: P
                   />
                 )}
               />
-
+n
               <div className="flex justify-around w-full mt-5">
                 <button
                   type="submit"
