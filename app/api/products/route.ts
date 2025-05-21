@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { prisma } from '@/prisma/prisma-client';
 import intersection from 'lodash/intersection';
+import { FetchProducts } from '@/services/dto/cart.dto';
 
 export type ItemsType = {
   id: number;
@@ -17,13 +18,13 @@ export interface FilteredArray {
 // типизация запроса - NextRequest
 // Vercel не обрабатывает регистры символов в посковых запросах на кириллице
 export async function GET(req: NextRequest) {
-  const productName = req.nextUrl.searchParams.get('productName') || '';
-  const prodManufIds = req.nextUrl.searchParams.get('manufacturers');
-  const prodIngredIds = req.nextUrl.searchParams.get('ingredients');
-  const prodCatIds = req.nextUrl.searchParams.get('categories');
+  const productName = req.nextUrl.searchParams.get('prodName') || '';
+  const prodManufIds = req.nextUrl.searchParams.get('manuf');
+  const prodIngredIds = req.nextUrl.searchParams.get('ingred');
+  const prodCatIds = req.nextUrl.searchParams.get('cat');
   const productPriceFrom = req.nextUrl.searchParams.get('priceFrom') || '0';
   const productPriceTo = req.nextUrl.searchParams.get('priceTo') || '100000';
-  const prodQuantVariants = req.nextUrl.searchParams.get('quantityOfTeeth');
+  const prodQuantVariants = req.nextUrl.searchParams.get('quantOfTeeth');
   const prodThicknVariants = req.nextUrl.searchParams.get('thickness');
   const prodVolumeVariants = req.nextUrl.searchParams.get('volume');
   const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
@@ -53,11 +54,19 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Некорректные значения цен' }, { status: 400 });
     }
 
-    // общее количество товаров в БД
+    // подсчет общего количества товаров в БД
     const totalCount = await prisma.product.count();
 
     // если все фильры (кроме цен) не заданы, то возвращаем все товары
-    if (!productName && !prodManufIds && !prodIngredIds && !prodCatIds && !prodQuantVariants && !prodThicknVariants && !prodVolumeVariants) {
+    if (
+      !productName &&
+      !prodManufIds &&
+      !prodIngredIds &&
+      !prodCatIds &&
+      !prodQuantVariants &&
+      !prodThicknVariants &&
+      !prodVolumeVariants
+    ) {
       const res = await prisma.product.findMany({
         orderBy: {
           name: 'asc',
@@ -69,7 +78,7 @@ export async function GET(req: NextRequest) {
                 gt: Number(productPriceFrom),
                 lte: Number(productPriceTo),
               },
-            },  
+            },
           },
           ingredients: true,
           category: true,
@@ -79,7 +88,7 @@ export async function GET(req: NextRequest) {
         skip: Number(startIndex),
       });
 
-      return NextResponse.json({products: res, totalCount});
+      return NextResponse.json({ products: res, totalCount } as FetchProducts);
     }
 
     // поиск по названию
@@ -320,42 +329,48 @@ export async function GET(req: NextRequest) {
       volumeInPriceRange,
     );
 
-    const products = await prisma.product.findMany({
-      where: {
-        items: {
-          some: {
-            id: {
-              in: resultArr,
+    // получаем отфильтрованный список товаров
+    const [products, filteredTotalCount] = await Promise.all([
+      prisma.product.findMany({
+        where: {
+          items: {
+            some: {
+              id: {
+                in: resultArr,
+              },
             },
           },
         },
-      },
-      include: {
-        items: {
-          where: {
-            price: {
-              gte: Number(productPriceFrom),
-              lte: Number(productPriceTo),
+        include: {
+          items: {
+            where: {
+              price: {
+                gte: Number(productPriceFrom),
+                lte: Number(productPriceTo),
+              },
             },
           },
+          ingredients: true,
+          gearboxesManufacturers: true,
+          category: true,
         },
-        ingredients: true,
-        gearboxesManufacturers: true,
-        category: true,
-      },
-    });
+        take: Number(itemsPerPage),
+        skip: Number(startIndex),
+      }),
+      prisma.product.count({
+        where: {
+          items: {
+            some: {
+              id: {
+                in: resultArr,
+              },
+            },
+          },
+        }, 
+      }),
+    ]);
 
-    // console.log('[GET_PRODUCTS 257] nameInPriceRange', nameInPriceRange);
-    // console.log('[GET_PRODUCTS 258] manufInPriceRange', manufInPriceRange);
-    // console.log('[GET_PRODUCTS 259] ingredInPriceRange', ingredInPriceRange);
-    // console.log('[GET_PRODUCTS 260] catInPriceRange', catInPriceRange);
-    // console.log('[GET_PRODUCTS 261] quantInPriceRange', quantInPriceRange);
-    // console.log('[GET_PRODUCTS 262] thicknInPriceRange', thicknInPriceRange);
-    // console.log('[GET_PRODUCTS 263] volumeInPriceRange', volumeInPriceRange);
-    // console.log('[GET_PRODUCTS 264] resultArr', resultArr);
-    // console.log('[GET_PRODUCTS 265] fetchedProducts', products);
-
-    return NextResponse.json({ products, totalCount });
+    return NextResponse.json({ products, totalCount: filteredTotalCount } as FetchProducts);
   } catch (err) {
     console.log('[GET_PRODUCTS] Error', err);
     return NextResponse.json({ message: '[GET_PRODUCTS] Error' }, { status: 500 });

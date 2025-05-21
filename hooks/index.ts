@@ -10,4 +10,5 @@ export {useOrders} from './use-orders';
 export {useUsersProfile} from './use-users-profile';
 export {useCategories} from './use-categories';
 export {useProductItemsVariants} from './use-productitems-variants';
-export {useAdminProductsSearch} from './use-admin-products-search';
+// export {useAdminProductsSearch} from './use-admin-products-search';
+export {useAdminSelectsOptions} from './use-admin-selects-options';

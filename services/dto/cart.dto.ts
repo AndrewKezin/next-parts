@@ -28,3 +28,8 @@ export interface ProductDTO extends Product {
     gearboxesManufacturers: GearboxManufacturer[];
     ingredients: Ingredient[];
 }
+
+export interface FetchProducts {
+    products: ProductDTO[];
+    totalCount?: number;
+  }

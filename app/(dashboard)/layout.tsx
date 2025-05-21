@@ -1,6 +1,8 @@
 import { Container, Header } from '@/components/shared';
 import { getUserSession } from '@/lib/get-user-session';
+import { productStore } from '@/store/redux';
 import { redirect } from 'next/navigation';
+import { Provider } from 'react-redux';
 
 export const metadata = {
   title: 'Панель администратора',

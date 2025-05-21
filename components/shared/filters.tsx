@@ -12,7 +12,7 @@ interface Props {
 }
 
 export const Filters: React.FC<Props> = ({ classname }) => {
-  // кастомный хук для ингредиантов
+  // кастомный хук для получения списка ингредиантов
   const { ingredients, loading } = useIngredients();
   // кастомный хук для получения списка производителей трансмиссии
   const { manufacturers, loading: loadingManufacturers } = useManufacturers(); 

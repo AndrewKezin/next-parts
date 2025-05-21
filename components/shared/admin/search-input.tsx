@@ -6,9 +6,9 @@ import { useDebounce } from 'react-use';
 interface Props {
   searchQuery: string;
   title: string;
-  setSearchQuery: React.Dispatch<React.SetStateAction<string>>;
+  setSearchQuery: (value: string) => void;
   isClearInput: boolean;
-  setIsClearInput: React.Dispatch<React.SetStateAction<boolean>>;
+  disableClearInput: (value: boolean) => void;
   placeholder?: string;
   isDisabled?: boolean;
   className?: string;
@@ -20,7 +20,7 @@ export const AdminSearchInput: React.FC<Props> = ({
   setSearchQuery,
   title,
   isClearInput,
-  setIsClearInput,
+  disableClearInput,
   placeholder='Поиск',
   isDisabled=false,
   className,
@@ -31,7 +31,7 @@ export const AdminSearchInput: React.FC<Props> = ({
   React.useEffect(() => {
     if (isClearInput) {
       setQuery('');
-      setIsClearInput(false);
+      disableClearInput(false);
     }
   }, [isClearInput]);
 

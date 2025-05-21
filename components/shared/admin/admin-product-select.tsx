@@ -14,7 +14,7 @@ interface Props {
   title: string;
   options: TOption[];
   value: string[];
-  setValue: React.Dispatch<React.SetStateAction<string[]>>;
+  setValue: (value: string[]) => void;
   id?: string;
   isMulti?: boolean;
   loading?: boolean;

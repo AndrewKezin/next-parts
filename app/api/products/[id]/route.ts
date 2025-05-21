@@ -2,6 +2,7 @@ import { prisma } from '@/prisma/prisma-client';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
+import { FetchProducts } from '@/services/dto/cart.dto';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
@@ -27,7 +28,11 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       },
     });
 
-    return NextResponse.json(product);
+    const products = product ? [product] : [];
+    const totalCount = 1;
+    const res: FetchProducts = { products, totalCount };
+
+    return NextResponse.json(res);
   } catch (err) {
     console.log('[GET_PRODUCT] Error', err);
     return NextResponse.json({ message: '[GET_PRODUCT] Error' }, { status: 500 });
