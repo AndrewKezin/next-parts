@@ -17,3 +17,4 @@ export { AdminProdFilter2ndBlock } from './admin-prod-filter-2nd-block';
 export { AdminProdFilter3rdBlock } from './admin-prod-filter-3rd-block';
 export { AdminNewProdForm } from './admin-new-prod-form';
 export { AdminNewProdItemForm } from './admin-new-proditem-form';
+export {AdminPagination} from './admin-pagination';

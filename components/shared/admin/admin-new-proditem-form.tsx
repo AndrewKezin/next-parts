@@ -11,9 +11,7 @@ import { cn } from '@/lib/utils';
 interface Props {
   selectedCateg: TOption;
   categoryId: string;
-  resetItemForm: boolean;
   itemForm: IProductItemForm[];
-  setResetItemForm: (value: boolean) => void;
   onSubmitItem: (data: IProductItemForm) => void;
   handleItemDelete: (id: string) => void;
 }
@@ -31,10 +29,8 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
   selectedCateg,
   categoryId,
   itemForm,
-  resetItemForm,
-  setResetItemForm,
   onSubmitItem,
-  handleItemDelete
+  handleItemDelete,
 }) => {
   const itemsForm = useForm({
     defaultValues: {
@@ -47,16 +43,20 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
     },
   });
 
-  const { control: itemControl, handleSubmit: handleSubmitItem, reset: resetItem } = itemsForm;
-
-  if (resetItemForm) {
-    resetItem();
-    setResetItemForm(false);
-  }
+  const { handleSubmit: handleSubmitItem, reset: resetItem } = itemsForm;
 
   return (
     <FormProvider {...itemsForm}>
-      <form onSubmit={handleSubmitItem(onSubmitItem)} className="w-1/2">
+      <form
+        onSubmit={handleSubmitItem((data) => {
+          if (itemForm.every((item) => item.id !== data.id)) {
+            onSubmitItem(data);
+            resetItem();
+          } else {
+            window.alert('Вариант товара с таким артикулом уже есть!');
+          }
+        })}
+        className="w-1/2">
         <div className="flex flex-col items-center justify-center border border-gray-300 gap-2 p-3">
           <div className="underline">Варианты исполнения:</div>
 
@@ -192,7 +192,7 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
               type="submit"
               className={cn(
                 'w-[300px] h-[50px] border border-gray-500 bg-gray-100 rounded-[5px] hover:bg-gray-200 transition-colors font-bold',
-                !categoryId && 'bg-gray-300 cursor-not-allowed',
+                !categoryId && 'opacity-50 cursor-not-allowed',
               )}>
               2. Добавить вариант товара
             </button>
@@ -205,7 +205,7 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
             </button>
           </div>
 
-          {/* {itemForm.length > 0 && (
+          {itemForm.length > 0 && (
             <div className="w-full flex flex-col items-center justify-center gap-3 p-3">
               {itemForm.map((item) => (
                 <div className="flex gap-2" key={item.id}>
@@ -216,7 +216,7 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
                 </div>
               ))}
             </div>
-          )} */}
+          )}
         </div>
       </form>
     </FormProvider>

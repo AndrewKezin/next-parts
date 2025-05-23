@@ -12,7 +12,7 @@ import { FetchProducts } from '@/services/dto/cart.dto';
 
 interface Props {
   startIndex: number;
-  itemsPerPage: TOption;
+  itemsPerPage: number;
   handleSetData: (product: FetchProducts) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -55,12 +55,14 @@ export const AdminProductFilter: React.FC<Props> = ({
   // получение данных через RTK-Query
   const { data: dataProduct, isLoading: isLoadingProduct } = useGetProductQuery(filters.productId);
 
-  const { data: dataProductItem, isLoading: isLoadingProductItem } = useGetProductItemQuery(filters.productItemId);
+  const { data: dataProductItem, isLoading: isLoadingProductItem } = useGetProductItemQuery(
+    filters.productItemId,
+  );
 
   const { data, isLoading } = useGetAllProductsQuery({
     ...filters,
     startIndex,
-    itemsPerPage: Number(itemsPerPage.value),
+    itemsPerPage,
   });
 
   useEffect(() => {
@@ -77,20 +79,6 @@ export const AdminProductFilter: React.FC<Props> = ({
       setIsLoading(isLoading);
     }
   }, [dataProduct, dataProductItem, data, isLoading, isLoadingProduct, isLoadingProductItem]);
-
-  // функция очистки фильтров
-  const handleClearSearch = () => {
-    setIsClearInput(true);
-    setFilters((prevFilters) => ({
-      ...prevFilters,
-      prodQuantVariants: [],
-      prodThicknVariants: [],
-      prodVolumeVariants: [],
-      prodManufIds: [],
-      prodIngredIds: [],
-      prodCatIds: [],
-    }));
-  };
 
   // отключение флага очистки инпутов
   const disableClearInput = () => setIsClearInput(false);
@@ -118,9 +106,28 @@ export const AdminProductFilter: React.FC<Props> = ({
     filters.prodThicknVariants.length ||
     filters.prodVolumeVariants.length
   );
-  const disabledInputs = {
+  let disabledInputs = {
     isProductOrItemIdDisabled,
     isFiltersDisabled,
+  };
+
+  // функция очистки фильтров
+  const handleClearSearch = () => {
+    disabledInputs = { isProductOrItemIdDisabled: false, isFiltersDisabled: false };
+    setIsClearInput(true);
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      productId: '',
+      productItemId: '',
+      productName: '',
+      productPrice: ['', ''],
+      prodQuantVariants: [],
+      prodThicknVariants: [],
+      prodVolumeVariants: [],
+      prodManufIds: [],
+      prodIngredIds: [],
+      prodCatIds: [],
+    }));
   };
 
   // если фильтры загрузились, то включаем флаг загруженных фильтров

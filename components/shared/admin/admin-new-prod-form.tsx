@@ -4,7 +4,7 @@ import { Input } from '@/components/ui';
 import Select from 'react-select';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { TOption } from './admin-product-select';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 interface Props {
   categOptions: TOption[];
@@ -13,7 +13,7 @@ interface Props {
   prodCatLoading: boolean;
   prodManufLoading: boolean;
   prodIngLoading: boolean;
-  categoryId: number;
+  categoryId: string;
   resetForm: boolean;
   setSelectedCateg: (value: TOption) => void;
   setResetForm: (value: boolean) => void;
@@ -55,10 +55,12 @@ export const AdminNewProdForm: React.FC<Props> = ({
 
   const { control, handleSubmit, watch, reset } = form;
 
-  if (resetForm) {
-    reset();
-    setResetForm(false);
-  }
+  useEffect(() => {
+    if (resetForm) {
+      reset();
+      setResetForm(false);
+    }
+  }, [resetForm]);
 
   // выбранная категория
   const selectedCateg = watch('category');

@@ -1,16 +1,11 @@
 'use client';
 
 import React from 'react';
-import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { TOption } from './admin-product-select';
-import Select, { OnChangeValue } from 'react-select';
-import { Input } from '@/components/ui';
-import { ItemElement } from './item-element';
-import { cn } from '@/lib/utils';
-import { Trash } from 'lucide-react';
 import { useAdminSelectsOptions } from '@/hooks';
 import { AdminNewProdForm, IProductForm } from './admin-new-prod-form';
 import { AdminNewProdItemForm, IProductItemForm } from './admin-new-proditem-form';
+import { cn } from '@/lib/utils';
 
 export const AdminNewProduct = () => {
   // categoryId используется ПОСЛЕ отправки первой формы, чтобы выбранная категория для товара уже не менялась (disabled)
@@ -20,7 +15,6 @@ export const AdminNewProduct = () => {
   const [productForm, setProductForm] = React.useState<IProductForm>();
   const [itemForm, setItemForm] = React.useState<IProductItemForm[]>([]);
   const [resetForm, setResetForm] = React.useState(false);
-  const [resetItemForm, setResetItemForm] = React.useState(false);
 
   const {
     manufOptions,
@@ -38,11 +32,11 @@ export const AdminNewProduct = () => {
 
   const onSubmitItem = (data: IProductItemForm) => {
     setItemForm((prevData) => [...prevData, data]);
-    setResetItemForm(true);
   };
 
   console.log('productForm', productForm);
   console.log('itemForm', itemForm);
+  console.log('categoryId', categoryId);
 
   const onSubmitFormSend = (productForm: IProductForm, itemForm: IProductItemForm[]) => {
     const formData = {
@@ -66,11 +60,14 @@ export const AdminNewProduct = () => {
       })),
     };
 
+    // ОТПРАВКА НА СЕРВЕР
+    console.log('formData', formData);
+
+    // сброс форм
     setResetForm(true);
     setCategoryId('');
     setProductForm(undefined);
     setItemForm([]);
-    console.log(formData);
   };
 
   const handleItemDelete = (id: string) => {
@@ -90,7 +87,7 @@ export const AdminNewProduct = () => {
           prodCatLoading={prodCatLoading}
           prodManufLoading={prodManufLoading}
           prodIngLoading={prodIngLoading}
-          categoryId={Number(categoryId)}
+          categoryId={categoryId}
           setSelectedCateg={setSelectedCateg}
           resetForm={resetForm}
           setResetForm={setResetForm}
@@ -102,19 +99,20 @@ export const AdminNewProduct = () => {
           categoryId={categoryId}
           itemForm={itemForm}
           onSubmitItem={onSubmitItem}
-          resetItemForm={resetItemForm}
-          setResetItemForm={setResetItemForm}
           handleItemDelete={(id: string) => handleItemDelete(id)}
         />
       </div>
 
-      {productForm && itemForm.length > 0 && (
-        <button
-          className="w-[300px] h-[50px] border border-gray-500 bg-gray-100 rounded-[5px] hover:bg-gray-200 transition-colors font-bold"
-          onClick={() => onSubmitFormSend(productForm, itemForm)}>
-          3. Отправить товары в БД
-        </button>
-      )}
+      {/* {productForm && itemForm.length > 0 && ( */}
+      <button
+        disabled={!productForm || !itemForm.length}
+        className={cn("w-[300px] h-[50px] border border-gray-500 bg-gray-100 rounded-[5px] hover:bg-gray-200 transition-colors font-bold",
+          !productForm || !itemForm.length ? 'opacity-50 cursor-not-allowed' : ''
+        )}
+        onClick={() => productForm && itemForm.length && onSubmitFormSend(productForm, itemForm)}>
+        3. Отправить товары в БД
+      </button>
+      {/* )} */}
     </div>
   );
 };
