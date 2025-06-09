@@ -19,7 +19,7 @@ export const AdminOrderInfo: React.FC<Props> = ({ order, className }) => {
       
       <h3 className="text-xl font-bold mb-3 text-center">Товары</h3>
 
-      <CartItemsView items={items} />
+      {items && items.length > 0 && <CartItemsView items={items} />}
     </div>
   );
 };

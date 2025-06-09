@@ -2,6 +2,8 @@
 
 import {
   AdminDatePicker,
+  AdminNavMenu,
+  AdminPagination,
   AdminSearchInput,
   AdminSearchSelect,
   AdminUsersView,
@@ -23,6 +25,8 @@ export default function DashboardUsers() {
   const [searchQuery, setSearchQuery] = React.useState<string>('');
   const [currentUserRole, setCurrentUserRole] = React.useState<string>('');
   const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+  const [startIndex, setStartIndex] = React.useState(0);
+  const [itemsPerPage, setItemsPerPage] = React.useState(10);
 
   const { users, loading } = useUsersProfile({
     isInterval,
@@ -32,6 +36,8 @@ export default function DashboardUsers() {
     searchQuery,
     currentUserRole,
     date,
+    startIndex,
+    itemsPerPage,
   });
 
   const handleClearSearch = () => {
@@ -64,7 +70,7 @@ export default function DashboardUsers() {
             title="ID пользователя"
             className="w-[200px] px-6"
             isClearInput={isInputClear}
-            setIsClearInput={setIsInputClear}
+            disableClearInput={setIsInputClear}
             setSearchQuery={setUserId}
           />
           <AdminSearchSelect
@@ -79,7 +85,7 @@ export default function DashboardUsers() {
             title="Поиск по: ФИО, email"
             className="w-[200px] px-6"
             isClearInput={isInputClear}
-            setIsClearInput={setIsInputClear}
+            disableClearInput={setIsInputClear}
             setSearchQuery={setSearchQuery}
           />
           <AdminSearchSelect
@@ -108,18 +114,14 @@ export default function DashboardUsers() {
 
       <AdminUsersView fetchUsers={users} handleClearSearch={handleClearSearch} className='w-full' />
 
-      <Link href="/dashboard" className="text-primary font-bold text-2xl mb-3">
-        Вернуться в панель администратора
-      </Link>
-      <Link href="/dashboard/profile" className="text-primary font-bold text-xl mb-3">
-        Перейти в профиль администратора
-      </Link>
-      <Link href="/dashboard/orders" className="text-primary font-bold text-xl mb-3">
-        Перейти к управлению заказами
-      </Link>
-      <Link href="/dashboard/products" className="text-primary font-bold text-xl mb-3">
-        Перейти к управлению товарами
-      </Link>
+      <AdminPagination
+        totalCount={users?.totalCount || 0}
+        setStartIndex={setStartIndex}
+        setItemsPerPage={setItemsPerPage}
+        className='flex items-center justify-center w-full gap-7 p-3 mb-5'
+      />
+
+      <AdminNavMenu page="users" />
     </div>
   );
 }

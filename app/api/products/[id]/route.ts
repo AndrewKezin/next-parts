@@ -12,13 +12,13 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
       return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
     }
 
-    if (session.user.role !== 'ADMIN') {
+    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
       return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
     }
 
     const product = await prisma.product.findFirst({
       where: {
-        id: Number(params.id),
+        id: params.id,
       },
       include: {
         category: true,
@@ -36,5 +36,40 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   } catch (err) {
     console.log('[GET_PRODUCT] Error', err);
     return NextResponse.json({ message: '[GET_PRODUCT] Error' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
+    }
+
+    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
+      return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    }
+
+    if (!params.id) {
+      return NextResponse.json({ message: 'Некорректные данные' }, { status: 400 });
+    }
+
+    await prisma.productItem.deleteMany({
+      where: {
+        productId:params.id,
+      },
+    });
+
+    await prisma.product.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    return NextResponse.json({ message: 'Товар удален' }, { status: 200 });
+  } catch (err) {
+    console.log('[DELETE_PRODUCT] Error', err);
+    return NextResponse.json({ message: '[DELETE_PRODUCT] Error', err }, { status: 500 });
   }
 }

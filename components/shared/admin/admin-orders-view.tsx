@@ -37,8 +37,7 @@ export const AdminOrdersView: React.FC<Props> = ({ fetchOrders, handleClearSearc
       ) : (
         <>
           <p className="text-left mb-3">
-            Всего заказов в базе данных: <b>{totalCount}</b> | Заказов, удовлетворяющих запросам:{' '}
-            <b>{orders.length}</b>
+            Найдено заказов: <b>{totalCount}</b>
           </p>
           <table className="table-auto w-full mb-10 border-collapse border border-black">
             <thead className="bg-slate-200 border border-black">

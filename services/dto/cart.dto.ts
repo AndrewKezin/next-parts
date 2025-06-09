@@ -1,35 +1,63 @@
-import { Cart, CartItem, Category, GearboxManufacturer, Ingredient, Order, Product, ProductItem, User } from "@prisma/client";
+import { ingredients } from '@/prisma/constants';
+import {
+  Cart,
+  CartItem,
+  Category,
+  GearboxManufacturer,
+  Ingredient,
+  Order,
+  Product,
+  ProductItem,
+  User,
+} from '@prisma/client';
 
 export type CartItemDTO = CartItem & {
-    productItem: ProductItem & {
-        product: Product;
-    };
-    ingredients: Ingredient[];
-}
+  productItem: ProductItem & {
+    product: Product;
+  };
+  ingredients: Ingredient[];
+};
 
-export interface CartDTO extends Cart{
-    items: CartItemDTO[];
+export interface CartDTO extends Cart {
+  items: CartItemDTO[];
 }
 
 export interface UserDTO extends User {
-    orders: Order[];
-    cart: CartDTO;
-    }
+  orders: Order[];
+  cart: CartDTO;
+}
 
 export interface CreateCartItemValues {
-    productItemId: number;
-    quantity: number;
-    ingredients?: number[];
+  productItemId: string;
+  quantity: number;
+  ingredients?: string[];
 }
 
 export interface ProductDTO extends Product {
-    category: Category;
-    items: ProductItem[];
-    gearboxesManufacturers: GearboxManufacturer[];
-    ingredients: Ingredient[];
+  category: Category;
+  items: ProductItem[];
+  gearboxesManufacturers: GearboxManufacturer[];
+  ingredients: Ingredient[];
 }
 
 export interface FetchProducts {
-    products: ProductDTO[];
-    totalCount?: number;
-  }
+  products: ProductDTO[];
+  totalCount?: number;
+}
+
+export interface AddProductDTO {
+  id: string;
+  name: string;
+  imageUrl: string;
+  categoryId: number;
+  ingredients: { id: string }[];
+  gearboxesManufacturers: { id: number }[];
+  items: {
+    id: string;
+    quantityOfTeeth: number;
+    thickness: number;
+    volume: number;
+    quantity: number;
+    price: number;
+  }[];
+}

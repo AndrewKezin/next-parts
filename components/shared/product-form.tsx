@@ -24,7 +24,7 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
 
   const firstItem = product.items[0];
 
-  const onSubmit = async (productItemId?: number, ingredients?: number[]) => {
+  const onSubmit = async (productItemId?: string, ingredients?: string[]) => {
     try {
       const itemID = productItemId ?? firstItem.id;
 

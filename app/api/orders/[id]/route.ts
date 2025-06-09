@@ -11,7 +11,7 @@ export async function GET(req: NextRequest, {params}: {params: {id: string}}) {
           return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
         }
     
-        if (session.user.role !== 'ADMIN') {
+        if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
           return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
         }
     

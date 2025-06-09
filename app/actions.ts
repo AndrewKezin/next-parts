@@ -1,7 +1,11 @@
 'use server';
 
 import { CheckoutFormValues } from '@/components/checkout/checkout-form-schema';
-import { DeleteUserTemplate, PayOrderTemplate, VerificationUserTemplate } from '@/components/shared';
+import {
+  DeleteUserTemplate,
+  PayOrderTemplate,
+  VerificationUserTemplate,
+} from '@/components/shared';
 import { createPayment, sendEmail } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
@@ -203,7 +207,7 @@ export async function registerUser(body: Prisma.UserCreateInput) {
         userId: createdUser.id,
       },
     });
-    
+
     // отправить письмо подтверждения регистрации на почту
     await sendEmail(
       createdUser.email,
@@ -284,14 +288,14 @@ const findUserAndAdmin = async (id: number, password: string) => {
 
     const admin = await prisma.user.findFirst({
       where: {
-        id: Number(currentUser.id), 
+        id: Number(currentUser.id),
       },
-      })
+    });
 
     if (!admin) {
       throw new Error('Пользователь не найден');
     }
-    
+
     if (admin.role !== 'ADMIN') {
       throw new Error('Необходимы права администратора');
     }
@@ -299,21 +303,22 @@ const findUserAndAdmin = async (id: number, password: string) => {
     const changedUser = await prisma.user.findFirst({
       where: {
         id: Number(id),
-      }})
+      },
+    });
 
     if (!changedUser) {
       throw new Error('Пользователь, у которого изменяются данные, не найден');
     }
-      
+
     if (!compareSync(password, admin.password as string)) {
       throw new Error('Неверный пароль');
     }
 
     return changedUser;
-  } catch(err) {
+  } catch (err) {
     console.log('[FindUserAndAdmin] error: ', err);
-  };
-}
+  }
+};
 
 // Изменение Role пользователя через админпанель
 export async function changeUserRole(id: number, password: string, changedRole: string) {
@@ -330,14 +335,14 @@ export async function changeUserRole(id: number, password: string, changedRole: 
       },
       data: {
         role: changedRole as UserRole,
-      }
-    })
+      },
+    });
 
     return true;
-  } catch(err) {
-  console.log('[ChangeUserRole] error: ', err);
-  return false;
-  };
+  } catch (err) {
+    console.log('[ChangeUserRole] error: ', err);
+    return false;
+  }
 }
 
 // Изменение статуса пользователя через админпанель
@@ -355,14 +360,14 @@ export async function changeUserStatus(id: number, password: string, changedStat
       },
       data: {
         status: changedStatus as UserStatus,
-      }
-    })
+      },
+    });
 
     return true;
-  } catch(err) {
-  console.log('[ChangeUserStatus] error: ', err);
-  return false;
-  };
+  } catch (err) {
+    console.log('[ChangeUserStatus] error: ', err);
+    return false;
+  }
 }
 
 // Подтверждение регистрации пользователя вручную через админпанель
@@ -388,9 +393,9 @@ export async function setUserVerified(id: number, password: string) {
       },
       data: {
         verified: new Date(),
-      }
+      },
     });
-  } catch(err) {
-  console.log('[SetUserVerified] error: ', err);
-  };
+  } catch (err) {
+    console.log('[SetUserVerified] error: ', err);
+  }
 }

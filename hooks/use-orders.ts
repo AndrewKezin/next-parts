@@ -10,6 +10,8 @@ interface Props {
   searchQuery: string;
   orderStatus: string;
   date: DateRange | undefined;
+  startIndex: number;
+  itemsPerPage: number;
 }
 
 interface ReturnProps {
@@ -35,6 +37,8 @@ export const useOrders = ({
   searchQuery,
   orderStatus,
   date,
+  startIndex,
+  itemsPerPage,
 }: Props): ReturnProps => {
   const [orders, setOrders] = React.useState<FetchOrders>({ orders: [] });
   const [loading, setLoading] = React.useState(true);
@@ -45,7 +49,7 @@ export const useOrders = ({
         // отправить GET запрос на localhost:3000/api/orders?query=qwe чтобы через призму получить из БД список всех заказов
         orderId
           ? setOrders({ orders: [await Api.orders.getOrder(orderId)] })
-          : setOrders(await Api.orders.getOrders(searchQuery, orderStatus, date));
+          : setOrders(await Api.orders.getOrders(searchQuery, orderStatus, date, String(startIndex), String(itemsPerPage)));
         setLoading(false);
       } catch (err) {
         console.log(err);
@@ -66,7 +70,7 @@ export const useOrders = ({
     return () => {
       clearInterval(fetchInterval);
     };
-  }, [orderId, isInterval, intervalTime, searchQuery, orderStatus, date]);
+  }, [orderId, isInterval, intervalTime, searchQuery, orderStatus, date, startIndex, itemsPerPage]);
 
   return { orders, loading };
 };

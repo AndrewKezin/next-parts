@@ -3,7 +3,7 @@ import React from 'react';
 interface Props {
   // Record - это утилита, которая создаёт новый объектный тип, ключами которого являются Keys, а значениями свойств — Type. В list будет передаваться enum, получаемый из схемы prisma
   list: Record<string, string>;
-  value: string;
+  value?: string;
   defaultValue?: string;
   handleChange?: React.ChangeEventHandler<HTMLSelectElement>;
   className?: string;

@@ -14,7 +14,7 @@ import { Ingredient, ProductItem } from '@prisma/client';
 export const calcTotalDiscPrice = (
   items: ProductItem[],
   ingredients: Ingredient[],
-  selectedIngredients: Set<number>,
+  selectedIngredients: Set<string>,
   thickness: Number,
   quantityOfTeeth: Number,
 ) => {

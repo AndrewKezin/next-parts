@@ -17,10 +17,12 @@ export const getUsers = async (
   currentUserStatus: string,
   currentUserRole: string,
   date: DateRange | undefined,
+  startIndex: string,
+  itemsPerPage: string,
 ) => {
   return (
     await axiosInstance.get<FetchUsers>(ApiRoutes.USERS, {
-      params: { searchQuery, currentUserStatus, currentUserRole, date },
+      params: { searchQuery, currentUserStatus, currentUserRole, date, startIndex, itemsPerPage },
     })
   ).data;
 };

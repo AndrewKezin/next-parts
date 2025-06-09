@@ -23,7 +23,7 @@ export const findParts = async (params: GetSearchParams) => {
     const thickness = params.thickness?.split(',').map(Number);
     const quantityOfTeeth = params.quantityOfTeeth?.split(',').map(Number);
     const volume = params.volume?.split(',').map(Number);
-    const ingredientsIdArr = params.ingredients?.split(',').map(Number);
+    const ingredientsIdArr = params.ingredients?.split(',');
     const gearboxesManufacturersIdArr = params.gearboxManufacturers?.split(',').map(Number);
 
     const minPrice = Number(params.priceFrom) || DEFAULT_MIN_PRICE;

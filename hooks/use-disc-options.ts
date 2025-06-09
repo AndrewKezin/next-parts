@@ -7,12 +7,12 @@ import { useSet } from 'react-use';
 interface ReturnProps {
   thickness: Number;
   quantityOfTeeth: Number;
-  currentItemId: number | undefined;
-  selectedIngredients: Set<number>;
+  currentItemId: string | undefined;
+  selectedIngredients: Set<string>;
   availableDiscThicknesses: Variant[];
   setThickness: (thickness: Number) => void;
   setQuantityOfTeeth: (quantityOfTeeth: Number) => void;
-  addIngredient: (id: number) => void;
+  addIngredient: (id: string) => void;
 }
 
 /**
@@ -30,7 +30,7 @@ export const useDiscOptions = (
   const [quantityOfTeeth, setQuantityOfTeeth] = useState<Number>(55);
 
   // Кастомный хук useSet для хранения выбранных id ингредиентов
-  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<number>([]));
+  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<string>([]));
 
   const availableDiscThicknesses = getAvailableDiscThickness(
     quantityOfTeeth,

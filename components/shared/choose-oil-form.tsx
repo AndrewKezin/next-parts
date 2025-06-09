@@ -15,7 +15,7 @@ interface Props {
   items: ProductItem[];
   manufacturer: GearboxManufacturer[];
   loading?: boolean;
-  onSubmit: (itemId: number, ingredients: number[]) => void;
+  onSubmit: (itemId: string, ingredients: string[]) => void;
   className?: string;
 }
 

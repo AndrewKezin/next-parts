@@ -13,41 +13,49 @@ export const categories = [
 // тестовые ингредиенты
 export const ingredients = [
   {
+    id: 'a1b2c3d',
     name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
     price: 2350,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg'
   },
   {
+    id: 'e4f5g6h',
     name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
     price: 435,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg'
   },
   {
+    id: 'i7j8k9l',
     name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
     price: 1100,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg'
   },
   {
+    id: 'm4n5o6p',
     name: 'Стабилизатор трансмиссионной жидкости',
     price: 1520,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg'
   },
   {
+    id: 'q1r2s3t',
     name: 'Жидкость для разверток',
     price: 1200,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465bt_1.jpg'
   },
   {
+    id: 'u4v5w6x',
     name: 'Модификатор концентрированный фрикционный Dr. Tranny',
     price: 3200,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465ha_1.jpg'
   },
   {
+    id: 'y7z8b9c',
     name: 'Перчатки одноразовые нитриловые JSN NATRIX (размер L, 50шт., оранжевые)',
     price: 2000,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2023/09/24/J10855L_1.jpg'
   },
   {
+    id: 'a2b3c4d',
     name: 'Радиатор охлаждения трансмиссии дополнительный',
     price: 5800,
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465bt_1.jpg'

@@ -11,6 +11,8 @@ interface Props {
   searchQuery: string;
   currentUserRole: string;
   date: DateRange | undefined;
+  startIndex: number;
+  itemsPerPage: number;
 }
 
 interface ReturnProps {
@@ -37,6 +39,8 @@ export const useUsersProfile = ({
   searchQuery,
   currentUserRole,
   date,
+  startIndex,
+  itemsPerPage,
 }: Props): ReturnProps => {
   const [users, setUsers] = useState<FetchUsers>({users: []});
   const [loading, setLoading] = useState(true);
@@ -47,7 +51,7 @@ export const useUsersProfile = ({
         userId
           ? setUsers({users: [await Api.users.getUser(userId)]})
           : setUsers(
-              await Api.users.getUsers(searchQuery, currentUserStatus, currentUserRole, date),
+              await Api.users.getUsers(searchQuery, currentUserStatus, currentUserRole, date, String(startIndex), String(itemsPerPage)),
             );
         setLoading(false);
       } catch (err) {
@@ -69,7 +73,7 @@ export const useUsersProfile = ({
     return () => {
       clearInterval(fetchInterval);
     };
-  }, [isInterval, intervalTime, userId, searchQuery, currentUserStatus, currentUserRole, date]);
+  }, [isInterval, intervalTime, userId, searchQuery, currentUserStatus, currentUserRole, date, startIndex, itemsPerPage]);
 
   return { users, loading };
 };

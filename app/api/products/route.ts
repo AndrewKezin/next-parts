@@ -3,10 +3,10 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { prisma } from '@/prisma/prisma-client';
 import intersection from 'lodash/intersection';
-import { FetchProducts } from '@/services/dto/cart.dto';
+import { AddProductDTO, FetchProducts, ProductDTO } from '@/services/dto/cart.dto';
 
 export type ItemsType = {
-  id: number;
+  id: string;
   price: number;
 };
 export interface FilteredArray {
@@ -46,7 +46,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
     }
 
-    if (session.user.role !== 'ADMIN') {
+    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
       return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
     }
 
@@ -155,7 +155,7 @@ export async function GET(req: NextRequest) {
               ingredients: {
                 some: {
                   id: {
-                    in: prodIngredIds.split(',').map(Number),
+                    in: prodIngredIds.split(','),
                   },
                 },
               },
@@ -255,8 +255,8 @@ export async function GET(req: NextRequest) {
       priceTo: string | SEARCHPRICERANGE.TO,
       arr?: FilteredArray[] | null,
       arrItems?: ItemsType[] | null,
-    ): number[] => {
-      let resArr;
+    ): string[] => {
+      let resArr: string[] | undefined;
 
       if (arr) {
         resArr = arr
@@ -303,18 +303,18 @@ export async function GET(req: NextRequest) {
 
     // функция пересечения фильтров
     const getResultArr = (
-      arr1: number[],
-      arr2: number[],
-      arr3: number[],
-      arr4: number[],
-      arr5: number[],
-      arr6: number[],
-      arr7: number[],
-    ): number[] => {
+      arr1: string[],
+      arr2: string[],
+      arr3: string[],
+      arr4: string[],
+      arr5: string[],
+      arr6: string[],
+      arr7: string[],
+    ): string[] => {
       // пропускаем пустые массивы
       const tempArr = [arr1, arr2, arr3, arr4, arr5, arr6, arr7].filter((arr) => arr.length > 0);
       // выполняем пересечение (получаем итоговый массив, в котором есть только элементы, которые есть во всех массивах)
-      const resultArr = intersection(...tempArr).sort((a, b) => a - b);
+      const resultArr = intersection(...tempArr).sort((a, b) => a.localeCompare(b));
       return resultArr;
     };
 
@@ -366,7 +366,7 @@ export async function GET(req: NextRequest) {
               },
             },
           },
-        }, 
+        },
       }),
     ]);
 
@@ -374,5 +374,70 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.log('[GET_PRODUCTS] Error', err);
     return NextResponse.json({ message: '[GET_PRODUCTS] Error' }, { status: 500 });
+  }
+}
+
+export async function POST(req: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
+    }
+
+    if (session?.user.role !== 'ADMIN' && session?.user.role !== 'MANAGER') {
+      NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    }
+
+    const data: AddProductDTO = await req.json();
+
+    const resProduct = await prisma.product.create({
+      data: {
+        id: data.id,
+        name: data.name,
+        imageUrl: data.imageUrl,
+        categoryId: data.categoryId,
+        gearboxesManufacturers: {
+          connect: data.gearboxesManufacturers,
+        },
+        ingredients: {
+          connect: data.ingredients,
+        },
+      },
+    });
+
+    const resProdItems =
+      data.items.length > 0 &&
+      data.items.map(
+        async (item) =>
+          await prisma.productItem.create({
+            data: {
+              id: item.id,
+              productId: resProduct.id,
+              thickness: item.thickness ? item.thickness : undefined,
+              quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
+              volume: item.volume ? item.volume : undefined,
+              quantity: item.quantity,
+              price: item.price,
+            },
+          }),
+      );
+
+    const res = await prisma.product.findFirst({
+      where: {
+        id: resProduct.id,
+      },
+      include: {
+        category: true,
+        ingredients: true,
+        items: true,
+        gearboxesManufacturers: true,
+      },
+    });
+
+    return NextResponse.json(res);
+  } catch (err) {
+    console.log('[POST_PRODUCT] Error', err);
+    return NextResponse.json({ message: '[POST_PRODUCT] Error', err }, { status: 500 });
   }
 }

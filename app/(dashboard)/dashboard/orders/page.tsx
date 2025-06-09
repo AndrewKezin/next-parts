@@ -2,46 +2,51 @@
 
 import {
   AdminDatePicker,
+  AdminNavMenu,
   AdminOrdersView,
+  AdminPagination,
   AdminSearchInput,
   AdminSearchSelect,
   AutoUpdate,
 } from '@/components/shared';
 import { useOrders } from '@/hooks';
 import { OrderStatus } from '@prisma/client';
-import Link from 'next/link';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 import { addDays } from 'date-fns';
 import { Button } from '@/components/ui';
 import { X } from 'lucide-react';
 
 export default function DashboardOrders() {
-  const [autoUpdate, setAutoUpdate] = React.useState(false);
-  const [intervalTime, setIntervalTime] = React.useState(1);
-  const [autoUpdatePeriod, setAutoUpdatePeriod] = React.useState('minutes');
-  const [interval, setInterval] = React.useState(60000);
-  const [searchQuery, setSearchQuery] = React.useState('');
-  const [orderId, setOrderId] = React.useState('');
-  const [currentOrderStatus, setCurrentOrderStatus] = React.useState('');
+  const [autoUpdate, setAutoUpdate] = useState(false);
+  const [intervalTime, setIntervalTime] = useState(1);
+  const [autoUpdatePeriod, setAutoUpdatePeriod] = useState('minutes');
+  const [interval, setInterval] = useState(60000);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [orderId, setOrderId] = useState('');
+  const [currentOrderStatus, setCurrentOrderStatus] = useState('');
   // const [date, setDate] = React.useState<DateRange | undefined>({
   //   from: addDays(new Date(Date.now()), -7),
   //   to: new Date(Date.now()),
   // });
-  const [date, setDate] = React.useState<DateRange | undefined>(undefined);
-  const [isInputClear, setIsInputClear] = React.useState(false);
+  const [date, setDate] = useState<DateRange | undefined>(undefined);
+  const [isInputClear, setIsInputClear] = useState(false);
+  const [startIndex, setStartIndex] = useState(0);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
 
   // получение списка заказов с учетом фильтров
-  const { orders, loading } = useOrders(
-    {
-      orderId,
-      isInterval: autoUpdate,
-      intervalTime,
-      searchQuery,
-      orderStatus: currentOrderStatus,
-      date,
-    }
-  );
+  const { orders, loading } = useOrders({
+    orderId,
+    isInterval: autoUpdate,
+    intervalTime,
+    searchQuery,
+    orderStatus: currentOrderStatus,
+    date,
+    startIndex,
+    itemsPerPage,
+  });
+
+  const { totalCount } = orders;
 
   const handleClearSearch = () => {
     setOrderId('');
@@ -73,6 +78,7 @@ export default function DashboardOrders() {
     <div className="flex flex-col items-center w-full">
       <h1 className="text-4xl font-bold mt-10 mb-7">Администрирование заказов</h1>
 
+      {/* Фильтрация */}
       <AutoUpdate
         autoUpdate={autoUpdate}
         setAutoUpdate={setAutoUpdate}
@@ -88,7 +94,7 @@ export default function DashboardOrders() {
             title="Поиск по номеру заказа"
             className="w-[300px] px-6"
             isClearInput={isInputClear}
-            setIsClearInput={setIsInputClear}
+            disableClearInput={setIsInputClear}
             setSearchQuery={setOrderId}
           />
           <AdminSearchInput
@@ -96,9 +102,9 @@ export default function DashboardOrders() {
             title="Поиск по: клиенту, адресу, телефону"
             className="w-[300px] px-6"
             isClearInput={isInputClear}
-            setIsClearInput={setIsInputClear}
+            disableClearInput={setIsInputClear}
             setSearchQuery={setSearchQuery}
-            />
+          />
           <AdminSearchSelect
             list={OrderStatus}
             value={currentOrderStatus}
@@ -123,20 +129,20 @@ export default function DashboardOrders() {
         </Button>
       </div>
 
+      {/* Список заказов */}
       <AdminOrdersView fetchOrders={orders} handleClearSearch={handleClearSearch} />
 
-      <Link href="/dashboard" className="text-primary font-bold text-2xl mb-3">
-        Вернуться в панель администратора
-      </Link>
-      <Link href="/dashboard/profile" className="text-primary font-bold text-xl mb-3">
-        Перейти в профиль администратора
-      </Link>
-      <Link href="/dashboard/products" className="text-primary font-bold text-xl mb-3">
-        Перейти к управлению товарами
-      </Link>
-      <Link href="/dashboard/users" className="text-primary font-bold text-xl mb-3">
-        Перейти к управлению профилями пользователей
-      </Link>
+      {/* Пагинация */}
+      {orders && totalCount && totalCount > 1 && (
+        <AdminPagination
+          totalCount={totalCount}
+          setStartIndex={setStartIndex}
+          setItemsPerPage={setItemsPerPage}
+          className="flex items-center justify-center w-full gap-7 p-3 mb-5"
+        />
+      )}
+
+      <AdminNavMenu page="orders" />
     </div>
   );
 }

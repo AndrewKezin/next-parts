@@ -6,6 +6,10 @@ import { useAdminSelectsOptions } from '@/hooks';
 import { AdminNewProdForm, IProductForm } from './admin-new-prod-form';
 import { AdminNewProdItemForm, IProductItemForm } from './admin-new-proditem-form';
 import { cn } from '@/lib/utils';
+import { AddProductDTO, ProductDTO } from '@/services/dto/cart.dto';
+import axios from 'axios';
+import { useAddProductMutation } from '@/store/redux';
+import toast from 'react-hot-toast';
 
 export const AdminNewProduct = () => {
   // categoryId используется ПОСЛЕ отправки первой формы, чтобы выбранная категория для товара уже не менялась (disabled)
@@ -25,6 +29,8 @@ export const AdminNewProduct = () => {
     prodCatLoading,
   } = useAdminSelectsOptions();
 
+  const [addProduct, { isError: addError, isLoading: addLoading, isSuccess: addSuccess }] = useAddProductMutation();
+
   const onSubmit = (data: IProductForm) => {
     setProductForm(data);
     setCategoryId(data.category.label);
@@ -34,24 +40,20 @@ export const AdminNewProduct = () => {
     setItemForm((prevData) => [...prevData, data]);
   };
 
-  console.log('productForm', productForm);
-  console.log('itemForm', itemForm);
-  console.log('categoryId', categoryId);
-
   const onSubmitFormSend = (productForm: IProductForm, itemForm: IProductItemForm[]) => {
-    const formData = {
+    const formData: AddProductDTO = {
       id: productForm.id,
       name: productForm.name,
       imageUrl: productForm.imageUrl,
       categoryId: Number(productForm.category.value),
       ingredients: productForm.ingredients.map((ing) => ({
-        id: Number(ing.value),
+        id: ing.value,
       })),
       gearboxesManufacturers: productForm.gearboxesManufacturers.map((gbm) => ({
         id: Number(gbm.value),
       })),
       items: itemForm.map((item) => ({
-        productId: Number(item.id),
+        id: item.id,
         quantityOfTeeth: Number(item.quantityOfTeeth),
         thickness: Number(item.thickness),
         volume: Number(item.volume),
@@ -60,8 +62,8 @@ export const AdminNewProduct = () => {
       })),
     };
 
-    // ОТПРАВКА НА СЕРВЕР
-    console.log('formData', formData);
+    // Отправка данных на сервер
+    addProduct(formData);
 
     // сброс форм
     setResetForm(true);
@@ -74,6 +76,30 @@ export const AdminNewProduct = () => {
     const newItemForm = itemForm.filter((item) => item.id !== id);
     setItemForm(newItemForm);
   };
+
+  if (addLoading) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center mb-2">
+        <h2 className="text-2xl font-bold">Добавление товара...</h2>
+      </div>
+    )
+  }
+
+  if (addSuccess) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center mb-2">
+        <h2 className="text-2xl font-bold">Товар добавлен</h2>
+      </div>
+    )
+  }
+
+  if (addError) {
+    return (
+      <div className="w-full flex flex-col items-center justify-center mb-2">
+        <h2 className="text-2xl font-bold">Произошла ошибка при добавлении товара</h2>
+      </div>
+    )
+  } 
 
   return (
     <div className="w-full flex flex-col items-center justify-center mb-2">

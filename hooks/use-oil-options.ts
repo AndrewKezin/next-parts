@@ -5,11 +5,11 @@ import { useSet } from 'react-use';
 
 interface ReturnProps {
   oilCanVolume: number;
-  currentItemId: number | undefined;
-  selectedIngredients: Set<number>;
+  currentItemId: string | undefined;
+  selectedIngredients: Set<string>;
   availableOilCansVolume: Variant[];
   setOilCanVolume: (volume: number) => void;
-  addIngredient: (id: number) => void;
+  addIngredient: (id: string) => void;
 }
 
 /**
@@ -22,7 +22,7 @@ export const useOilOptions = (items: ProductItem[]): ReturnProps => {
   const [oilCanVolume, setOilCanVolume] = useState<number>(1);
 
   // Кастомный хук useSet для хранения выбранных id ингредиентов
-  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<number>([]));
+  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<string>([]));
 
   const availableVolumes = (items: ProductItem[]): Variant[] => {
     const volumes = Array.from(new Set(items.map((item) => item.volume))).sort();

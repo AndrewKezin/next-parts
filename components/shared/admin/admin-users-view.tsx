@@ -33,8 +33,7 @@ export const AdminUsersView: React.FC<Props> = ({ fetchUsers, handleClearSearch,
   return (
     <div className={className}>
       <p className="text-left mb-3">
-        Всего пользователей в базе данных: <b>{totalCount}</b> | Пользователей, удовлетворяющих
-        запросам: <b>{users.length}</b>
+        Найдено пользователей: <b>{totalCount}</b>
       </p>
       <table className="table w-full mb-5 border-collapse border border-black bg-slate-100">
         <thead className="bg-slate-200 border border-black">

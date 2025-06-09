@@ -18,21 +18,21 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
     const productItem = await prisma.productItem.findFirst({
       where: {
-        id: Number(params.id),
+        id: params.id,
       },
       select: {
-          product: {
-            include: {
-              category: true,
-              ingredients: true,
-              items: {
-                where: {
-                    id: Number(params.id),
-                }
+        product: {
+          include: {
+            category: true,
+            ingredients: true,
+            items: {
+              where: {
+                id: params.id,
               },
-              gearboxesManufacturers: true,
-            }
+            },
+            gearboxesManufacturers: true,
           },
+        },
       },
     });
 
@@ -43,5 +43,58 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
   } catch (err) {
     console.log('[GET_PRODUCTITEMS] Error', err);
     return NextResponse.json({ message: '[GET_PRODUCTITEMS] Error' }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session) {
+      return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
+    }
+
+    if (session.user.role !== 'ADMIN') {
+      return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    }
+
+    if (!params.id) {
+      return NextResponse.json({ message: 'Некорректные данные' }, { status: 400 });
+    }
+
+    const product = await prisma.product.findFirst({
+      where: {
+        items: {
+          some: {
+            id: params.id,
+          },
+        },
+      },
+    });
+
+    if (!product) {
+      return NextResponse.json({ message: 'Товар не найден' }, { status: 404 });
+    }
+
+    const itemsCount = await prisma.productItem.count({
+      where: {
+        productId: product.id,
+      },
+    });
+
+    if (itemsCount < 2) {
+      return NextResponse.json({ message: 'Нельзя удалить последний вариант товара! Сначала добавьте еще один вариант.' }, { status: 400 });
+    }
+
+    await prisma.productItem.delete({
+      where: {
+        id: params.id,
+      },
+    });
+
+    return NextResponse.json({ message: 'Вариант товара удален'}, { status: 200 });
+  } catch (err) {
+    console.log('[DELETE_PRODUCTITEM] Error', err);
+    return NextResponse.json({ message: '[DELETE_PRODUCTITEM] Error' }, { status: 500 });
   }
 }

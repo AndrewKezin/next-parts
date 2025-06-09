@@ -15,6 +15,8 @@ export async function GET(req: NextRequest) {
   const orderStatus = req.nextUrl.searchParams.get('orderStatus') || '';
   const dateFrom = req.nextUrl.searchParams.get('date[from]') || '';
   const dateTo = req.nextUrl.searchParams.get('date[to]') || '';
+  const startIndex = req.nextUrl.searchParams.get('startIndex');
+  const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
 
   // переменная modifiedQuery - это попытка обойти косяк Vercel с регистром в поисковых запросах на кириллице
   let modifiedQuery: string;
@@ -27,11 +29,11 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
     }
 
-    if (session.user.role !== 'ADMIN') {
+    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
       return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
     }
 
-    const [orders, totalCount] = await prisma.$transaction([
+    const [orders, totalCount] = await Promise.all([
       prisma.order.findMany({
         orderBy: {
           createdAt: 'desc',
@@ -74,9 +76,50 @@ export async function GET(req: NextRequest) {
             lte: dateTo ? new Date(dateTo) : undefined,
           },
         },
+        skip: startIndex ? Number(startIndex) : undefined,
+        take: itemsPerPage ? Number(itemsPerPage) : undefined,
       }),
-      prisma.order.count(),
-    ])
+      prisma.order.count({
+        where: {
+          OR: query
+            ? [
+                {
+                  phone: {
+                    contains: modifiedQuery,
+                  },
+                },
+                {
+                  fullName: {
+                    contains: modifiedQuery,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  email: {
+                    contains: modifiedQuery,
+                    mode: 'insensitive',
+                  },
+                },
+                {
+                  address: {
+                    contains: modifiedQuery,
+                    mode: 'insensitive',
+                  },
+                },
+              ]
+            : undefined,
+          status: orderStatus
+            ? {
+                equals: orderStatus as OrderStatus,
+              }
+            : undefined,
+          createdAt: {
+            gte: dateFrom ? new Date(dateFrom) : undefined,
+            lte: dateTo ? new Date(dateTo) : undefined,
+          },
+        },
+      }),
+    ]);
 
     return NextResponse.json({ orders, totalCount });
   } catch (err) {

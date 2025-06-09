@@ -17,6 +17,8 @@ export async function GET(req: NextRequest) {
   const currentUserRole = req.nextUrl.searchParams.get('currentUserRole') || '';
   const dateFrom = req.nextUrl.searchParams.get('date[from]') || '';
   const dateTo = req.nextUrl.searchParams.get('date[to]') || '';
+  const startIndex = req.nextUrl.searchParams.get('startIndex');
+  const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
 
   // переменная modifiedQuery - это попытка обойти косяк Vercel с регистром в поисковых запросах на кириллице
   let modifiedQuery: string;
@@ -29,11 +31,12 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
     }
 
+    // менеджеру право на просмотр и редактирование не предоставлено
     if (session.user.role !== 'ADMIN') {
       return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
     }
 
-    const [users, totalCount] = await prisma.$transaction([
+    const [users, totalCount] = await Promise.all([
       prisma.user.findMany({
         orderBy: {
           createdAt: 'desc',
@@ -70,8 +73,35 @@ export async function GET(req: NextRequest) {
           status: true,
           createdAt: true,
         },
+        skip: startIndex ? Number(startIndex) : undefined,
+        take: itemsPerPage ? Number(itemsPerPage) : undefined,
       }),
-      prisma.user.count(),
+      prisma.user.count({
+        where: {
+          OR: searchQuery
+            ? [
+                {
+                  email: { contains: modifiedQuery, mode: 'insensitive' },
+                },
+                {
+                  fullName: { contains: modifiedQuery, mode: 'insensitive' },
+                },
+              ]
+            : undefined,
+          status: currentUserStatus 
+            ? {
+              equals: currentUserStatus as UserStatus,
+            } : undefined,
+          role: currentUserRole
+            ? {
+              equals: currentUserRole as UserRole,
+            } : undefined,
+          createdAt: {
+            gte: dateFrom ? new Date(dateFrom) : undefined,
+            lte: dateTo ? new Date(dateTo) : undefined,
+          }
+        },
+      }),
     ]);
 
     return NextResponse.json({users, totalCount});
