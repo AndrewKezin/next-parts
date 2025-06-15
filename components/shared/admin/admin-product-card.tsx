@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { ProductDTO } from '@/services/dto/cart.dto';
 import { useDeleteProductMutation } from '@/store/redux';
-import { SearchCheck, Trash } from 'lucide-react';
+import { FilePen, SearchCheck, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { ConfirmPassword } from '../confirm-password';
 import { cn } from '@/lib/utils';
@@ -14,23 +14,23 @@ import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 
 interface Props {
   product: ProductDTO;
+  handleProductEdit: (id: string) => void;
 }
 
-export const AdminProductCard: React.FC<Props> = ({ product }) => {
+export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }) => {
   const [password, setPassword] = useState<string>('');
   const [onClickTrash, setOnClickTrash] = useState<boolean>(false);
   const [deleteProduct, { isSuccess, isError, error }] = useDeleteProductMutation();
 
   const handleDeleteConfirm = async () => {
-    const { isConfirm, errorMessage } = await confirmAdminPassword( password, product.id, true );
-    if(isConfirm) {
+    const { isConfirm, errorMessage } = await confirmAdminPassword(password, product.id, true);
+    if (isConfirm) {
       const res = await deleteProduct(product.id);
       if (res.error) {
         // ниже попытка обойти типизацию ошибки
         const error = res.error as FetchBaseQueryError;
         const errorData = error.data as { message: string };
         toast.error(errorData.message);
-
       } else {
         toast.success(res.data.message);
       }
@@ -45,34 +45,47 @@ export const AdminProductCard: React.FC<Props> = ({ product }) => {
       <div className="w-full flex-col border border-primary rounded bg-white p-2">
         {/* Верхний блок */}
         <div className="w-full flex bg-white p-2">
-          <div className="w-[100px] flex flex-col items-center justify-center border border-gray-300">
+          <div className="w-[150px] flex flex-col items-center justify-center border border-gray-300">
             <div className="underline">ID товара:</div>
-            <div className="flex flex-col justify-center items-center relative">
+            <div className="flex flex-col gap-3 justify-center items-center relative">
+              {/* Посмотреть товар в новом окне */}
               <Link
                 href={`../product/${product.id}`}
                 target="_blank"
-                className="flex flex-col justify-center items-center">
+                className="flex flex-col justify-center items-center"
+                title="Посмотреть">
                 {product.id}
-                <SearchCheck className="text-primary mb-2" />
+                <SearchCheck className="text-primary" />
               </Link>
+              {/* Удалить товар */}
               <button
                 onClick={() => {
                   setOnClickTrash(!onClickTrash);
-                }}>
-                <Trash className="text-primary mt-1" />
+                  setPassword('');
+                }}
+                title="Удалить">
+                <Trash className="text-primary" />
               </button>
+              {/* Подтвердить удаление */}
               <ConfirmPassword
                 inputText="Введите id товара"
                 labelText={`Будет удален товар и все варианты товара! Для подтверждения введите ${product.id}`}
                 password={password}
                 setPassword={setPassword}
                 handleConfirm={handleDeleteConfirm}
-                onClickCancel={() => setOnClickTrash(false)}
+                onClickCancel={() => {
+                  setOnClickTrash(false);
+                  setPassword('');
+                }}
                 className={cn(
                   'bg-white border border-red-500 rounded-[3px] flex justify-center items-center gap-2 absolute top-12 left-10 p-2',
                   { hidden: !onClickTrash },
                 )}
               />
+              {/* Редактировать товар */}
+              <button title="Редактировать" onClick={() => handleProductEdit(product.id)}>
+                <FilePen className="text-primary mb-2" />
+              </button>
             </div>
           </div>
           <div className="w-[300px] flex flex-col flex-1 items-center justify-center border border-gray-300">

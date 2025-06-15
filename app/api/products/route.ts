@@ -4,6 +4,8 @@ import { authOptions } from '../auth/[...nextauth]/route';
 import { prisma } from '@/prisma/prisma-client';
 import intersection from 'lodash/intersection';
 import { AddProductDTO, FetchProducts, ProductDTO } from '@/services/dto/cart.dto';
+import { ProductItem } from '@prisma/client';
+import { checkAdminRules } from '@/lib/check-admin-rules';
 
 export type ItemsType = {
   id: string;
@@ -440,4 +442,91 @@ export async function POST(req: NextRequest) {
     console.log('[POST_PRODUCT] Error', err);
     return NextResponse.json({ message: '[POST_PRODUCT] Error', err }, { status: 500 });
   }
+}
+
+export async function PUT(req: NextRequest) {
+  try {
+    const adminRules = await checkAdminRules(true);
+
+    if (adminRules.status !== 200) {
+      return NextResponse.json({ message: adminRules.message}, {status: adminRules.status});
+    }
+
+    const data: AddProductDTO = await req.json();
+
+    const itemsArr: ProductItem[] = data.items.map((item: ProductItem) => ({
+      id: item.id,
+      productId: data.id,
+      thickness: item.thickness,
+      quantityOfTeeth: item.quantityOfTeeth,
+      volume: item.volume,
+      price: item.price,
+      quantity: item.quantity
+    }));
+
+   
+    
+      await prisma.product.upsert({
+        where: {
+          id: data.id,
+        },
+        update: {
+          name: data.name,
+          imageUrl: data.imageUrl,
+          categoryId: data.categoryId,
+          gearboxesManufacturers: {
+            connect: data.gearboxesManufacturers,
+          },
+          ingredients: {
+            connect: data.ingredients,
+          },
+        },
+        create: {
+          id: data.id,
+          name: data.name,
+          imageUrl: data.imageUrl,
+          categoryId: data.categoryId,
+          gearboxesManufacturers: {
+            connect: data.gearboxesManufacturers,
+          },
+          ingredients: {
+            connect: data.ingredients,
+          },
+        },
+      });
+
+      // upsert обновит или создаст запись в БД
+      await Promise.all(
+        itemsArr.map((item) => (
+          prisma.productItem.upsert({
+            where: {
+              id: item.id,
+            },
+            update: {
+              thickness: item.thickness ? item.thickness : undefined,
+              quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
+              volume: item.volume ? item.volume : undefined,
+              price: item.price,
+              quantity: item.quantity
+            },
+            create: {
+              id: item.id,
+              productId: item.productId,
+              thickness: item.thickness ? item.thickness : undefined,
+              quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
+              volume: item.volume ? item.volume : undefined,
+              price: item.price,
+              quantity: item.quantity
+            },
+          })
+        ))
+      )
+    
+
+    return NextResponse.json({message: 'Товар обновлен'}, {status: 200});
+
+    } catch (err) {
+      console.log('[PUT_PRODUCT] Error', err);
+      return NextResponse.json({message: '[PUT_PRODUCT] Error', err}, {status: 500});
+    }
 }

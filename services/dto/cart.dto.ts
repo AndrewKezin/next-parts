@@ -1,4 +1,3 @@
-import { ingredients } from '@/prisma/constants';
 import {
   Cart,
   CartItem,
@@ -54,6 +53,7 @@ export interface AddProductDTO {
   gearboxesManufacturers: { id: number }[];
   items: {
     id: string;
+    productId: string;
     quantityOfTeeth: number;
     thickness: number;
     volume: number;

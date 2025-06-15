@@ -25,7 +25,7 @@ export const AdminProdCardItem: React.FC<Props> = ({ item, hasBorder, className 
 
   const handleDeleteItemConfirm = async (id: string) => {
     const { isConfirm, errorMessage } = await confirmAdminPassword(password, id, true);
-    
+
     if (isConfirm) {
       const result = await deleteProductItem(id);
       if (result.error) {
@@ -34,7 +34,7 @@ export const AdminProdCardItem: React.FC<Props> = ({ item, hasBorder, className 
         const errorData = error.data as { message: string };
         toast.error(errorData.message);
       } else {
-      toast.success(result.data.message);
+        toast.success(result.data.message);
       }
       setOnClickItemTrash(false);
     } else {
@@ -78,9 +78,15 @@ export const AdminProdCardItem: React.FC<Props> = ({ item, hasBorder, className 
 
         <AdminProdCardItemProp text="Стоимость" value={item.price} endText="₽" className="mx-1" />
 
+        <AdminProdCardItemProp text="Кол-во" value={item.quantity} className="mx-1" />
+
         <button
           className="w-[40px] h-[40px] flex items-center justify-center"
-          onClick={() => setOnClickItemTrash(!onClickItemTrash)}>
+          onClick={() => {
+            setOnClickItemTrash(!onClickItemTrash);
+            setPassword('');
+          }}
+          title="Удалить">
           <Trash className="text-primary  mt-1" />
         </button>
       </div>
@@ -91,7 +97,10 @@ export const AdminProdCardItem: React.FC<Props> = ({ item, hasBorder, className 
         password={password}
         setPassword={setPassword}
         handleConfirm={() => handleDeleteItemConfirm(item.id)}
-        onClickCancel={() => setOnClickItemTrash(false)}
+        onClickCancel={() => {
+          setOnClickItemTrash(false);
+          setPassword('');
+        }}
         className={cn(
           'bg-white border border-red-500 rounded-[3px] flex justify-center items-center gap-2 p-2 mb-2',
           { hidden: !onClickItemTrash },

@@ -29,7 +29,7 @@ export const ChooseProductForm: React.FC<Props> = ({
   className,
 }) => {
   // Кастомный хук useSet для хранения выбранных id ингредиентов
-  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<number>([]));
+  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<string>([]));
 
   let textDetails
   manufacturer.length > 0 ?

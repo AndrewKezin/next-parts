@@ -3,6 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { FetchProducts } from '@/services/dto/cart.dto';
+import { ProductItem } from '@prisma/client';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {

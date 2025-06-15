@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import {
   AdminNavMenu,
   AdminNewProduct,
@@ -8,19 +8,20 @@ import {
   AdminProductCard,
   AdminProductFilter,
 } from '@/components/shared';
-import Link from 'next/link';
 import { Button } from '@/components/ui';
-import { PackagePlus } from 'lucide-react';
+import { PackagePlus, PackageSearch } from 'lucide-react';
 import { ProductDTO } from '@/services/dto/cart.dto';
 import { FetchProducts } from '@/services/dto/cart.dto';
 
 export default function DashboardProducts() {
-  const [isNewProduct, setIsNewProduct] = React.useState(false);
-  const [products, setProducts] = React.useState<ProductDTO[]>([]);
-  const [totalCount, setTotalCount] = React.useState<number>(0);
-  const [isLoading, setIsLoading] = React.useState(true);
-  const [startIndex, setStartIndex] = React.useState(1);
-  const [itemsPerPage, setItemsPerPage] = React.useState(10);
+  const [isNewProduct, setIsNewProduct] = useState(false);
+  const [products, setProducts] = useState<ProductDTO[]>([]);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [isLoading, setIsLoading] = useState(true);
+  const [startIndex, setStartIndex] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [productEditId, setProductEditId] = useState<string>('');
+  const [isProductEdit, setIsProductEdit] = useState(false);
 
   const handleSetData = (product: FetchProducts) => {
     if (product) {
@@ -29,9 +30,36 @@ export default function DashboardProducts() {
     }
   };
 
+  const handleProductEdit = (id: string) => {
+    setIsProductEdit(true);
+    setProductEditId(id);
+  };
+
   const handleAddProduct = () => {
     setIsNewProduct(!isNewProduct);
+    setIsProductEdit(false);
   };
+
+  if (isProductEdit) {
+    return (
+      <>
+        <div className="w-full p-3">
+          <Button
+            variant={'outline'}
+            className="w-[250px] mb-3 border-black text-black bg-slate-100"
+            onClick={() => setIsProductEdit(false)}>
+            <PackageSearch className="mr-2" />
+            Перейти к списку товаров
+          </Button>
+          <AdminNewProduct
+            productId={productEditId}
+            isProductEdit={isProductEdit}
+            setIsProductEdit={setIsProductEdit}
+          />
+        </div>
+      </>
+    );
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
@@ -52,8 +80,15 @@ export default function DashboardProducts() {
           variant={'outline'}
           className="w-[250px] mb-3 border-black text-black bg-slate-100"
           onClick={handleAddProduct}>
-          <PackagePlus className="mr-2" />
-          {isNewProduct ? 'Перейти к списку товаров' : 'Добавить новый товар'}
+          {isNewProduct || isProductEdit ? (
+            <>
+              <PackageSearch className="mr-2" /> Перейти к списку товаров
+            </>
+          ) : (
+            <>
+              <PackagePlus className="mr-2" /> Добавить новый товар
+            </>
+          )}
         </Button>
       </div>
 
@@ -65,16 +100,18 @@ export default function DashboardProducts() {
         <p className="text-2xl p-5">Товары по выбранным параметрам не найдены</p>
       )}
 
-      {!isNewProduct &&
-        products &&
-        products.length > 0 && (
-          <>
-            <p className='text-md p-5'>Найдено товаров: {totalCount}</p>
-            {products.map((product) => (
-              <AdminProductCard key={product.id} product={product} />
-            ))}
-          </>
-        )}
+      {!isNewProduct && products && products.length > 0 && (
+        <>
+          <p className="text-md p-5">Найдено товаров: {totalCount}</p>
+          {products.map((product) => (
+            <AdminProductCard
+              key={product.id}
+              product={product}
+              handleProductEdit={handleProductEdit}
+            />
+          ))}
+        </>
+      )}
 
       {/* Пагинация */}
       {!isNewProduct && products && products.length > 1 && (

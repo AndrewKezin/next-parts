@@ -28,7 +28,7 @@ export const ProfileButton: React.FC<Props> = ({ className, onClickSignIn }) => 
 
       <div className="flex gap-2">
         {session && (
-          <Button variant="outline" className="flex items-center gap-2" onClick={() => logOut()} alt="Выход">
+          <Button variant="outline" className="flex items-center gap-2" onClick={() => logOut()} title='Выход'>
             <LogOut size={18} />
             Выход
           </Button>

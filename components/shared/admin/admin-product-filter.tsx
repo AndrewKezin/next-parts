@@ -9,6 +9,7 @@ import { AdminProdFilter1stBlock } from './admin-prod-filter-1st-block';
 import { AdminProdFilter2ndBlock } from './admin-prod-filter-2nd-block';
 import { AdminProdFilter3rdBlock } from './admin-prod-filter-3rd-block';
 import { FetchProducts } from '@/services/dto/cart.dto';
+import { ProdFiltersSktn } from './skeletons';
 
 interface Props {
   startIndex: number;
@@ -135,7 +136,7 @@ export const AdminProductFilter: React.FC<Props> = ({
     if (loadedStatus.every((item) => item)) setIsFiltersLoaded(true);
   }, [loadedStatus]);
 
-  if (!isFiltersLoaded) return <p className="text-center text-lg">Загрузка фильтров...</p>;
+  if (!isFiltersLoaded) return <ProdFiltersSktn />;
 
   return (
     <div className="w-full flex-col items-center justify-between border border-gray-300 p-3 mb-5">

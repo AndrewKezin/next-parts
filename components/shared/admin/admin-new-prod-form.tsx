@@ -5,6 +5,7 @@ import Select from 'react-select';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { TOption } from './admin-product-select';
 import React, { useEffect } from 'react';
+import { ProductDTO } from '@/services/dto/cart.dto';
 
 interface Props {
   categOptions: TOption[];
@@ -15,6 +16,7 @@ interface Props {
   prodIngLoading: boolean;
   categoryId: string;
   resetForm: boolean;
+  defaultValues: ProductDTO | undefined;
   setSelectedCateg: (value: TOption) => void;
   setResetForm: (value: boolean) => void;
   onSubmit: (data: IProductForm) => void;
@@ -38,26 +40,60 @@ export const AdminNewProdForm: React.FC<Props> = ({
   prodManufLoading,
   prodIngLoading,
   categoryId,
+  defaultValues,
   setSelectedCateg,
   resetForm,
   setResetForm,
 }) => {
+  useEffect(() => {
+    if (defaultValues) {
+      const defaultManufOptions: TOption[] = defaultValues.gearboxesManufacturers.map((item) => {
+        return { value: String(item.id), label: item.name };
+      });
+
+      const defaultIngredOptions: TOption[] = defaultValues.ingredients.map((item) => {
+        return { value: String(item.id), label: item.name };
+      });
+
+      const defaultCategOptions: TOption = {
+        value: String(defaultValues.category.id),
+        label: defaultValues.category.name,
+      };
+
+      form.reset({
+        id: defaultValues.id,
+        name: defaultValues.name,
+        category: defaultCategOptions,
+        imageUrl: defaultValues.imageUrl,
+        gearboxesManufacturers: defaultManufOptions,
+        ingredients: defaultIngredOptions,
+      });
+    }
+  }, [defaultValues]);
+
   const form = useForm({
     defaultValues: {
       id: '',
       name: '',
-      category: { value: '', label: '' },
+      category: { value: '', label: '' } as TOption,
       imageUrl: '',
-      gearboxesManufacturers: [],
-      ingredients: [],
-    },
+      gearboxesManufacturers: [] as TOption[],
+      ingredients: [] as TOption[],
+    } as IProductForm,
   });
 
   const { control, handleSubmit, watch, reset } = form;
 
   useEffect(() => {
     if (resetForm) {
-      reset();
+      reset({
+        id: '',
+        name: '',
+        category: { value: '', label: '' },
+        imageUrl: '',
+        gearboxesManufacturers: [],
+        ingredients: [],
+      });
       setResetForm(false);
     }
   }, [resetForm]);
@@ -143,10 +179,18 @@ export const AdminNewProdForm: React.FC<Props> = ({
                 value={field.value}
                 onChange={field.onChange}
                 required
-                className="w-full bg-white rounded-none border border-gray-300"
+                className="w-full bg-white rounded-none border border-gray-300 mb-1"
               />
             )}
           />
+
+          {watch('imageUrl') ? (
+            <img src={watch('imageUrl')} className="w-[200px] h-[200px]" alt={watch('name')} />
+          ) : (
+            <div className="flex items-center justify-center w-[200px] h-[200px] bg-gray-300">
+              Добавьте URL фото
+            </div>
+          )}
 
           <label htmlFor="gearboxesManufacturers" className="mt-3">
             Производители:
@@ -203,7 +247,16 @@ export const AdminNewProdForm: React.FC<Props> = ({
             <button
               type="reset"
               className="w-[100px] h-[50px] border border-gray-500 bg-gray-100 rounded-[5px] hover:bg-gray-200 transition-colors font-bold"
-              onClick={() => reset()}>
+              onClick={() =>
+                reset({
+                  id: '',
+                  name: '',
+                  category: { value: '', label: '' },
+                  imageUrl: '',
+                  gearboxesManufacturers: [],
+                  ingredients: [],
+                })
+              }>
               Сброс
             </button>
           </div>

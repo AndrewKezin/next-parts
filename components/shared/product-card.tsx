@@ -9,7 +9,7 @@ import { Plus } from 'lucide-react';
 import { GearboxManufacturer } from '@prisma/client';
 
 interface Props {
-  id: number;
+  id: string;
   name: string;
   price: number;
   imageUrl: string;

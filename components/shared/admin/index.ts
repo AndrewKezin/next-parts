@@ -21,3 +21,4 @@ export {AdminPagination} from './admin-pagination';
 export {AdminNavMenu} from './admin-nav-menu';
 export {AdminProdCardItem} from './admin-prod-card-item';
 export {AdminProdCardItemProp} from './admin-prod-card-item-prop';
+export * from './skeletons';

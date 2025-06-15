@@ -76,6 +76,15 @@ export const productsApi = createApi({
       }),
       invalidatesTags: ['Products'],
     }),
+    // изменить товар
+    createOrUpdateProduct: build.mutation({
+      query: (body) => ({
+        url: `/products`,
+        method: 'PUT',
+        body,
+      }),
+      invalidatesTags: ['Products'],
+    }),
   }),
 });
 
@@ -86,4 +95,5 @@ export const {
   useAddProductMutation,
   useDeleteProductMutation,
   useDeleteProductItemMutation,
+  useCreateOrUpdateProductMutation,
 } = productsApi;

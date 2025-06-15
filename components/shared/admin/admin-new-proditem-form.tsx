@@ -1,17 +1,19 @@
 'use client';
 
 import { Input } from '@/components/ui';
-import { Trash } from 'lucide-react';
-import React from 'react';
+import { FilePen, Trash } from 'lucide-react';
+import React, { useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import { ItemElement } from './item-element';
 import { TOption } from './admin-product-select';
 import { cn } from '@/lib/utils';
+import { ConfirmPassword } from '../confirm-password';
 
 interface Props {
   selectedCateg: TOption;
   categoryId: string;
-  itemForm: IProductItemForm[];
+  itemsArr: IProductItemForm[];
+  setItemsArr: React.Dispatch<React.SetStateAction<IProductItemForm[]>>;
   onSubmitItem: (data: IProductItemForm) => void;
   handleItemDelete: (id: string) => void;
 }
@@ -28,10 +30,16 @@ export interface IProductItemForm {
 export const AdminNewProdItemForm: React.FC<Props> = ({
   selectedCateg,
   categoryId,
-  itemForm,
+  itemsArr,
+  setItemsArr,
   onSubmitItem,
   handleItemDelete,
 }) => {
+  // itemId, который выбран для изменения
+  const [currentItemId, setCurrentItemId] = useState('');
+  const [isConfirmItemDelete, setIsConfirmItemDelete] = useState('');
+  const [password, setPassword] = useState('');
+
   const itemsForm = useForm({
     defaultValues: {
       id: '',
@@ -45,13 +53,54 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
 
   const { handleSubmit: handleSubmitItem, reset: resetItem } = itemsForm;
 
+  const handleItemEdit = (id: string) => {
+    setCurrentItemId(id);
+    const currentItemId = itemsArr.find((item) => item.id === id);
+
+    itemsForm.reset(currentItemId);
+  };
+
+  const confirmItemDelete = (id: string) => {
+    if (password === id) {
+      handleItemDelete(id);
+      setIsConfirmItemDelete('');
+      setPassword('');
+    } else {
+      window.alert('Неверный код подтверждения');
+    }
+  };
+
+  console.log('itemsArr', itemsArr);
+
   return (
     <FormProvider {...itemsForm}>
       <form
         onSubmit={handleSubmitItem((data) => {
-          if (itemForm.every((item) => item.id !== data.id)) {
+          if (currentItemId === data.id) {
+            const index = itemsArr.findIndex((item) => item.id === data.id);
+            const newItemsArr = [...itemsArr];
+            newItemsArr[index] = data;
+            setItemsArr(newItemsArr);
+
+            resetItem({
+              id: '',
+              quantityOfTeeth: '',
+              thickness: '',
+              quantity: '',
+              volume: '',
+              price: '',
+            });
+            setCurrentItemId('');
+          } else if (itemsArr.every((item) => item.id !== data.id)) {
             onSubmitItem(data);
-            resetItem();
+            resetItem({
+              id: '',
+              quantityOfTeeth: '',
+              thickness: '',
+              quantity: '',
+              volume: '',
+              price: '',
+            });
           } else {
             window.alert('Вариант товара с таким артикулом уже есть!');
           }
@@ -194,25 +243,62 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
                 'w-[300px] h-[50px] border border-gray-500 bg-gray-100 rounded-[5px] hover:bg-gray-200 transition-colors font-bold',
                 !categoryId && 'opacity-50 cursor-not-allowed',
               )}>
-              2. Добавить вариант товара
+              {!currentItemId ? '2. Добавить вариант товара' : '2. Изменить вариант товара'}
             </button>
 
             <button
               type="reset"
               className="w-[100px] h-[50px] border border-gray-500 bg-gray-100 rounded-[5px] hover:bg-gray-200 transition-colors font-bold"
-              onClick={() => resetItem()}>
+              onClick={() =>
+                resetItem({
+                  id: '',
+                  quantityOfTeeth: '',
+                  thickness: '',
+                  quantity: '',
+                  volume: '',
+                  price: '',
+                })
+              }>
               Сброс
             </button>
           </div>
 
-          {itemForm.length > 0 && (
-            <div className="w-full flex flex-col items-center justify-center gap-3 p-3">
-              {itemForm.map((item) => (
-                <div className="flex gap-2" key={item.id}>
+          {itemsArr.length > 0 && (
+            <div className="w-full flex flex-col items-center justify-center gap-3 p-3 relative">
+              {itemsArr.map((item) => (
+                <div
+                  className={cn(
+                    'flex gap-2',
+                    currentItemId === item.id && 'outline-2 outline outline-primary rounded-[3px]',
+                  )}
+                  key={item.id}>
                   <ItemElement item={item} categoryId={categoryId} />
-                  <button onClick={() => handleItemDelete(item.id)}>
-                    <Trash className="text-primary" />
-                  </button>
+                  <div className="flex flex-col items-center justify-center gap-3">
+                    <div
+                      title="Удалить вариант"
+                      onClick={() => setIsConfirmItemDelete(isConfirmItemDelete ? '' : item.id)}>
+                      <Trash className="text-primary" cursor={'pointer'} />
+                    </div>
+                    <div title="Редактировать вариант" onClick={() => handleItemEdit(item.id)}>
+                      <FilePen className="text-primary" cursor={'pointer'} />
+                    </div>
+                  </div>
+
+                  <ConfirmPassword
+                    className={cn(
+                      'bg-white border border-red-500 rounded-[3px] flex justify-center items-center gap-2 p-2 absolute top-0 right-1/2 -translate-x-1/2',
+                      { hidden: isConfirmItemDelete !== item.id },
+                    )}
+                    password={password}
+                    setPassword={setPassword}
+                    handleConfirm={() => confirmItemDelete(item.id)}
+                    onClickCancel={() => {
+                      setIsConfirmItemDelete('');
+                      setPassword('');
+                    }}
+                    inputText="Введите артикул"
+                    labelText={`Для подтвеждения удаления варинта товара введите ${item.id}`}
+                  />
                 </div>
               ))}
             </div>
