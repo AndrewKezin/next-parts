@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { prisma } from '@/prisma/prisma-client';
 import intersection from 'lodash/intersection';
-import { AddProductDTO, FetchProducts, ProductDTO } from '@/services/dto/cart.dto';
+import { AddProductDTO, FetchProducts } from '@/services/dto/cart.dto';
 import { ProductItem } from '@prisma/client';
 import { checkAdminRules } from '@/lib/check-admin-rules';
 
@@ -20,36 +20,33 @@ export interface FilteredArray {
 // типизация запроса - NextRequest
 // Vercel не обрабатывает регистры символов в посковых запросах на кириллице
 export async function GET(req: NextRequest) {
-  const productName = req.nextUrl.searchParams.get('prodName') || '';
-  const prodManufIds = req.nextUrl.searchParams.get('manuf');
-  const prodIngredIds = req.nextUrl.searchParams.get('ingred');
-  const prodCatIds = req.nextUrl.searchParams.get('cat');
-  const productPriceFrom = req.nextUrl.searchParams.get('priceFrom') || '0';
-  const productPriceTo = req.nextUrl.searchParams.get('priceTo') || '100000';
-  const prodQuantVariants = req.nextUrl.searchParams.get('quantOfTeeth');
-  const prodThicknVariants = req.nextUrl.searchParams.get('thickness');
-  const prodVolumeVariants = req.nextUrl.searchParams.get('volume');
-  const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
-  const startIndex = req.nextUrl.searchParams.get('startIndex');
-
-  // переменная modifiedQuery - это попытка обойти косяк Vercel с регистром в поисковых запросах на кириллице
-  let modifiedQuery: string;
-  productName.length > 1 ? (modifiedQuery = productName.slice(1)) : (modifiedQuery = productName);
-
-  enum SEARCHPRICERANGE {
-    FROM = '0',
-    TO = '100000',
-  }
-
   try {
-    const session = await getServerSession(authOptions);
+    const adminRules = await checkAdminRules(true);
 
-    if (!session) {
-      return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
+    if (adminRules.status !== 200) {
+      return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
     }
 
-    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    // вытащить значения параметров из адресной строки. Если нет параметра, то вернет пустую строку
+    const productName = req.nextUrl.searchParams.get('prodName') || '';
+    const prodManufIds = req.nextUrl.searchParams.get('manuf');
+    const prodIngredIds = req.nextUrl.searchParams.get('ingred');
+    const prodCatIds = req.nextUrl.searchParams.get('cat');
+    const productPriceFrom = req.nextUrl.searchParams.get('priceFrom') || '0';
+    const productPriceTo = req.nextUrl.searchParams.get('priceTo') || '100000';
+    const prodQuantVariants = req.nextUrl.searchParams.get('quantOfTeeth');
+    const prodThicknVariants = req.nextUrl.searchParams.get('thickness');
+    const prodVolumeVariants = req.nextUrl.searchParams.get('volume');
+    const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
+    const startIndex = req.nextUrl.searchParams.get('startIndex');
+
+    // переменная modifiedQuery - это попытка обойти косяк Vercel с регистром в поисковых запросах на кириллице
+    let modifiedQuery: string;
+    productName.length > 1 ? (modifiedQuery = productName.slice(1)) : (modifiedQuery = productName);
+
+    enum SEARCHPRICERANGE {
+      FROM = '0',
+      TO = '100000',
     }
 
     if (Number(productPriceFrom) > Number(productPriceTo)) {
@@ -379,16 +376,13 @@ export async function GET(req: NextRequest) {
   }
 }
 
+// Добавление товара (не используется, потому что ниже прописана логика для PUT запроса)
 export async function POST(req: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const adminRules = await checkAdminRules(true);
 
-    if (!session) {
-      NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
-    }
-
-    if (session?.user.role !== 'ADMIN' && session?.user.role !== 'MANAGER') {
-      NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    if (adminRules.status !== 200) {
+      return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
     }
 
     const data: AddProductDTO = await req.json();
@@ -444,12 +438,13 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Обновление товара или добавление товара, если его нет в БД
 export async function PUT(req: NextRequest) {
   try {
     const adminRules = await checkAdminRules(true);
 
     if (adminRules.status !== 200) {
-      return NextResponse.json({ message: adminRules.message}, {status: adminRules.status});
+      return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
     }
 
     const data: AddProductDTO = await req.json();
@@ -461,72 +456,70 @@ export async function PUT(req: NextRequest) {
       quantityOfTeeth: item.quantityOfTeeth,
       volume: item.volume,
       price: item.price,
-      quantity: item.quantity
+      quantity: item.quantity,
     }));
 
-   
-    
-      await prisma.product.upsert({
-        where: {
-          id: data.id,
-        },
-        update: {
-          name: data.name,
-          imageUrl: data.imageUrl,
-          categoryId: data.categoryId,
-          gearboxesManufacturers: {
-            connect: data.gearboxesManufacturers,
-          },
-          ingredients: {
-            connect: data.ingredients,
-          },
-        },
-        create: {
-          id: data.id,
-          name: data.name,
-          imageUrl: data.imageUrl,
-          categoryId: data.categoryId,
-          gearboxesManufacturers: {
-            connect: data.gearboxesManufacturers,
-          },
-          ingredients: {
-            connect: data.ingredients,
-          },
-        },
-      });
+    console.log('itemsArr', itemsArr);
 
-      // upsert обновит или создаст запись в БД
-      await Promise.all(
-        itemsArr.map((item) => (
-          prisma.productItem.upsert({
-            where: {
-              id: item.id,
-            },
-            update: {
-              thickness: item.thickness ? item.thickness : undefined,
-              quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
-              volume: item.volume ? item.volume : undefined,
-              price: item.price,
-              quantity: item.quantity
-            },
-            create: {
-              id: item.id,
-              productId: item.productId,
-              thickness: item.thickness ? item.thickness : undefined,
-              quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
-              volume: item.volume ? item.volume : undefined,
-              price: item.price,
-              quantity: item.quantity
-            },
-          })
-        ))
-      )
-    
+    await prisma.product.upsert({
+      where: {
+        id: data.id,
+      },
+      update: {
+        name: data.name,
+        imageUrl: data.imageUrl,
+        categoryId: data.categoryId,
+        gearboxesManufacturers: {
+          connect: data.gearboxesManufacturers,
+        },
+        ingredients: {
+          connect: data.ingredients,
+        },
+      },
+      create: {
+        id: data.id,
+        name: data.name,
+        imageUrl: data.imageUrl,
+        categoryId: data.categoryId,
+        gearboxesManufacturers: {
+          connect: data.gearboxesManufacturers,
+        },
+        ingredients: {
+          connect: data.ingredients,
+        },
+      },
+    });
 
-    return NextResponse.json({message: 'Товар обновлен'}, {status: 200});
+    // upsert обновит или создаст запись в БД
+    await Promise.all(
+      itemsArr.map((item) =>
+        prisma.productItem.upsert({
+          where: {
+            id: item.id,
+          },
+          update: {
+            thickness: item.thickness ? item.thickness : undefined,
+            quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
+            volume: item.volume ? item.volume : undefined,
+            price: item.price,
+            quantity: item.quantity,
+          },
+          create: {
+            id: item.id,
+            productId: item.productId,
+            thickness: item.thickness ? item.thickness : undefined,
+            quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
+            volume: item.volume ? item.volume : undefined,
+            price: item.price,
+            quantity: item.quantity,
+          },
+        }),
+      ),
+    );
 
-    } catch (err) {
-      console.log('[PUT_PRODUCT] Error', err);
-      return NextResponse.json({message: '[PUT_PRODUCT] Error', err}, {status: 500});
-    }
+    return NextResponse.json({ message: 'Товар обновлен' }, { status: 200 });
+  } catch (err) {
+    console.log('[PUT_PRODUCT] Error', err);
+    return NextResponse.json({ message: '[PUT_PRODUCT] Error', err }, { status: 500 });
+  }
 }

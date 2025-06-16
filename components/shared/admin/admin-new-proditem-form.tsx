@@ -70,8 +70,6 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
     }
   };
 
-  console.log('itemsArr', itemsArr);
-
   return (
     <FormProvider {...itemsForm}>
       <form
@@ -139,6 +137,8 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
                   render={({ field }) => (
                     <Input
                       type="text"
+                      inputMode="numeric"
+                      pattern="[0-9]*"
                       name={field.name}
                       value={field.value}
                       onChange={field.onChange}
@@ -159,6 +159,8 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
                   render={({ field }) => (
                     <Input
                       type="text"
+                      inputMode="decimal"
+                      pattern="[0-9].[0-9]*"
                       name={field.name}
                       value={field.value}
                       onChange={field.onChange}
@@ -182,6 +184,8 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
                 render={({ field }) => (
                   <Input
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     name={field.name}
                     value={field.value}
                     onChange={field.onChange}
@@ -204,6 +208,8 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
                 render={({ field }) => (
                   <Input
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     name={field.name}
                     value={field.value}
                     onChange={field.onChange}
@@ -224,6 +230,8 @@ export const AdminNewProdItemForm: React.FC<Props> = ({
                 render={({ field }) => (
                   <Input
                     type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
                     name={field.name}
                     value={field.value}
                     onChange={field.onChange}

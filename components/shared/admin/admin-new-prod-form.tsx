@@ -167,7 +167,7 @@ export const AdminNewProdForm: React.FC<Props> = ({
           />
 
           <label htmlFor="imageUrl" className="mt-3">
-            URL фото:
+            URL фото (символ "-" - отсутствие фото):
           </label>
           <Controller
             name="imageUrl"
@@ -185,7 +185,13 @@ export const AdminNewProdForm: React.FC<Props> = ({
           />
 
           {watch('imageUrl') ? (
-            <img src={watch('imageUrl')} className="w-[200px] h-[200px]" alt={watch('name')} />
+            watch('imageUrl') !== '-' ? (
+              <img src={watch('imageUrl')} className="w-[200px] h-[200px]" alt={watch('name')} />
+            ) : (
+              <div className="flex items-center justify-center w-[200px] h-[200px] bg-gray-300">
+                Нет фото
+              </div>
+            )
           ) : (
             <div className="flex items-center justify-center w-[200px] h-[200px] bg-gray-300">
               Добавьте URL фото

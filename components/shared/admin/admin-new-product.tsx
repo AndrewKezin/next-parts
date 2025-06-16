@@ -79,7 +79,7 @@ export const AdminNewProduct: React.FC<Props> = ({
   // const [addProduct, { isError: addError, isLoading: addLoading, isSuccess: addSuccess }] =
   //   useAddProductMutation();
 
-  const [createOrUpdateProduct, { isError, isLoading, isSuccess }] =
+  const [createOrUpdateProduct, { isError, error, isLoading, isSuccess }] =
     useCreateOrUpdateProductMutation();
 
   const onSubmit = (data: IProductForm) => {
@@ -172,6 +172,8 @@ export const AdminNewProduct: React.FC<Props> = ({
     );
   }
 
+  error && console.log(error);
+  
   return (
     <div className="w-full flex flex-col items-center justify-center mb-2">
       <h2 className="text-2xl font-bold mb-3">

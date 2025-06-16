@@ -23,6 +23,7 @@ export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }
   const [deleteProduct, { isSuccess, isError, error }] = useDeleteProductMutation();
 
   const handleDeleteConfirm = async () => {
+    setOnClickTrash(false);
     const { isConfirm, errorMessage } = await confirmAdminPassword(password, product.id, true);
     if (isConfirm) {
       const res = await deleteProduct(product.id);
@@ -34,7 +35,6 @@ export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }
       } else {
         toast.success(res.data.message);
       }
-      setOnClickTrash(false);
     } else {
       errorMessage && toast.error(errorMessage);
     }
@@ -96,8 +96,12 @@ export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }
             <div className="underline">Категория:</div>
             <div>{product.category.name}</div>
           </div>
-          <div className="w-[150px] h-[150px] flex flex-col items-center justify-center border border-gray-300">
-            <img src={product.imageUrl} alt={product.name} />
+          <div className="w-[150px] min-h-full flex items-center justify-center border border-gray-300">
+            {product.imageUrl === '-' ? (
+              <div className='flex justify-center items-centertext-gray-300'>Нет фото</div>
+            ) : (
+              <img src={product.imageUrl} alt={product.name} />
+            )}
           </div>
           <div className="w-[200px] flex flex-col items-center justify-center border border-gray-300">
             <div className="underline">Производители:</div>

@@ -7,6 +7,8 @@ import {
   AdminPagination,
   AdminProductCard,
   AdminProductFilter,
+  ProdFiltersSktn,
+  ProductSktn,
 } from '@/components/shared';
 import { Button } from '@/components/ui';
 import { PackagePlus, PackageSearch } from 'lucide-react';
@@ -95,7 +97,7 @@ export default function DashboardProducts() {
       {isNewProduct && <AdminNewProduct />}
 
       {/* Список товаров */}
-      {!isNewProduct && isLoading && <p className="text-2xl p-5">Загрузка...</p>}
+      {!isNewProduct && isLoading && Array(5).fill(0).map((_, index) => <ProductSktn key={index} />)}
       {!isLoading && (!products || products?.length === 0) && (
         <p className="text-2xl p-5">Товары по выбранным параметрам не найдены</p>
       )}
@@ -103,6 +105,7 @@ export default function DashboardProducts() {
       {!isNewProduct && products && products.length > 0 && (
         <>
           <p className="text-md p-5">Найдено товаров: {totalCount}</p>
+
           {products.map((product) => (
             <AdminProductCard
               key={product.id}
