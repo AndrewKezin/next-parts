@@ -10,3 +10,7 @@ export { sendEmail } from './send-email';
 export { createPayment } from './create-payment';
 export { getUserProfile } from './get-user-profile';
 export { getLocalFormatDate } from './get-local-date';
+export { searchProdByParams } from './search-prod-by-params';
+export { filterProdByPrice } from './filter-prod-by-price';
+export {getResultArrByIntersection} from './get-result-arr-by-intersection';
+export {getFilteredArr} from './get-filtered-arr';

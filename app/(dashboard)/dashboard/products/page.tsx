@@ -7,7 +7,6 @@ import {
   AdminPagination,
   AdminProductCard,
   AdminProductFilter,
-  ProdFiltersSktn,
   ProductSktn,
 } from '@/components/shared';
 import { Button } from '@/components/ui';
