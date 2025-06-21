@@ -37,6 +37,7 @@ export {CartItemsView} from './cart-items-view';
 export {UserOrdersView} from './user-orders-view';
 export {OrderView} from './order-view';
 export {AutoUpdate} from './auto-update';
+export {Counter} from './counter';
 export * from './email-templates';
 export * from '../form';
 export * from './modals';

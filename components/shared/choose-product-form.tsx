@@ -1,10 +1,13 @@
+'use client';
+
 import { cn } from '@/lib/utils';
 import React from 'react';
-import Image from 'next/image';
 import { Button } from '../ui';
 import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
 import { useSet } from 'react-use';
-import { IngredientItem, Title } from '@/components/shared';
+import { Counter, GroupVariants, IngredientItem, ProductImage, Title } from '@/components/shared';
+import { useProductOptions } from '@/hooks';
+import { calcTotalProductPrice } from '@/lib';
 
 interface Props {
   imageUrl: string;
@@ -12,8 +15,10 @@ interface Props {
   ingredients: Ingredient[];
   items: ProductItem[];
   manufacturer: GearboxManufacturer[];
+  quantity: number;
+  setQuantity: React.Dispatch<React.SetStateAction<number>>;
   loading?: boolean;
-  onSubmit: VoidFunction;
+  onSubmit: (itemId: string, ingredients: string[]) => void;
   className?: string;
 }
 
@@ -25,45 +30,52 @@ export const ChooseProductForm: React.FC<Props> = ({
   ingredients,
   items,
   manufacturer,
+  quantity,
+  setQuantity,
   loading,
   className,
 }) => {
   // Кастомный хук useSet для хранения выбранных id ингредиентов
   const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<string>([]));
 
-  let textDetails
-  manufacturer.length > 0 ?
-    textDetails = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')} ` :
-    textDetails = 'Детали уточняйте у менеджера';
-  
+  const { prodItemVariant, currentItemId, availableProdVariants, setProdItemVariant } =
+    useProductOptions(items);
 
-  const totalIngredientsPrice = ingredients
-    .filter((ingredient) => selectedIngredients.has(ingredient.id))
-    .reduce((acc, ingredient) => acc + ingredient.price, 0);
-  const totalPrice = items[0].price + totalIngredientsPrice;
+  // const textDetails = `${prodItemVariant}`;
+  const textManufacturer = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')} `;
+
+  const totalPrice = calcTotalProductPrice(
+    items,
+    ingredients,
+    selectedIngredients,
+    prodItemVariant,
+    quantity,
+  );
 
   const handleClickAdd = () => {
-    onSubmit();
+    if (currentItemId) {
+      onSubmit(currentItemId, Array.from(selectedIngredients));
+    }
   };
 
   return (
     <div className={cn(className, 'flex flex-1')}>
-      <div className={cn('flex items-center justify-center flex-1 relative w-full', className)}>
-        <Image
-          unoptimized
-          priority={true}
-          src={imageUrl}
-          alt="Товар"
-          className="relative left-2 top-2 transition-all z-10 duration-300"
-          width={350}
-          height={350}
-        />
-      </div>
+      <ProductImage imageUrl={imageUrl} />
 
       <div className="w-[490px] bg-[#f7f6f5] p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
 
-        <p className="text-gray-400">{textDetails}</p>
+        <p className="text-gray-400 mb-2">Артикул: {currentItemId}</p>
+
+        {/* <p className="text-gray-400">{textDetails}</p> */}
+
+        <p className="text-gray-400 mb-5">{textManufacturer}</p>
+
+        <GroupVariants
+          items={availableProdVariants}
+          value={String(prodItemVariant)}
+          onClick={(value) => setProdItemVariant(String(value))}
+        />
 
         {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
         {ingredients.length > 0 && (
@@ -84,6 +96,9 @@ export const ChooseProductForm: React.FC<Props> = ({
             </div>
           </div>
         )}
+
+        {/* Количество */}
+        <Counter setQuantity={setQuantity} />
 
         <Button
           loading={loading}

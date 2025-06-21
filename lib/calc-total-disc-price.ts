@@ -8,6 +8,7 @@ import { Ingredient, ProductItem } from '@prisma/client';
  * @param items - список вариаций товара
  * @param ingredients - список ингредиентов (дополнительных товаров)
  * @param selectedIngredients - выбранные ингредиенты
+ * @param quantity - количество дисков
  *
  * @returns общая стоимость
  */
@@ -15,8 +16,9 @@ export const calcTotalDiscPrice = (
   items: ProductItem[],
   ingredients: Ingredient[],
   selectedIngredients: Set<string>,
-  thickness: Number,
-  quantityOfTeeth: Number,
+  thickness: number,
+  quantityOfTeeth: number,
+  quantity: number,
 ) => {
   const productPrice =
     items.find((item) => item.thickness === thickness && item.quantityOfTeeth === quantityOfTeeth)
@@ -25,5 +27,5 @@ export const calcTotalDiscPrice = (
     .filter((ingredient) => selectedIngredients.has(ingredient.id))
     .reduce((acc, ingredient) => acc + ingredient.price, 0);
 
-  return productPrice + totalIngredientsPrice;
+  return ((productPrice*quantity) + totalIngredientsPrice);
 };

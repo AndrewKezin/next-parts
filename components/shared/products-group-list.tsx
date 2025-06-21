@@ -8,6 +8,7 @@ import { ProductCard } from './product-card';
 import { useCategoryStore } from '@/store/category';
 import { transliterate } from '@/lib/transliterate';
 import { ProductWithRelations } from '@/@types/prisma';
+import { useCartStore } from '@/store';
 
 interface Props {
   title: string;
@@ -26,6 +27,9 @@ export const ProductsGroupList: React.FC<Props> = ({
 }) => {
   // сохраняем id активной категории в глобальный стейт zustand
   const setActiveCategoryId = useCategoryStore((state) => state.setActiveId);
+
+  // получаем список товаров в корзине
+  const { items: itemsInCart } = useCartStore((state) => state);
 
   // ref для intersection observer. Нужен для слежения за положением блока контента
   const intersectionRef = useRef(null);
@@ -55,6 +59,8 @@ export const ProductsGroupList: React.FC<Props> = ({
             imageUrl={product.imageUrl}
             price={product.items[0].price}
             manufacturer={product.gearboxesManufacturers}
+            itemsInCart={itemsInCart}
+            prodItems={product.items}
           />
         ))}
       </div>

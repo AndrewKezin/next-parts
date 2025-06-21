@@ -8,6 +8,7 @@ export default async function UnauthorizedPage() {
   if (user) {
     return redirect('/');
   }
+  
   return (
     <div className="flex flex-col items-center justify-center mt-40">
       <InfoBlock

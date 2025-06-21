@@ -16,6 +16,7 @@ interface Props {
 
 export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className }) => {
   const [addCartItem, loading] = useCartStore((state) => [state.addCartItem, state.loading]);
+  const [quantity, setQuantity] = React.useState(1);
 
   // проверка на то, что продукт является диском
   const isDiscForm = Boolean(product.items[0].quantityOfTeeth);
@@ -30,13 +31,14 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
 
       await addCartItem({
         productItemId: itemID,
+        quantity: quantity,
         ingredients,
       });
 
       // всплывающее сообщение
       toast.success('Товар добавлен в корзину');
 
-    // если onSubmit отработал в модальном окне, то выполнить router.back(), который получен через пропс из компонента модалки
+      // если onSubmit отработал в модальном окне, то выполнить router.back(), который получен через пропс из компонента модалки
       onModalSubmit?.();
     } catch (err) {
       console.error(err);
@@ -52,6 +54,8 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
         ingredients={product.ingredients}
         items={product.items}
         manufacturer={product.gearboxesManufacturers}
+        quantity={quantity}
+        setQuantity={setQuantity}
         onSubmit={onSubmit}
         loading={loading}
       />
@@ -66,6 +70,8 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
         ingredients={product.ingredients}
         items={product.items}
         manufacturer={product.gearboxesManufacturers}
+        quantity={quantity}
+        setQuantity={setQuantity}
         onSubmit={onSubmit}
         loading={loading}
       />
@@ -79,6 +85,8 @@ export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className
       ingredients={product.ingredients}
       items={product.items}
       manufacturer={product.gearboxesManufacturers}
+      quantity={quantity}
+      setQuantity={setQuantity}
       onSubmit={onSubmit}
       loading={loading}
     />

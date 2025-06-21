@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import { Button } from '../ui';
 import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
-import { ProductImage, GroupVariants, IngredientItem, Title } from '@/components/shared';
+import { ProductImage, GroupVariants, IngredientItem, Title, Counter } from '@/components/shared';
 import { calcTotalDiscPrice } from '@/lib';
 import { useDiscOptions, useDiscAllVariants } from '@/hooks';
 
@@ -14,6 +14,8 @@ interface Props {
   ingredients: Ingredient[];
   items: ProductItem[];
   manufacturer: GearboxManufacturer[];
+  quantity: number;
+  setQuantity: React.Dispatch<React.SetStateAction<number>>;
   loading?: boolean;
   onSubmit: (itemId: string, ingredients: string[]) => void;
   className?: string;
@@ -26,10 +28,13 @@ export const ChooseDiscForm: React.FC<Props> = ({
   ingredients,
   items,
   manufacturer,
+  quantity,
+  setQuantity,
   loading,
   onSubmit,
   className,
 }) => {
+  
   // Получить список всех возможных вариантов толщины диска и количества зубьев диска. Схема работы такая: получить все доступные варианты количества зубьев диска. Отрендерить их в компоненте GroupVariants. По ним же с помощью хука useDiscOptions определить доступные варианты толщины диска и выбрать первый доступный вариант. Недоступные варианты сделать disabled.
   const { mapDiscQuantityOfTeethObj, mapDiscThicknessObj } = useDiscAllVariants(items);
 
@@ -54,6 +59,7 @@ export const ChooseDiscForm: React.FC<Props> = ({
     selectedIngredients,
     thickness,
     quantityOfTeeth,
+    quantity,
   );
 
   const handleClickAdd = () => {
@@ -68,6 +74,8 @@ export const ChooseDiscForm: React.FC<Props> = ({
 
       <div className="w-[490px] bg-[#f7f6f5] p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
+
+        <p className="text-gray-400 mb-2">Артикул: {currentItemId}</p>
 
         <p className="text-gray-400 mb-2">{textDetails}</p>
 
@@ -108,6 +116,11 @@ export const ChooseDiscForm: React.FC<Props> = ({
             </div>
           </div>
         )}
+
+        {/* Количество */}
+        <Counter
+          setQuantity={setQuantity}
+        />
 
         <Button
           loading={loading}

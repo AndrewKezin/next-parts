@@ -17,8 +17,7 @@ export interface CartState {
   updateItemQuantity: (id: number, quantity: number) => Promise<void>;
 
   // Запрос на добавление товара в корзину
-  // !!!!!!!!TODO: типизировать values
-  addCartItem: (values: any) => Promise<void>;
+  addCartItem: (values: CreateCartItemValues) => Promise<void>;
 
   // Запрос на удаление товара из корзины
   removeCartItem: (id: number) => Promise<void>;
@@ -58,7 +57,10 @@ export const useCartStore = create<CartState>((set, get) => ({
       console.error(err);
       set({ error: true });
     } finally {
-      set((state) => ({ loading: false, items: state.items.map((item) => (item.id === id ? {...item, disabled: false} : item)) }));
+      set((state) => ({
+        loading: false,
+        items: state.items.map((item) => (item.id === id ? { ...item, disabled: false } : item)),
+      }));
     }
   },
 

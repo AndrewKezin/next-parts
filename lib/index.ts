@@ -1,5 +1,6 @@
 export { calcTotalDiscPrice } from './calc-total-disc-price';
 export { calcTotalOilPrice } from './calc-total-oil-price';
+export { calcTotalProductPrice } from './calc-total-product-price';
 export { getAvailableDiscThickness } from './get-available-disc-thickness';
 export { getMapDiscVariants } from './get-map-disc-variants';
 export { findAvailableDiscVariants } from './find-available-disc-variants';

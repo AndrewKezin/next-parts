@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import { Api } from '@/services/api-client';
 import { Product } from '@prisma/client';
-import { Search } from 'lucide-react';
+import { Search, X } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import React, { useRef, useState } from 'react';
@@ -66,6 +66,15 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
         />
+
+        {/* Lucide-значок очистки */}
+        {searchQuery.length > 0 && (
+          <button
+            onClick={() => setSearchQuery('')}
+            className="absolute top-1/2 translate-y-[-50%] right-3 h-5 text-gray-400">
+            <X />
+          </button>
+        )}
 
         {/* popup окно для найденных товаров */}
         {products.length > 0 && (

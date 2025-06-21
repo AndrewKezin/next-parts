@@ -5,8 +5,9 @@ import Link from 'next/link';
 import React from 'react';
 import { Title } from './title';
 import { Button } from '../ui';
-import { Plus } from 'lucide-react';
-import { GearboxManufacturer } from '@prisma/client';
+import { Plus, ShoppingCart } from 'lucide-react';
+import { GearboxManufacturer, ProductItem } from '@prisma/client';
+import { CartStateItem } from '@/lib/get-cart-details';
 
 interface Props {
   id: string;
@@ -14,10 +15,26 @@ interface Props {
   price: number;
   imageUrl: string;
   manufacturer: GearboxManufacturer[];
+  itemsInCart: CartStateItem[];
+  prodItems: ProductItem[];
   classname?: string;
 }
 
-export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, manufacturer, classname }) => {
+export const ProductCard: React.FC<Props> = ({
+  id,
+  name,
+  price,
+  imageUrl,
+  manufacturer,
+  itemsInCart,
+  prodItems,
+  classname,
+}) => {
+  const prodItemsInCart = itemsInCart.map((item) => item.productItemId);
+  const prodItemsIds = prodItems.map((item) => item.id);
+  // проверка наличия товара в корзине
+  const isInCart = prodItemsInCart.some((item) => prodItemsIds.includes(item));
+
   const textManufacturer = manufacturer.map((item) => item.name).join(', ');
 
   return (
@@ -25,7 +42,21 @@ export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, manufa
       <Link href={`product/${id}`}>
         {/* Изображение */}
         <div className="flex justify-center p-6 bg-secondary rounded-lg  h-[260px]">
-          <Image unoptimized priority={true} src={imageUrl} alt={name} width={215} height={215} className='w-auto h-auto' />
+          {!imageUrl || imageUrl === '-' ? (
+            <div className="flex justify-center items-center w-[215px] h-[215px] bg-gray-100 text-gray-400">
+              Нет фотографии
+            </div>
+          ) : (
+            <Image
+              unoptimized
+              priority={true}
+              src={imageUrl}
+              alt={name}
+              width={215}
+              height={215}
+              className="w-auto h-auto"
+            />
+          )}
         </div>
 
         {/* Заголовок */}
@@ -34,6 +65,9 @@ export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, manufa
         {/* Применимость */}
         <p className="text-sm text-grey-400">{textManufacturer}</p>
 
+        {/* ID */}
+        <p className="text-sm text-grey-400">Каталожный номер: {id}</p>
+
         {/* Цена */}
         <div className="flex justify-between items-center mt-4">
           <span className="text-[20px]">
@@ -41,11 +75,17 @@ export const ProductCard: React.FC<Props> = ({ id, name, price, imageUrl, manufa
           </span>
         </div>
 
-        {/* Кнопка "Добавить" */}
-        <Button variant="secondary">
-          <Plus size={20} className="mr-1" />
-          Добавить
-        </Button>
+        {/* В корзине / Кнопка "Добавить" */}
+        {isInCart ? (
+          <div className="w-[150px] flex items-center justify-left gap-2 px-2 py-1 bg-secondary rounded-sm text-md font-bold text-primary">
+            <ShoppingCart className="mr-1 text-primary" />В корзине
+          </div>
+        ) : (
+          <Button variant="secondary">
+            <Plus size={20} className="mr-1" />
+            Добавить
+          </Button>
+        )}
       </Link>
     </div>
   );

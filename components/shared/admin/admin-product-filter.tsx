@@ -1,7 +1,6 @@
 'use client';
 
 import React, { useEffect, useState } from 'react';
-import { TOption } from './admin-product-select';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui';
 import { useGetAllProductsQuery, useGetProductItemQuery, useGetProductQuery } from '@/store/redux';

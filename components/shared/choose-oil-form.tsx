@@ -3,7 +3,7 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { Button } from '../ui';
-import { ProductImage, GroupVariants, IngredientItem, Title } from '@/components/shared';
+import { ProductImage, GroupVariants, IngredientItem, Title, Counter } from '@/components/shared';
 import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
 import { calcTotalOilPrice } from '@/lib';
 import { useOilOptions } from '@/hooks';
@@ -14,6 +14,8 @@ interface Props {
   ingredients: Ingredient[];
   items: ProductItem[];
   manufacturer: GearboxManufacturer[];
+  quantity: number;
+  setQuantity: React.Dispatch<React.SetStateAction<number>>;
   loading?: boolean;
   onSubmit: (itemId: string, ingredients: string[]) => void;
   className?: string;
@@ -26,6 +28,8 @@ export const ChooseOilForm: React.FC<Props> = ({
   ingredients,
   items,
   manufacturer,
+  quantity,
+  setQuantity,
   loading,
   onSubmit,
   className,
@@ -42,7 +46,7 @@ export const ChooseOilForm: React.FC<Props> = ({
   const textDetails = `Канистра ${oilCanVolume} л.`;
   const textManufacturer = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')}`;
 
-  const totalPrice = calcTotalOilPrice(items, ingredients, selectedIngredients, oilCanVolume);
+  const totalPrice = calcTotalOilPrice(items, ingredients, selectedIngredients, oilCanVolume, quantity);
 
   const handleClickAdd = () => {
     if (currentItemId) {
@@ -56,6 +60,8 @@ export const ChooseOilForm: React.FC<Props> = ({
 
       <div className="w-[490px] bg-[#f7f6f5] p-7">
         <Title text={name} size="md" className="font-extrabold mb-1" />
+
+        <p className="text-gray-400 mb-2">Артикул: {currentItemId}</p>
 
         <p className="text-gray-400 mb-2">{textDetails}</p>
 
@@ -86,6 +92,9 @@ export const ChooseOilForm: React.FC<Props> = ({
             </div>
           </div>
         )}
+
+        {/* Количество */}
+        <Counter setQuantity={setQuantity} />
 
         <Button
           loading={loading}

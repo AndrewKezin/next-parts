@@ -3,25 +3,25 @@ import { Ingredient, ProductItem } from '@prisma/client';
 /**
  * Функция подсчета общей стоимости товара
  *
- * @param oilCanVolume - объём канистры масла
+ * @param prodItemVariant - вариант товара
  * @param items - список вариаций товара
  * @param ingredients - список ингредиентов (дополнительных товаров)
  * @param selectedIngredients - выбранные ингредиенты
- * @param quantity - количество канистр
+ * @param quantity - количество товаров
  *
  * @returns общая стоимость
  */
-export const calcTotalOilPrice = (
+export const calcTotalProductPrice = (
   items: ProductItem[],
   ingredients: Ingredient[],
   selectedIngredients: Set<string>,
-  oilCanVolume: number,
+  prodItemVariant: string,
   quantity: number,
 ) => {
-  const productPrice = items.find((item) => item.volume === oilCanVolume)?.price || 0;
+  const productPrice = items.find((item) => item.id === prodItemVariant)?.price || 0;
   const totalIngredientsPrice = ingredients
     .filter((ingredient) => selectedIngredients.has(ingredient.id))
     .reduce((acc, ingredient) => acc + ingredient.price, 0);
 
-  return ((productPrice*quantity) + totalIngredientsPrice);
+  return productPrice * quantity + totalIngredientsPrice;
 };
