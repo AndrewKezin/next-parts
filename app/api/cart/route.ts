@@ -126,7 +126,8 @@ export async function POST(req: NextRequest) {
     const findCartItemWithSameIngredients = findCartItemId.find(
       (item) =>
         (item.ingredients.length === data.ingredients?.length &&
-        item.ingredients.every((ingredient) => data.ingredients?.includes(ingredient.id))) || (item.ingredients.length === 0 && item.productItemId === data.productItemId),
+          item.ingredients.every((ingredient) => data.ingredients?.includes(ingredient.id))) ||
+        (item.ingredients.length === 0 && item.productItemId === data.productItemId),
     );
 
     // если одинаковый товар нашелся, то прибавить его количество. Если такого нет, то добавить его в корзину
@@ -136,7 +137,7 @@ export async function POST(req: NextRequest) {
           id: findCartItemWithSameIngredients.id,
         },
         data: {
-          quantity: findCartItemWithSameIngredients.quantity + 1,
+          quantity: findCartItemWithSameIngredients.quantity + data.quantity,
         },
       });
     } else {
@@ -144,7 +145,7 @@ export async function POST(req: NextRequest) {
         data: {
           cartId: userCart.id,
           productItemId: data.productItemId,
-          quantity: 1,
+          quantity: data.quantity,
           ingredients: { connect: data.ingredients?.map((id) => ({ id })) },
         },
       });

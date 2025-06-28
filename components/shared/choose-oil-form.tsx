@@ -37,6 +37,7 @@ export const ChooseOilForm: React.FC<Props> = ({
   const {
     oilCanVolume,
     currentItemId,
+    currentItemIdCount,
     selectedIngredients,
     availableOilCansVolume,
     setOilCanVolume,
@@ -46,7 +47,13 @@ export const ChooseOilForm: React.FC<Props> = ({
   const textDetails = `Канистра ${oilCanVolume} л.`;
   const textManufacturer = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')}`;
 
-  const totalPrice = calcTotalOilPrice(items, ingredients, selectedIngredients, oilCanVolume, quantity);
+  const totalPrice = calcTotalOilPrice(
+    items,
+    ingredients,
+    selectedIngredients,
+    oilCanVolume,
+    quantity,
+  );
 
   const handleClickAdd = () => {
     if (currentItemId) {
@@ -93,11 +100,20 @@ export const ChooseOilForm: React.FC<Props> = ({
           </div>
         )}
 
+        {/* Доступное количество */}
+        <div className="mt-3 mb-3 flex justify-center items-center gap-1 text-gray-400 text-md">
+          <span>В наличии:</span>
+          <span>{currentItemIdCount}шт</span>
+        </div>
+
         {/* Количество */}
-        <Counter setQuantity={setQuantity} />
+        {currentItemIdCount && (
+          <Counter setQuantity={setQuantity} availableQuantity={currentItemIdCount} />
+        )}
 
         <Button
           loading={loading}
+          disabled={quantity === 0}
           onClick={handleClickAdd}
           className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
           Добавить в корзину за {totalPrice} ₽

@@ -34,7 +34,6 @@ export const ChooseDiscForm: React.FC<Props> = ({
   onSubmit,
   className,
 }) => {
-  
   // Получить список всех возможных вариантов толщины диска и количества зубьев диска. Схема работы такая: получить все доступные варианты количества зубьев диска. Отрендерить их в компоненте GroupVariants. По ним же с помощью хука useDiscOptions определить доступные варианты толщины диска и выбрать первый доступный вариант. Недоступные варианты сделать disabled.
   const { mapDiscQuantityOfTeethObj, mapDiscThicknessObj } = useDiscAllVariants(items);
 
@@ -43,6 +42,7 @@ export const ChooseDiscForm: React.FC<Props> = ({
     thickness,
     quantityOfTeeth,
     currentItemId,
+    currentItemIdCount,
     selectedIngredients,
     availableDiscThicknesses,
     setThickness,
@@ -117,13 +117,20 @@ export const ChooseDiscForm: React.FC<Props> = ({
           </div>
         )}
 
+        {/* Доступное количество */}
+        <div className="mt-3 mb-3 flex justify-center items-center gap-1 text-gray-400 text-md">
+          <span>В наличии:</span>
+          <span>{currentItemIdCount}шт</span>
+        </div>
+
         {/* Количество */}
-        <Counter
-          setQuantity={setQuantity}
-        />
+        {currentItemIdCount && (
+          <Counter setQuantity={setQuantity} availableQuantity={currentItemIdCount} />
+        )}
 
         <Button
           loading={loading}
+          disabled={quantity === 0}
           onClick={handleClickAdd}
           className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
           Добавить в корзину за {totalPrice} ₽

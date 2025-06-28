@@ -38,8 +38,13 @@ export const ChooseProductForm: React.FC<Props> = ({
   // Кастомный хук useSet для хранения выбранных id ингредиентов
   const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<string>([]));
 
-  const { prodItemVariant, currentItemId, availableProdVariants, setProdItemVariant } =
-    useProductOptions(items);
+  const {
+    prodItemVariant,
+    currentItemId,
+    currentItemIdCount,
+    availableProdVariants,
+    setProdItemVariant,
+  } = useProductOptions(items);
 
   // const textDetails = `${prodItemVariant}`;
   const textManufacturer = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')} `;
@@ -97,11 +102,20 @@ export const ChooseProductForm: React.FC<Props> = ({
           </div>
         )}
 
+        {/* Доступное количество */}
+        <div className="mt-3 mb-3 flex justify-center items-center gap-1 text-gray-400 text-md">
+          <span>В наличии:</span>
+          <span>{currentItemIdCount}шт</span>
+        </div>
+
         {/* Количество */}
-        <Counter setQuantity={setQuantity} />
+        {currentItemIdCount && (
+          <Counter setQuantity={setQuantity} availableQuantity={currentItemIdCount} />
+        )}
 
         <Button
           loading={loading}
+          disabled={quantity === 0}
           className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10"
           onClick={handleClickAdd}>
           Добавить в корзину за {totalPrice} ₽

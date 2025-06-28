@@ -6,6 +6,7 @@ import { useSet } from 'react-use';
 interface ReturnProps {
   oilCanVolume: number;
   currentItemId: string | undefined;
+  currentItemIdCount: number | undefined;
   selectedIngredients: Set<string>;
   availableOilCansVolume: Variant[];
   setOilCanVolume: (volume: number) => void;
@@ -39,9 +40,13 @@ export const useOilOptions = (items: ProductItem[]): ReturnProps => {
   // id масла, который имеет нужный объем канистры
   const currentItemId = items.find((item) => item.volume === oilCanVolume)?.id;
 
+  // количество выбранного варианта товара
+  const currentItemIdCount = items.find((item) => item.id === currentItemId)?.quantity;
+
   return {
     oilCanVolume,
     currentItemId,
+    currentItemIdCount,
     selectedIngredients,
     availableOilCansVolume,
     setOilCanVolume,

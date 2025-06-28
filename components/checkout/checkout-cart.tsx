@@ -6,7 +6,7 @@ import { Skeleton } from '../ui';
 
 interface Props {
   items: CartStateItem[];
-  onClickCountButton: (id: number, quantity: number, type: 'plus' | 'minus') => void;
+  updateItemQuantity: (id: number, quantity: number) => void;
   removeCartItem: (id: number) => void;
   loading?: boolean;
   className?: string;
@@ -14,20 +14,24 @@ interface Props {
 
 export const CheckoutCart: React.FC<Props> = ({
   items,
-  onClickCountButton,
+  updateItemQuantity,
   removeCartItem,
   loading,
   className,
 }) => {
+  console.log("render checkout cart");
+  
+
   return (
     <WhiteBlock title="1. Корзина" className={className}>
       <div className="flex flex-col gap-5">
         {loading
-          ? [...Array(5)].map((_, index) => <Skeleton key={index} className="h-12 w-50" />)
+          ? [...Array(5)].map((_, index) => <Skeleton key={index} className="h-[100px] w-50" />)
           : items.map((item) => (
               <CheckoutItem
                 key={item.id}
                 id={item.id}
+                productItemId={item.productItemId}
                 disabled={item.disabled}
                 imageUrl={item.imageUrl}
                 details={
@@ -38,8 +42,9 @@ export const CheckoutCart: React.FC<Props> = ({
                 }
                 name={item.name}
                 price={item.price}
+                availableQuantity={item.availableQuantity}
                 quantity={item.quantity}
-                onClickCountButton={(type) => onClickCountButton(item.id, item.quantity, type)}
+                handleSetQuantity={(value) => updateItemQuantity(item.id, value)}
                 onClickRemove={() => removeCartItem(item.id)}
               />
             ))}

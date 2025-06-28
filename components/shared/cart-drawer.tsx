@@ -23,14 +23,9 @@ import { useCart } from '@/hooks';
 
 // Выезжающее окно корзины справа
 export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const {totalAmount, items, updateItemQuantity, removeCartItem} = useCart();
-
   const [redirecting, setRedirecting] = useState(false);
 
-  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
-    const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
-    updateItemQuantity(id, newQuantity);
-  };
+  const { totalAmount, items, updateItemQuantity, removeCartItem } = useCart();
 
   return (
     <Sheet>
@@ -66,7 +61,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
               />
               <Title size="sm" text="Корзина пуста" className="text-center font-bold my-2" />
               <p className="text-center text-neutral-500 mb-5">
-                Вы еще не добавили товаров в корзину
+                Вы еще не добавили товары в корзину
               </p>
 
               {/* SheetClose добавит onclick на кнопку закрытия */}
@@ -86,6 +81,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                   <div className="mb-2" key={item.id}>
                     <CartDrawerItem
                       id={item.id}
+                      productItemId={item.productItemId}
                       imageUrl={item.imageUrl}
                       details={
                         ((item.thickness || item.quantityOfTeeth) &&
@@ -101,10 +97,9 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                       disabled={item.disabled}
                       name={item.name}
                       price={item.price}
+                      availableQuantity={item.availableQuantity}
                       quantity={item.quantity}
-                      onClickCountButton={(type) =>
-                        onClickCountButton(item.id, item.quantity, type)
-                      }
+                      handleSetQuantity={(value) => updateItemQuantity(item.id, value)}
                       onClickRemove={() => removeCartItem(item.id)}
                     />
                   </div>
@@ -123,12 +118,16 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                   </div>
 
                   <Link href="/checkout">
-                    <Button onClick={() => setRedirecting(true)} disabled={redirecting} type="submit" className="w-full h-12 text-base">
+                    <Button
+                      onClick={() => setRedirecting(true)}
+                      disabled={redirecting}
+                      type="submit"
+                      className="w-full h-12 text-base">
                       Оформить заказ
                       <ArrowRight className="w-5 ml-2" />
                     </Button>
                   </Link>
-                </div> 
+                </div>
               </SheetFooter>
             </>
           )}

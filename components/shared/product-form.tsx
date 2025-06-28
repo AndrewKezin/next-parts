@@ -15,8 +15,8 @@ interface Props {
 }
 
 export const ProductForm: React.FC<Props> = ({ product, onModalSubmit, className }) => {
-  const [addCartItem, loading] = useCartStore((state) => [state.addCartItem, state.loading]);
   const [quantity, setQuantity] = React.useState(1);
+  const [addCartItem, loading] = useCartStore((state) => [state.addCartItem, state.loading]);
 
   // проверка на то, что продукт является диском
   const isDiscForm = Boolean(product.items[0].quantityOfTeeth);

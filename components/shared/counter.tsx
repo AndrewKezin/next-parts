@@ -4,19 +4,20 @@ import { cn } from '@/lib/utils';
 import React, { useEffect } from 'react';
 
 interface Props {
+  availableQuantity: number;
   setQuantity: (value: number) => void;
   className?: string;
 }
 
-export const Counter: React.FC<Props> = ({ setQuantity, className }) => {
-  const [value, setValue] = React.useState(1);
+export const Counter: React.FC<Props> = ({ availableQuantity, setQuantity, className }) => {
+  const [value, setValue] = React.useState<number>(1);
 
   useEffect(() => {
     setQuantity(value);
   }, [value]);
 
   const onIncrement = () => {
-    if (value <= 10) {
+    if (value < availableQuantity) {
       setValue(value + 1);
     }
   };
@@ -26,10 +27,26 @@ export const Counter: React.FC<Props> = ({ setQuantity, className }) => {
     }
   };
 
-  const setCurrentValue = (newValue: number) => {
-    if (!isNaN(newValue)) {
-      setValue(newValue);
+  const setCurrentValue = (newValue: string) => {
+    if (isNaN(+newValue)) {
+      return;
     }
+    if (newValue === '') {
+      setValue(0);
+      return;
+    }
+    if (+newValue === 0) {
+      return;
+    }
+    if (+newValue > availableQuantity) {
+      setValue(availableQuantity);
+      return;
+    }
+    if (+newValue < 0) {
+      setValue(1);
+      return;
+    }
+    setValue(+newValue);
   };
 
   return (
@@ -42,9 +59,9 @@ export const Counter: React.FC<Props> = ({ setQuantity, className }) => {
         type="text"
         inputMode="numeric"
         pattern="[0-9]*"
-        className="w-10 text-center"
+        className={cn('w-10 text-center', { 'text-red-500': value === 0 })}
         value={value}
-        onChange={(e) => setCurrentValue(Number(e.target.value))}
+        onChange={(e) => setCurrentValue(e.target.value)}
       />
       <button onClick={onIncrement}>+</button>
     </div>

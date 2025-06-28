@@ -16,51 +16,87 @@ export const ingredients = [
     id: 'a1b2c3d',
     name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
     price: 2350,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
   },
   {
     id: 'e4f5g6h',
     name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
     price: 435,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
   },
   {
     id: 'i7j8k9l',
     name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
     price: 1100,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
   },
   {
     id: 'm4n5o6p',
     name: 'Стабилизатор трансмиссионной жидкости',
     price: 1520,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
   },
   {
     id: 'q1r2s3t',
     name: 'Жидкость для разверток',
     price: 1200,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465bt_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465bt_1.jpg',
   },
   {
     id: 'u4v5w6x',
     name: 'Модификатор концентрированный фрикционный Dr. Tranny',
     price: 3200,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465ha_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465ha_1.jpg',
   },
   {
     id: 'y7z8b9c',
     name: 'Перчатки одноразовые нитриловые JSN NATRIX (размер L, 50шт., оранжевые)',
     price: 2000,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2023/09/24/J10855L_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2023/09/24/J10855L_1.jpg',
   },
   {
     id: 'a2b3c4d',
     name: 'Радиатор охлаждения трансмиссии дополнительный',
     price: 5800,
-    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465bt_1.jpg'
+    imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465bt_1.jpg',
   },
-]
+  {
+    id: 'oilutil001',
+    name: 'Утилизация отработанного масла (1л)',
+    price: 10,
+    imageUrl: '../public/assets/images/ingredients/oilutil.png',
+  },
+  {
+    id: 'oilutil002',
+    name: 'Утилизация отработанного масла (5л)',
+    price: 30,
+    imageUrl: '../public/assets/images/ingredients/oilutil.png',
+  },
+  {
+    id: 'oilutil003',
+    name: 'Утилизация отработанного масла (10л)',
+    price: 50,
+    imageUrl: '../public/assets/images/ingredients/oilutil.png',
+  },
+  {
+    id: 'flash001',
+    name: 'Установка программного обеспечения под VIN а/м (на 1 ЭБУ)',
+    price: 2000,
+    imageUrl: '../public/assets/images/ingredients/flash.png',
+  },
+  {
+    id: 'calib001',
+    name: 'Запись калибровочных данных (на 1 ЭБУ)',
+    price: 1500,
+    imageUrl: '../public/assets/images/ingredients/calib.png',
+  },
+  {
+    id: 'pack001',
+    name: 'Дополнительная упаковка от повреждений для транспортировки',
+    price: 500,
+    imageUrl: '../public/assets/images/ingredients/pack.png',
+  },
+];
 
 // тестовые продукты
 export const products = [
@@ -155,25 +191,25 @@ export const products = [
     imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/11/jtc-4921_1.jpg',
     categoryId: 8,
   },
-]
+];
 
 // список производителей трансмиссий
 export const gearboxManufacturers = [
-  {name: 'Aisin Warner'},
-  {name: 'Borg Warner'},
-  {name: 'China manuf.'},
-  {name: 'Ford'},
-  {name: 'Getrag'},
-  {name: 'GM'},
-  {name: 'Honda'},
-  {name: 'Kia/Hundai'},
-  {name: 'Mercedes-Benz'},
-  {name: 'Mitsubishi'},
-  {name: 'Nissan/Jatco'},
-  {name: 'Other manuf.'},
-  {name: 'PSA (France manuf.)'},
-  {name: 'Subaru'},
-  {name: 'Toyota'},
-  {name: 'VAG'},
-  {name: 'ZF'},
+  { name: 'Aisin Warner' },
+  { name: 'Borg Warner' },
+  { name: 'China manuf.' },
+  { name: 'Ford' },
+  { name: 'Getrag' },
+  { name: 'GM' },
+  { name: 'Honda' },
+  { name: 'Kia/Hundai' },
+  { name: 'Mercedes-Benz' },
+  { name: 'Mitsubishi' },
+  { name: 'Nissan/Jatco' },
+  { name: 'Other manuf.' },
+  { name: 'PSA (France manuf.)' },
+  { name: 'Subaru' },
+  { name: 'Toyota' },
+  { name: 'VAG' },
+  { name: 'ZF' },
 ];

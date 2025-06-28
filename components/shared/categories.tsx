@@ -2,7 +2,7 @@
 
 import { transliterate } from '@/lib/transliterate';
 import { cn } from '@/lib/utils';
-import { useCategoryStore } from '@/store/category';
+import { useCategoryStore } from '@/store';
 import { Category } from '@prisma/client';
 import React from 'react';
 

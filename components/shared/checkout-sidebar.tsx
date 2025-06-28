@@ -3,7 +3,6 @@ import { WhiteBlock } from './white-block';
 import { CheckoutItemDetails } from './checkout-item-details';
 import { ArrowRight, Package, Percent, Truck } from 'lucide-react';
 import { Button } from '../ui';
-import { useCartStore } from '@/store';
 
 interface Props {
   totalAmount: number;

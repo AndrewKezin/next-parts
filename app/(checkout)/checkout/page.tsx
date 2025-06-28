@@ -19,6 +19,8 @@ export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
   
   const session = useSession();
+  console.log("session", session);
+  
 
   // стор для тестового платежа
   const payStore = useTestPayStore((state) => state);
@@ -87,11 +89,8 @@ export default function CheckoutPage() {
     } 
   };
 
-
-  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
-    const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
-    updateItemQuantity(id, newQuantity);
-  };
+  console.log("render checkout page");
+  
 
   return (
     <Container className="mt-10">
@@ -104,7 +103,7 @@ export default function CheckoutPage() {
             <div className="flex flex-col gap-10 flex-1 mb-20">
               <CheckoutCart
                 items={items}
-                onClickCountButton={onClickCountButton}
+                updateItemQuantity={updateItemQuantity}
                 removeCartItem={removeCartItem}
                 loading={loading}
               />

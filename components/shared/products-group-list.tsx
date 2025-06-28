@@ -5,7 +5,7 @@ import { useIntersection } from 'react-use';
 import { Title } from './title';
 import { cn } from '@/lib/utils';
 import { ProductCard } from './product-card';
-import { useCategoryStore } from '@/store/category';
+import { useCategoryStore } from '@/store';
 import { transliterate } from '@/lib/transliterate';
 import { ProductWithRelations } from '@/@types/prisma';
 import { useCartStore } from '@/store';
