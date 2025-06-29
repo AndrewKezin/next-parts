@@ -1,7 +1,10 @@
 'use client';
 
-import { AddressInput, ErrorText, FormTextarea, WhiteBlock } from '../shared';
-import { Controller, useFormContext } from 'react-hook-form';
+import { useState } from 'react';
+import { WhiteBlock } from '../shared';
+import { CheckoutDeliveryMethod } from './checkout-delivery-method';
+import { CheckoutDelivery } from './checkout-delivery';
+import { CheckoutPickup } from './checkout-pickup';
 
 interface Props {
   inputValue?: string;
@@ -9,28 +12,22 @@ interface Props {
 }
 
 export const CheckoutAddressForm: React.FC<Props> = ({ inputValue, className }) => {
-  const { control } = useFormContext();
+  const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
 
   return (
-    <WhiteBlock title="3. Адрес доставки" className={className}>
-      <div className="flex flex-col gap-5">
-        <Controller
-          name="address"
-          control={control}
-          render={({ field, fieldState }) => (
-            <>
-              <AddressInput defaultQuery={inputValue} onChange={field.onChange} />
-              {fieldState.error?.message && <ErrorText text={fieldState.error.message} />}
-            </>
-          )}
-        />
-        <FormTextarea
-          name="comment"
-          rows={5}
-          className="text-base"
-          placeholder="Комментарий к заказу"
-        />
-      </div>
+    <WhiteBlock
+      title={deliveryMethod === 'pickup' ? '3. Адрес магазина' : '3. Адрес доставки'}
+      className={className}>
+      <CheckoutDeliveryMethod
+        deliveryMethod={deliveryMethod}
+        setDeliveryMethod={setDeliveryMethod}
+      />
+
+      {deliveryMethod === 'delivery' ? (
+        <CheckoutDelivery defaultAddress={inputValue} />
+      ) : (
+        <CheckoutPickup />
+      )}
     </WhiteBlock>
   );
 };

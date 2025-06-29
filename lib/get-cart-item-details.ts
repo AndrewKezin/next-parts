@@ -22,7 +22,7 @@ export const getCartItemDetails = (
 
   // Если есть ингредиенты, то тоже добавляем их в массив
   if (ingredients) {
-    details.push(...ingredients.map((ingredient) => ingredient.name));
+    details.push(...ingredients.map((ingredient) => `${ingredient.name} - ${ingredient.price} руб.`));
   }
 
   return details.join(', ');

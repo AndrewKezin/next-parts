@@ -16,6 +16,7 @@ export const checkoutFormSchema = z.object({
         .string()
         .min(10, 'Номер телефона должен содержать не менее 10 символов')
         .max(15, 'Номер телефона должен содержать не более 15 символов'),
+    deliveryMethod: z.enum(['delivery', 'pickup']),
     address: z
         .string()
         .min(5, 'Адрес должен содержать не менее 5 символов')

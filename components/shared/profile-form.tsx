@@ -48,7 +48,6 @@ export const ProfileForm: React.FC<Props> = ({ data }) => {
   const { control } = form;
 
   const onSubmit = async (data: TFormProfileValues) => {
-    console.log('onsubmit');
     try {
       await updateUserInfo({
         email: data.email,

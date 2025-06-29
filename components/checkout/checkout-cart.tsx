@@ -19,14 +19,13 @@ export const CheckoutCart: React.FC<Props> = ({
   loading,
   className,
 }) => {
-  console.log("render checkout cart");
-  
-
   return (
     <WhiteBlock title="1. Корзина" className={className}>
       <div className="flex flex-col gap-5">
         {loading
-          ? [...Array(5)].map((_, index) => <Skeleton key={index} className="h-[100px] w-50" />)
+          ? Array.from({ length: 5 }).map((_, i) => (
+              <Skeleton key={i} className="h-[80px] w-full" />
+            ))
           : items.map((item) => (
               <CheckoutItem
                 key={item.id}
@@ -38,7 +37,7 @@ export const CheckoutCart: React.FC<Props> = ({
                   ((item.thickness || item.quantityOfTeeth) &&
                     getCartItemDetails(item.ingredients, item.thickness, item.quantityOfTeeth)) ||
                   (item.volume && getCartItemDetails(item.ingredients, null, null, item.volume)) ||
-                  ''
+                  getCartItemDetails(item.ingredients)
                 }
                 name={item.name}
                 price={item.price}

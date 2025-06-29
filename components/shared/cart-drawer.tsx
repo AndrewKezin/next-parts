@@ -92,7 +92,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                           )) ||
                         (item.volume &&
                           getCartItemDetails(item.ingredients, null, null, item.volume)) ||
-                        ''
+                        getCartItemDetails(item.ingredients)
                       }
                       disabled={item.disabled}
                       name={item.name}

@@ -35,15 +35,14 @@ export const ChooseProductForm: React.FC<Props> = ({
   loading,
   className,
 }) => {
-  // Кастомный хук useSet для хранения выбранных id ингредиентов
-  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<string>([]));
-
   const {
     prodItemVariant,
     currentItemId,
     currentItemIdCount,
     availableProdVariants,
+    selectedIngredients,
     setProdItemVariant,
+    addIngredient,
   } = useProductOptions(items);
 
   // const textDetails = `${prodItemVariant}`;
