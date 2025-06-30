@@ -1,4 +1,5 @@
 import { prisma } from "@/prisma/prisma-client";
+import { UserDTO } from "@/services/dto/cart.dto";
 
 /**
  * Получить информацию о пользователе и его заказах
@@ -25,9 +26,10 @@ export const getUserProfile = async (id: string) => {
                 },
               },
             },
-          }
+          },
+          addresses: true,
         },
       });
 
-      return user;
+      return user as UserDTO;
 }

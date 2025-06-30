@@ -46,7 +46,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'ACTIVE',
-        address: '123 Main St',
         phone: '1234567890',
       },
       {
@@ -73,7 +72,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'BANNED',
-        address: '456 Elm St',
       },
       {
         fullName: 'Alexandr Petrov',
@@ -90,7 +88,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'ACTIVE',
-        address: '789 Pine St',
       },
       {
         fullName: 'Ekaterina Ekaterinova',
@@ -116,7 +113,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'BANNED',
-        address: '321 Oak St',
       },
       {
         fullName: 'Evgeniy Evgeniev',
@@ -142,7 +138,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'INACTIVE',
-        address: '654 Spruce St',
       },
       {
         fullName: 'Natalia Nikolaeva',
@@ -176,7 +171,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'ACTIVE',
-        address: '987 Birch St',
       },
       {
         fullName: 'Aleksandr Petrov',
@@ -210,7 +204,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'DELETED',
-        address: '159 Cedar St',
       },
       {
         fullName: 'Nikolay Nikolaev',
@@ -252,7 +245,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'DELETED',
-        address: '753 Maple St',
       },
       {
         fullName: 'Ivan Ivanov',
@@ -1819,7 +1811,26 @@ async function up() {
       },
     ],
   });
+
+  // создать базу адресов
+  await prisma.userAddresses.createMany({
+    data: [
+      {
+        userId: 1,
+        address: 'Москва, ул. Айтишников, д. 10100',
+      },
+      {
+        userId: 1,
+        address: 'Москва, ул. Электронная", д. 11100',
+      },
+      {
+        userId: 1,
+        address: 'Москва, ул. Компьютерная", д. 10',
+      },
+    ],
+  })
 }
+
 
 // удаление тестовых данных
 async function down() {

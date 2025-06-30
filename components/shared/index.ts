@@ -38,6 +38,8 @@ export {UserOrdersView} from './user-orders-view';
 export {OrderView} from './order-view';
 export {AutoUpdate} from './auto-update';
 export {Counter} from './counter';
+export {ProfileMenu} from './profile-menu';
+export {ProfileAddresses} from './profile-addresses';
 export * from './email-templates';
 export * from '../form';
 export * from './modals';

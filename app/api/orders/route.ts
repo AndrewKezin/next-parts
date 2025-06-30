@@ -1,8 +1,7 @@
 import { prisma } from '@/prisma/prisma-client';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { OrderStatus } from '@prisma/client';
+import { checkAdminRules } from '@/lib/check-admin-rules';
 
 // запрос на получение всех заказов для админки
 //  поиск по заказам (api/orders?query=qweqwe)
@@ -23,14 +22,10 @@ export async function GET(req: NextRequest) {
   query.length > 1 ? (modifiedQuery = query.slice(1)) : (modifiedQuery = query);
 
   try {
-    const session = await getServerSession(authOptions);
+    const adminRules = await checkAdminRules(true);
 
-    if (!session) {
-      return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
-    }
-
-    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    if (adminRules.status !== 200) {
+      return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
     }
 
     const [orders, totalCount] = await Promise.all([

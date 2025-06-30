@@ -52,9 +52,6 @@ export default function CheckoutPage() {
       if (data.phone) {
         form.setValue('phone', data.phone);
       }
-      if (data.address) {
-        form.setValue('address', data.address);
-      }
     }
 
     if (session) {

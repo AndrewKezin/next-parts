@@ -1,20 +1,14 @@
 import { prisma } from '@/prisma/prisma-client';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
 import { FetchProducts } from '@/services/dto/cart.dto';
-import { ProductItem } from '@prisma/client';
+import { checkAdminRules } from '@/lib/check-admin-rules';
 
 export async function GET(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const adminRules = await checkAdminRules(true);
 
-    if (!session) {
-      return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
-    }
-
-    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    if (adminRules.status !== 200) {
+      return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
     }
 
     const product = await prisma.product.findFirst({
@@ -42,14 +36,10 @@ export async function GET(req: NextRequest, { params }: { params: { id: string }
 
 export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
   try {
-    const session = await getServerSession(authOptions);
+    const adminRules = await checkAdminRules(true);
 
-    if (!session) {
-      return NextResponse.json({ message: 'Вы не авторизованы' }, { status: 401 });
-    }
-
-    if (session.user.role !== 'ADMIN' && session.user.role !== 'MANAGER') {
-      return NextResponse.json({ message: 'Недостаточно прав' }, { status: 403 });
+    if (adminRules.status !== 200) {
+      return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
     }
 
     if (!params.id) {
@@ -58,7 +48,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
 
     await prisma.productItem.deleteMany({
       where: {
-        productId:params.id,
+        productId: params.id,
       },
     });
 

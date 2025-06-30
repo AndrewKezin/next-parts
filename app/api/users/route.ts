@@ -52,18 +52,20 @@ export async function GET(req: NextRequest) {
                 },
               ]
             : undefined,
-          status: currentUserStatus 
+          status: currentUserStatus
             ? {
-              equals: currentUserStatus as UserStatus,
-            } : undefined,
+                equals: currentUserStatus as UserStatus,
+              }
+            : undefined,
           role: currentUserRole
             ? {
-              equals: currentUserRole as UserRole,
-            } : undefined,
+                equals: currentUserRole as UserRole,
+              }
+            : undefined,
           createdAt: {
             gte: dateFrom ? new Date(dateFrom) : undefined,
             lte: dateTo ? new Date(dateTo) : undefined,
-          }
+          },
         },
         select: {
           id: true,
@@ -88,23 +90,25 @@ export async function GET(req: NextRequest) {
                 },
               ]
             : undefined,
-          status: currentUserStatus 
+          status: currentUserStatus
             ? {
-              equals: currentUserStatus as UserStatus,
-            } : undefined,
+                equals: currentUserStatus as UserStatus,
+              }
+            : undefined,
           role: currentUserRole
             ? {
-              equals: currentUserRole as UserRole,
-            } : undefined,
+                equals: currentUserRole as UserRole,
+              }
+            : undefined,
           createdAt: {
             gte: dateFrom ? new Date(dateFrom) : undefined,
             lte: dateTo ? new Date(dateTo) : undefined,
-          }
+          },
         },
       }),
     ]);
 
-    return NextResponse.json({users, totalCount});
+    return NextResponse.json({ users, totalCount });
   } catch (err) {
     console.log(err);
     return NextResponse.json({ message: '[GET_USERS] Error' }, { status: 500 });
@@ -114,7 +118,7 @@ export async function GET(req: NextRequest) {
 // POST-запрос на создание пользователя. Вытаскиваем запрос, он типизируется с помощью NextRequest
 // !!!!!!!!!!!!!! СДЕЛАТЬ ЗАЩИТУ ОТ НЕСАНКЦИОНИРОВАННОГО ДОСТУПА !!!!!!!!!!!!!
 export async function POST(req: NextRequest) {
-  // вытвскиваем данные из запроса
+  // вытаскиваем данные из запроса
   const data = await req.json();
 
   // передаем эти данные в призму и создаем пользователя

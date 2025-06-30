@@ -26,3 +26,7 @@ export const getUsers = async (
     })
   ).data;
 };
+
+export const deleteUser = async (password: string) => {
+  return (await axiosInstance.delete(ApiRoutes.USERS, { data: { password } })).data;
+};
