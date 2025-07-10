@@ -1,6 +1,5 @@
 import { deleteUserAddress } from '@/app/actions';
 import { UserAddresses } from '@prisma/client';
-import { add } from 'lodash';
 import { Trash } from 'lucide-react';
 import React from 'react';
 
@@ -18,7 +17,8 @@ export const ProfileAddresses: React.FC<Props> = ({ addresses }) => {
     window.location.reload();
   };
 
-  if (!addresses) return <h3 className="text-xl font-bold mb-5 text-center">Адреса доставки не найдены</h3>;
+  if (!addresses)
+    return <h3 className="text-xl font-bold mb-5 text-center">Адреса доставки не найдены</h3>;
 
   return (
     <>

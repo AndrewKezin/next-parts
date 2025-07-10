@@ -11,7 +11,34 @@ export const getUserProfile = async (id: string) => {
         where: {
           id: Number(id),
         },
-        include: {
+        // include: {
+        //   orders: true,
+        //   cart: {
+        //     include: {
+        //       items: {
+        //         include: {
+        //           ingredients: true,
+        //           productItem: {
+        //             include: {
+        //               product: true,
+        //             },
+        //           },
+        //         },
+        //       },
+        //     },
+        //   },
+        //   addresses: true,
+        // },
+        select: {
+          id: true,
+          email: true,
+          fullName: true,
+          phone: true,
+          role: true,
+          status: true,
+          verified: true,
+          provider: true,
+          providerId: true,
           orders: true,
           cart: {
             include: {

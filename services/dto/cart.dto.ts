@@ -28,6 +28,10 @@ export interface UserDTO extends User {
   addresses: UserAddresses[];
 }
 
+export interface UserWithAddresses extends User {
+  addresses: UserAddresses[];
+}
+
 export interface CreateCartItemValues {
   productItemId: string;
   quantity: number;

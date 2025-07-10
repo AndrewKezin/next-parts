@@ -7,6 +7,7 @@ import { Button } from '../ui';
 interface Props {
   totalAmount: number;
   hasDelivery: boolean;
+  btnDisabled?: boolean;
   loading?: boolean;
   className?: string;
 }
@@ -17,6 +18,7 @@ const DELIVERY_PRICE = 500;
 export const CheckoutSidebar: React.FC<Props> = ({
   totalAmount,
   hasDelivery,
+  btnDisabled,
   loading,
   className,
 }) => {
@@ -66,7 +68,7 @@ export const CheckoutSidebar: React.FC<Props> = ({
       <Button
         type="submit"
         loading={loading}
-        disabled={loading}
+        disabled={loading || btnDisabled}
         className="w-full h-14 rounded-2xl mt-6 text-base font-bold">
         Перейти к оплате
         <ArrowRight className="w-5 ml-2" />

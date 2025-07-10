@@ -42,7 +42,7 @@ export const Header: React.FC<Props> = ({ hasSearch = true, hasCart = true, clas
       setTimeout(() => {
         // удаляем ?paid или ?verified из URL без возможности возврата назад
         router.replace('/');
-  
+
         toast.success(toastMessage, { duration: 5000 });
       }, 1000);
     }

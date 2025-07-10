@@ -40,6 +40,7 @@ export {AutoUpdate} from './auto-update';
 export {Counter} from './counter';
 export {ProfileMenu} from './profile-menu';
 export {ProfileAddresses} from './profile-addresses';
+export {ProdItemCounter} from './prod-item-counter';
 export * from './email-templates';
 export * from '../form';
 export * from './modals';

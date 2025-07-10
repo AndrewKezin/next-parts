@@ -3,7 +3,14 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import { Button } from '../ui';
-import { ProductImage, GroupVariants, IngredientItem, Title, Counter } from '@/components/shared';
+import {
+  ProductImage,
+  GroupVariants,
+  IngredientItem,
+  Title,
+  Counter,
+  ProdItemCounter,
+} from '@/components/shared';
 import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
 import { calcTotalOilPrice } from '@/lib';
 import { useOilOptions } from '@/hooks';
@@ -80,44 +87,38 @@ export const ChooseOilForm: React.FC<Props> = ({
           onClick={(value) => setOilCanVolume(Number(value))}
         />
 
-        {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
-        {ingredients.length > 0 && (
-          <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
-            <div className="grid grid-cols-3 gap-3">
-              {ingredients?.map((ingredients) => (
-                <IngredientItem
-                  key={ingredients.id}
-                  imageUrl={ingredients.imageUrl}
-                  name={ingredients.name}
-                  price={ingredients.price}
-                  onClick={() => {
-                    addIngredient(ingredients.id);
-                  }}
-                  active={selectedIngredients.has(ingredients.id)}
-                />
-              ))}
-            </div>
-          </div>
+        {currentItemIdCount !== undefined && (
+          <>
+            {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
+            {ingredients.length > 0 && (
+              <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
+                <div className="grid grid-cols-3 gap-3">
+                  {ingredients?.map((ingredients) => (
+                    <IngredientItem
+                      key={ingredients.id}
+                      imageUrl={ingredients.imageUrl}
+                      name={ingredients.name}
+                      price={ingredients.price}
+                      onClick={() => {
+                        addIngredient(ingredients.id);
+                      }}
+                      active={selectedIngredients.has(ingredients.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <ProdItemCounter
+              currentItemIdCount={currentItemIdCount}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              handleClickAdd={handleClickAdd}
+              totalPrice={totalPrice}
+              loading={loading}
+            />
+          </>
         )}
-
-        {/* Доступное количество */}
-        <div className="mt-3 mb-3 flex justify-center items-center gap-1 text-gray-400 text-md">
-          <span>В наличии:</span>
-          <span>{currentItemIdCount}шт</span>
-        </div>
-
-        {/* Количество */}
-        {currentItemIdCount && (
-          <Counter setQuantity={setQuantity} availableQuantity={currentItemIdCount} />
-        )}
-
-        <Button
-          loading={loading}
-          disabled={quantity === 0}
-          onClick={handleClickAdd}
-          className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10">
-          Добавить в корзину за {totalPrice} ₽
-        </Button>
       </div>
     </div>
   );

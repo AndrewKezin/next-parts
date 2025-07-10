@@ -26,14 +26,14 @@ export const CheckoutDeliveryMethod: React.FC<Props> = ({
           <>
             <div
               className={cn(
-                'w-[200px] flex justify-center items-center rounded-md text-xl p-2 cursor-pointer',
+                'w-[200px] flex justify-center items-center rounded-md text-xl p-2 cursor-pointer transition ease-in-out',
                 {
-                  'bg-primary text-white': deliveryMethod === 'pickup',
-                  'bg-gray-300 text-gray-600': deliveryMethod === 'delivery',
+                  'bg-primary hover:bg-primary/80 text-white': deliveryMethod === 'pickup',
+                  'bg-gray-300 hover:bg-gray-300/80 text-gray-600': deliveryMethod === 'delivery',
                 },
               )}
               onClick={() => {
-                field.onChange('pickup');
+                field.onChange('PICKUP');
                 setDeliveryMethod('pickup');
               }}>
               Самовывоз
@@ -42,12 +42,12 @@ export const CheckoutDeliveryMethod: React.FC<Props> = ({
               className={cn(
                 'w-[200px] flex justify-center items-center rounded-md text-xl p-2 cursor-pointer',
                 {
-                  'bg-primary text-white': deliveryMethod === 'delivery',
-                  'bg-gray-300 text-gray-600': deliveryMethod === 'pickup',
+                  'bg-primary hover:bg-primary/80 text-white': deliveryMethod === 'delivery',
+                  'bg-gray-300 hover:bg-gray-300/80 text-gray-600': deliveryMethod === 'pickup',
                 },
               )}
               onClick={() => {
-                field.onChange('delivery');
+                field.onChange('DELIVERY');
                 setDeliveryMethod('delivery');
               }}>
               Доставка

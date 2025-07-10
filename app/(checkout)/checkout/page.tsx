@@ -9,22 +9,19 @@ import { checkoutFormSchema, CheckoutFormValues } from '@/components/checkout/ch
 import { createOrder } from '@/app/actions';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
-import { useTestPayStore } from '@/store';
 import { Api } from '@/services/api-client';
 import { useSession } from 'next-auth/react';
-import { User } from '@prisma/client';
+import { UserAddresses } from '@prisma/client';
+import { UserWithAddresses } from '@/services/dto/cart.dto';
+import { getExceedingAvailQuant } from '@/lib';
 
 export default function CheckoutPage() {
   const [submitting, setSubmitting] = useState(false);
-
-  const { totalAmount, items, updateItemQuantity, removeCartItem, loading } = useCart();
-
-  const totalCountDisabled = items.some((item) => item.disabled);
+  const [addresses, setAddresses] = useState<UserAddresses[]>([]);
 
   const session = useSession();
 
-  // стор для тестового платежа
-  const payStore = useTestPayStore((state) => state);
+  const { totalAmount, items, updateItemQuantity, removeCartItem, loading } = useCart();
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutFormSchema),
@@ -32,8 +29,8 @@ export default function CheckoutPage() {
       firstName: '',
       lastName: '',
       phone: '',
-      deliveryMethod: 'delivery',
-      address: '',
+      deliveryMethod: 'DELIVERY',
+      address: undefined,
       email: '',
       comment: '',
     },
@@ -42,7 +39,8 @@ export default function CheckoutPage() {
   // вшить в поля формы данные о пользователе, когда придут данные о сессии
   useEffect(() => {
     async function fetchUserInfo() {
-      const data: User = await Api.auth.getMe();
+      // @ts-ignore
+      const data: UserWithAddresses = await Api.auth.getMe();
 
       const [firstName, lastName] = data.fullName.split(' ');
 
@@ -52,6 +50,9 @@ export default function CheckoutPage() {
       if (data.phone) {
         form.setValue('phone', data.phone);
       }
+      if (data.addresses.length > 0) {
+        setAddresses(data.addresses);
+      }
     }
 
     if (session) {
@@ -59,28 +60,47 @@ export default function CheckoutPage() {
     }
   }, [session]);
 
+  // получение товаров с превышением доступного количества
+  const { countOfSameItems, isExceedingItems } = getExceedingAvailQuant(items);
+
+  const deliveryMethod = form.watch('deliveryMethod');
+  const isAddress = Boolean(form.watch('address'));
+
+  const totalCountDisabled = items.some((item) => item.disabled);
+
+  const checkDeliveryAddress = () => {
+    return isAddress || deliveryMethod === 'PICKUP';
+  };
+
   const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
     try {
+      // включаем индикатор загрузки
       setSubmitting(true);
+
       // серверный экшн. Вернет ссылку (по учебному курсу)
       // const url = await createOrder(data);
 
       const orderData = await createOrder(data);
+
+      if (!orderData) {
+        return toast.error('Не удалось создать заказ', {
+          icon: '❌',
+        });
+      }
+
       const url = orderData?.confirmation.confirmation_url;
 
       toast.success('Заказ успешно оформлен! Переход на страницу оплаты заказа...', {
         icon: '✅',
       });
 
-      // отправить данные в стор для тестового платежа (не в рамках учебного курса). Zustand стор с middleware persist сохранит данные в localStorage, чтобы затем достать эти данные на группе роута test-pay.
-      if (orderData) {
-        payStore.setData(orderData);
+      if (!url) {
+        return toast.error('При создании заказа произошла ошибка', {
+          icon: '❌',
+        });
       }
-
       // редирект на страницу оплаты заказа, если серверный экшн вернул ссылку
-      if (url) {
-        location.href = url;
-      }
+      window.location.href = url;
     } catch (err) {
       setSubmitting(false);
       console.log(err);
@@ -115,12 +135,14 @@ export default function CheckoutPage() {
                 updateItemQuantity={updateItemQuantity}
                 removeCartItem={removeCartItem}
                 loading={loading}
+                isExceedingItems={isExceedingItems}
+                countOfSameItems={countOfSameItems}
               />
 
               <CheckoutPersonalForm className={loading ? 'opacity-40 cursor-pointer-none' : ''} />
 
               <CheckoutAddressForm
-                inputValue={form.watch('address')}
+                addresses={addresses}
                 className={loading ? 'opacity-40 cursor-pointer-none' : ''}
               />
             </div>
@@ -129,7 +151,8 @@ export default function CheckoutPage() {
             <div className="w-[450px]">
               <CheckoutSidebar
                 totalAmount={totalAmount}
-                hasDelivery={form.watch('deliveryMethod') === 'delivery'}
+                btnDisabled={isExceedingItems || !checkDeliveryAddress()}
+                hasDelivery={deliveryMethod === 'DELIVERY'}
                 loading={totalCountDisabled || loading || submitting}
               />
             </div>

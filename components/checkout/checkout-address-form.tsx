@@ -1,17 +1,19 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { WhiteBlock } from '../shared';
 import { CheckoutDeliveryMethod } from './checkout-delivery-method';
 import { CheckoutDelivery } from './checkout-delivery';
 import { CheckoutPickup } from './checkout-pickup';
+import { UserAddresses } from '@prisma/client';
+import { useFormContext } from 'react-hook-form';
 
 interface Props {
-  inputValue?: string;
+  addresses?: UserAddresses[];
   className?: string;
 }
 
-export const CheckoutAddressForm: React.FC<Props> = ({ inputValue, className }) => {
+export const CheckoutAddressForm: React.FC<Props> = ({ addresses, className }) => {
   const [deliveryMethod, setDeliveryMethod] = useState<'delivery' | 'pickup'>('delivery');
 
   return (
@@ -24,7 +26,7 @@ export const CheckoutAddressForm: React.FC<Props> = ({ inputValue, className }) 
       />
 
       {deliveryMethod === 'delivery' ? (
-        <CheckoutDelivery defaultAddress={inputValue} />
+        <CheckoutDelivery addresses={addresses} />
       ) : (
         <CheckoutPickup />
       )}

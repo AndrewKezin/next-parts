@@ -7,6 +7,7 @@ import { Ingredient } from '@prisma/client';
 
 interface Props extends CartItemProps {
   availableQuantity: number;
+  isExceeding?: boolean;
   handleSetQuantity: (value: number) => void;
   onClickRemove?: () => void;
   ingredients?: Ingredient[];
@@ -16,8 +17,10 @@ interface Props extends CartItemProps {
 export const CheckoutItem = ({
   name,
   price,
+  productItemId,
   imageUrl,
   availableQuantity,
+  isExceeding,
   quantity,
   details,
   disabled,
@@ -41,7 +44,12 @@ export const CheckoutItem = ({
         )}>
         <div className="flex items-center gap-5 flex-1">
           <CartItemDetails.Image src={imageUrl} />
-          <CartItemDetails.Info name={name} details={details} />
+          <CartItemDetails.Info
+            name={name}
+            productItemId={productItemId}
+            details={details}
+            isExceeding={isExceeding}
+          />
         </div>
 
         <CartItemDetails.Price value={price / quantity} className="font-medium" endText="/шт" />

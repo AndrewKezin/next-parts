@@ -11,8 +11,8 @@ interface Props {
 export const CartItemsView: React.FC<Props> = ({ items, className }) => {
   return (
     <div className={cn('w-full', className)}>
-      {!items ||items.length === 0 ? (
-        <p className="text-xl mb-5 text-center">Нет товаров</p>
+      {!items || items.length === 0 ? (
+        <p className="text-xl mb-5 text-center">Нет товаров/услуг</p>
       ) : (
         <table className="table-auto w-full mb-10 border-collapse border border-black">
           <thead className="bg-slate-200 border border-black">
@@ -44,7 +44,7 @@ export const CartItemsView: React.FC<Props> = ({ items, className }) => {
                 <th className="border border-black px-2 font-normal">{item.quantity}</th>
                 <th className="border border-black px-2 font-normal">
                   {item.ingredients.length === 0 ? (
-                    <p>Нет доп.товаров</p>
+                    <p>Нет доп.товаров/услуг</p>
                   ) : (
                     <>
                       {item.ingredients.map((ingregient) => (

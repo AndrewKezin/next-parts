@@ -1,5 +1,6 @@
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
+import { UserWithAddresses } from '@/services/dto/cart.dto';
 import { NextRequest, NextResponse } from 'next/server';
 
 // это нужно для асинхронного getUserSession
@@ -24,13 +25,13 @@ export async function GET(req: NextRequest, res: any) {
         email: true,
         password: false,
         phone: true,
-        address: true,
         id: true,
         role: true,
+        addresses: true,
       },
     });
 
-    return NextResponse.json(data);
+    return NextResponse.json(data as UserWithAddresses);
   } catch (err) {
     console.log('[AUTH_ME] Error', err);
     return NextResponse.json({ message: '[AUTH_ME] Error' }, { status: 401 });

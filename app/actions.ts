@@ -56,6 +56,17 @@ export async function createOrder(data: CheckoutFormValues) {
       throw new Error('Корзина пуста');
     }
 
+    // найти адрес
+    const address = await prisma.userAddresses.findFirst({
+      where: {
+        id: data.address,
+      },
+    });
+
+    if (!address) {
+      throw new Error('Адрес не найден');
+    }
+
     // Создать заказ
     const order = await prisma.order.create({
       data: {
@@ -64,12 +75,32 @@ export async function createOrder(data: CheckoutFormValues) {
         fullName: data.firstName + ' ' + data.lastName,
         email: data.email,
         phone: data.phone,
-        address: data.address,
+        deliveryMethod: data.deliveryMethod,
+        address: address.address,
         comment: data.comment,
         totalAmount: userCart.totalAmount,
         status: OrderStatus.PENDING,
         items: JSON.stringify(userCart.items),
       },
+    });
+
+    // если заказ не создан, возвращаем ошибку
+    if (!order) {
+      throw new Error('Не удалось создать заказ');
+    }
+
+    // если заказ создан, то изменить количество товаров в БД
+    userCart.items.forEach(async (item) => {
+      await prisma.productItem.update({
+        where: {
+          id: item.productItemId,
+        },
+        data: {
+          quantity: {
+            decrement: item.quantity,
+          },
+        },
+      });
     });
 
     // очистить корзину:
@@ -391,6 +422,46 @@ export async function deleteUserAddress(addressId: number) {
     return true;
   } catch (err) {
     console.log('[DeleteUserAddress] error: ', err);
+    return false;
+  }
+}
+
+// Добавление адреса пользователя
+export async function updateUserAddresses(newAddress: string) {
+  try {
+    const currentUser = await getUserSession();
+
+    if (!currentUser) {
+      throw new Error('Пользователь не найден');
+    }
+
+    const userAddresses: UserAddresses[] = await prisma.userAddresses.findMany({
+      where: {
+        userId: Number(currentUser.id),
+      },
+    });
+
+    if (!userAddresses) {
+      throw new Error('Ошибка получения данных');
+    }
+
+    const hasCurrentAddress = userAddresses.some((address) => address.address === newAddress);
+
+    if (hasCurrentAddress) {
+      throw new Error('Указанный адрес уже существует');
+    }
+
+    await prisma.userAddresses.create({
+      data: {
+        userId: Number(currentUser.id),
+        address: newAddress,
+      },
+    });
+
+    return true;
+  } catch (err) {
+    console.log('[UpdateUserAddresses] error: ', err);
+
     return false;
   }
 }

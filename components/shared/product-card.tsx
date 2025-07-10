@@ -32,10 +32,13 @@ export const ProductCard: React.FC<Props> = ({
 }) => {
   const prodItemsInCart = itemsInCart.map((item) => item.productItemId);
   const prodItemsIds = prodItems.map((item) => item.id);
+
   // проверка наличия товара в корзине
   const isInCart = prodItemsInCart.some((item) => prodItemsIds.includes(item));
 
   const textManufacturer = manufacturer.map((item) => item.name).join(', ');
+
+  const isAvailable = prodItems.some((item) => item.quantity > 0);
 
   return (
     <div className={classname}>
@@ -69,11 +72,19 @@ export const ProductCard: React.FC<Props> = ({
         <p className="text-sm text-grey-400">Каталожный номер: {id}</p>
 
         {/* Цена */}
-        <div className="flex justify-between items-center mt-4">
-          <span className="text-[20px]">
-            от <b>{price} ₽</b>
-          </span>
-        </div>
+        {!isAvailable ? (
+          <div className="flex justify-between items-center mt-4">
+            <span className="text-[20px] text-gray-500">
+              <b>Нет в наличии</b>
+            </span>
+          </div>
+        ) : (
+          <div className="flex justify-between items-center mt-4">
+            <span className="text-[20px]">
+              от <b>{price} ₽</b>
+            </span>
+          </div>
+        )}
 
         {/* В корзине / Кнопка "Добавить" */}
         {isInCart ? (

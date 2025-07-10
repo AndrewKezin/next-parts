@@ -4,6 +4,7 @@ import { findOrCreateCart } from '@/lib/find-or-create-cart';
 import { CreateCartItemValues } from '@/services/dto/cart.dto';
 import { updateCartTotalAmount } from '@/lib/update-cart-total-amount';
 import { getUserSession } from '@/lib/get-user-session';
+import { CARTTOKENAGE } from '@/constants/tokensAge';
 
 // GET-запрос на получение корзины
 export async function GET(req: NextRequest) {
@@ -160,7 +161,7 @@ export async function POST(req: NextRequest) {
     resp.cookies.set('cartToken', userCart.token as string, {
       httpOnly: true,
       path: '/',
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: CARTTOKENAGE,
     });
     // возвращаем ответ
     return resp;

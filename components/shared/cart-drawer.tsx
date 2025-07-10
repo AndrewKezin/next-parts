@@ -36,6 +36,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
       <SheetContent
         aria-describedby={undefined}
         className="flex flex-col justify-between pb-0 bg-[#f4f1ee]">
+        <SheetTitle className="hidden">Корзина</SheetTitle>
         <div className={cn('flex flex-col h-full', !totalAmount && 'justify-center')}>
           {totalAmount > 0 && (
             <SheetHeader>
@@ -65,10 +66,10 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
               </p>
 
               {/* SheetClose добавит onclick на кнопку закрытия */}
-              <SheetClose>
-                <Button className="w-65 h-12 text-base" size="lg">
+              <SheetClose className="w-full">
+                <div className="w-65 h-12 flex items-center justify-center rounded-md bg-primary text-white hover:bg-primary/85 text-base">
                   <ArrowLeft className="w-5 mr-2" /> Вернуться назад
-                </Button>
+                </div>
               </SheetClose>
             </div>
           )}

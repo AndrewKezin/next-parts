@@ -1,3 +1,8 @@
+// УДАЛИТЬ
+
+
+
+
 'use client';
 
 import { PaymentData } from '@/@types/onlinekassa';
