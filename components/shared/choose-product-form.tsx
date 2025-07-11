@@ -5,7 +5,14 @@ import React from 'react';
 import { Button } from '../ui';
 import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
 import { useSet } from 'react-use';
-import { Counter, GroupVariants, IngredientItem, ProductImage, Title } from '@/components/shared';
+import {
+  Counter,
+  GroupVariants,
+  IngredientItem,
+  ProdItemCounter,
+  ProductImage,
+  Title,
+} from '@/components/shared';
 import { useProductOptions } from '@/hooks';
 import { calcTotalProductPrice } from '@/lib';
 
@@ -35,11 +42,15 @@ export const ChooseProductForm: React.FC<Props> = ({
   loading,
   className,
 }) => {
-  // Кастомный хук useSet для хранения выбранных id ингредиентов
-  const [selectedIngredients, { toggle: addIngredient }] = useSet(new Set<string>([]));
-
-  const { prodItemVariant, currentItemId, availableProdVariants, setProdItemVariant } =
-    useProductOptions(items);
+  const {
+    prodItemVariant,
+    currentItemId,
+    currentItemIdCount,
+    availableProdVariants,
+    selectedIngredients,
+    setProdItemVariant,
+    addIngredient,
+  } = useProductOptions(items);
 
   // const textDetails = `${prodItemVariant}`;
   const textManufacturer = `Для трансмиссий: ${manufacturer.map((item) => item.name).join(', ')} `;
@@ -77,35 +88,38 @@ export const ChooseProductForm: React.FC<Props> = ({
           onClick={(value) => setProdItemVariant(String(value))}
         />
 
-        {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
-        {ingredients.length > 0 && (
-          <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
-            <div className="grid grid-cols-3 gap-3">
-              {ingredients?.map((ingredients) => (
-                <IngredientItem
-                  key={ingredients.id}
-                  imageUrl={ingredients.imageUrl}
-                  name={ingredients.name}
-                  price={ingredients.price}
-                  onClick={() => {
-                    addIngredient(ingredients.id);
-                  }}
-                  active={selectedIngredients.has(ingredients.id)}
-                />
-              ))}
-            </div>
-          </div>
+        {currentItemIdCount !== undefined && (
+          <>
+            {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
+            {ingredients.length > 0 && currentItemIdCount > 0 && (
+              <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
+                <div className="grid grid-cols-3 gap-3">
+                  {ingredients?.map((ingredients) => (
+                    <IngredientItem
+                      key={ingredients.id}
+                      imageUrl={ingredients.imageUrl}
+                      name={ingredients.name}
+                      price={ingredients.price}
+                      onClick={() => {
+                        addIngredient(ingredients.id);
+                      }}
+                      active={selectedIngredients.has(ingredients.id)}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <ProdItemCounter
+              currentItemIdCount={currentItemIdCount}
+              quantity={quantity}
+              setQuantity={setQuantity}
+              handleClickAdd={handleClickAdd}
+              totalPrice={totalPrice}
+              loading={loading}
+            />
+          </>
         )}
-
-        {/* Количество */}
-        <Counter setQuantity={setQuantity} />
-
-        <Button
-          loading={loading}
-          className="h-[55px] px-10 text-base rounded-[18px] w-full mt-10"
-          onClick={handleClickAdd}>
-          Добавить в корзину за {totalPrice} ₽
-        </Button>
       </div>
     </div>
   );

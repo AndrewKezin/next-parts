@@ -8,6 +8,7 @@ import {
   Product,
   ProductItem,
   User,
+  UserAddresses,
 } from '@prisma/client';
 
 export type CartItemDTO = CartItem & {
@@ -24,6 +25,11 @@ export interface CartDTO extends Cart {
 export interface UserDTO extends User {
   orders: Order[];
   cart: CartDTO;
+  addresses: UserAddresses[];
+}
+
+export interface UserWithAddresses extends User {
+  addresses: UserAddresses[];
 }
 
 export interface CreateCartItemValues {

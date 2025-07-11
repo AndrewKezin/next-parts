@@ -1,0 +1,1 @@
+export const CARTTOKENAGE = 60 * 60 * 24 * 30;

@@ -158,11 +158,11 @@ export const AdminUserProfile: React.FC<Props> = ({ user, className }) => {
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Создан</td>
-            <td className="px-4 py-2 border border-black">{user?.createdAt.toLocaleString()}</td>
+            <td className="px-4 py-2 border border-black">{user?.createdAt?.toLocaleString()}</td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Обновлен</td>
-            <td className="px-4 py-2 border border-black">{user?.updatedAt.toLocaleString()}</td>
+            <td className="px-4 py-2 border border-black">{user?.updatedAt?.toLocaleString()}</td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Подтвержден</td>
@@ -192,8 +192,14 @@ export const AdminUserProfile: React.FC<Props> = ({ user, className }) => {
             <td className="px-4 py-2 border border-black">{user?.provider}</td>
           </tr>
           <tr>
-            <td className="px-4 py-2 border border-black font-bold">Адрес доставки</td>
-            <td className="px-4 py-2 border border-black">{user?.address}</td>
+            <td className="px-4 py-2 border border-black font-bold">Адреса доставки</td>
+            <td className="px-4 py-2 border border-black">
+              {user?.addresses.map((address) => (
+                <div key={address.id}>
+                  <p>{address.address}</p>
+                </div>
+              ))}
+            </td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Телефон</td>

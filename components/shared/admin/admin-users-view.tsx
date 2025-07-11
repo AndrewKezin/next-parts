@@ -52,6 +52,7 @@ export const AdminUsersView: React.FC<Props> = ({ fetchUsers, handleClearSearch,
               <td className="border border-black px-2 text-center">
                 <Link
                   href={`/dashboard/users/${user.id}`}
+                  target="_blank"
                   className="w-full inline-block text-center text-blue-800 underline">
                   {user.id}
                 </Link>
@@ -79,7 +80,7 @@ export const AdminUsersView: React.FC<Props> = ({ fetchUsers, handleClearSearch,
               </td>
               <td className="border border-black px-2">{user.fullName}</td>
               <td className="border border-black px-2">{user.role}</td>
-              <td className="border border-black px-2">{getLocalFormatDate(user.createdAt)}</td>
+              <td className="border border-black px-2">{getLocalFormatDate(user?.createdAt)}</td>
             </tr>
           ))}
         </tbody>

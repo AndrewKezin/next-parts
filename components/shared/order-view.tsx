@@ -1,13 +1,15 @@
 import { cn } from '@/lib/utils';
 import { Order } from '@prisma/client';
+import Link from 'next/link';
 import React from 'react';
 
 interface Props {
   order: Order;
+  paymentUrl?: string;
   className?: string;
 }
 
-export const OrderView: React.FC<Props> = ({ order, className }) => {
+export const OrderView: React.FC<Props> = ({ order, paymentUrl, className }) => {
   return (
     <table className="w-full mb-8 border-collapse border border-slate-700 table-auto">
       <colgroup>
@@ -35,6 +37,28 @@ export const OrderView: React.FC<Props> = ({ order, className }) => {
             {order.status === 'PROCESSING' && 'В доставке'}
           </td>
         </tr>
+        <tr>
+          <td className="px-4 py-2 border border-black font-bold">Статус оплаты</td>
+          <td
+            className={cn(
+              'px-4 py-2 border border-black',
+              { 'text-red-800': !!paymentUrl === true },
+              { 'text-green-800': !!paymentUrl === false },
+            )}>
+            {!!paymentUrl === false && 'Оплачен'}
+            {!!paymentUrl === true && 'Не оплачен'}
+          </td>
+        </tr>
+        {paymentUrl && (
+          <tr>
+            <td className="px-4 py-2 border border-black font-bold">Ссылка на оплату</td>
+            <td className="px-4 py-2 border border-black">
+              <Link href={paymentUrl} className="inline-block text-blue-800 underline">
+                {paymentUrl}
+              </Link>
+            </td>
+          </tr>
+        )}
         <tr>
           <td className="px-4 py-2 border border-black font-bold">Сумма заказа</td>
           <td className="px-4 py-2 border border-black">{order?.totalAmount} ₽</td>

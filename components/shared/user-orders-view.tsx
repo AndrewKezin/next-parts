@@ -12,7 +12,7 @@ interface Props {
 export const UserOrdersView: React.FC<Props> = ({ orders, type, className }) => {
   return (
     <div className={cn('w-full', className)}>
-      {!orders ||orders.length === 0 ? (
+      {!orders || orders.length === 0 ? (
         <p className="text-xl mb-5 text-center">Нет заказов</p>
       ) : (
         <table className="table-auto w-full mb-10 border-collapse border border-black">
@@ -20,6 +20,7 @@ export const UserOrdersView: React.FC<Props> = ({ orders, type, className }) => 
             <tr>
               <th className="border border-black px-2">№ заказа</th>
               <th className="border border-black px-2">Сумма, ₽</th>
+              <th className="border border-black px-2">Метод доставки</th>
               <th className="border border-black px-2">Адрес доставки</th>
               <th className="border border-black px-2">Статус</th>
               <th className="border border-black px-2">Комментарий</th>
@@ -41,14 +42,17 @@ export const UserOrdersView: React.FC<Props> = ({ orders, type, className }) => 
                   )}
                   {type === 'user' && (
                     <Link
-                    href={`/profile/orders/${order.id}`}
-                    target="_blank"
-                    className="w-full inline-block text-center text-blue-800 underline">
-                    {order.id}
-                  </Link>
+                      href={`/profile/orders/${order.id}`}
+                      target="_blank"
+                      className="w-full inline-block text-center text-blue-800 underline">
+                      {order.id}
+                    </Link>
                   )}
                 </td>
                 <td className="border border-black px-2">{order.totalAmount}</td>
+                <td className="border border-black px-2">
+                  {order.deliveryMethod === 'PICKUP' ? 'Самовывоз' : 'Доставка'}
+                </td>
                 <td className="border border-black px-2">{order.address}</td>
                 <td
                   className={cn(

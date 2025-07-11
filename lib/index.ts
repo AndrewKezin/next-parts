@@ -15,3 +15,7 @@ export { searchProdByParams } from './search-prod-by-params';
 export { filterProdByPrice } from './filter-prod-by-price';
 export {getResultArrByIntersection} from './get-result-arr-by-intersection';
 export {getFilteredArr} from './get-filtered-arr';
+export {getDebounceFunc} from './get-debounce-func';
+export {getExceedingAvailQuant} from './get-exceeding-avail-quant';
+export {checkExceeding} from './check-exceeding';
+export {getTestpayData} from './get-testpay-data';

@@ -1,22 +1,25 @@
 import { AdminNavMenu, ProfileForm } from '@/components/shared';
+import { getUserProfile } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
-import { prisma } from '@/prisma/prisma-client';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
 export default async function DashboardProfile() {
- const session = await getUserSession();
+  const session = await getUserSession();
 
- const user = await prisma.user.findFirst({
-        where: {
-            id: Number(session?.id)
-        }
-    });
+  if (!session) {
+    return redirect('/not-auth');
+  }
 
-    if (!user) {
-        return redirect('/not-auth');
-    }
+  const user = await getUserProfile(session.id);
+
+  if (!user) {
+    return redirect('/not-auth');
+  }
+
+  if (user.role !== 'ADMIN' && user.role !== 'MANAGER') {
+    return redirect('/not-auth');
+  }
 
   return (
     <div className="flex flex-col items-center justify-center w-full">

@@ -26,6 +26,7 @@ export interface IFilters {
   prodThicknVariants: string[];
   prodVolumeVariants: string[];
   prodManufIds: string[];
+  prodQuantity: string;
   prodIngredIds: string[];
   prodCatIds: string[];
 }
@@ -45,6 +46,7 @@ export const AdminProductFilter: React.FC<Props> = ({
     prodThicknVariants: [] as string[],
     prodVolumeVariants: [] as string[],
     prodManufIds: [] as string[],
+    prodQuantity: '',
     prodIngredIds: [] as string[],
     prodCatIds: [] as string[],
   });
@@ -100,6 +102,7 @@ export const AdminProductFilter: React.FC<Props> = ({
     filters.prodManufIds.length ||
     filters.prodIngredIds.length ||
     filters.prodCatIds.length ||
+    filters.prodQuantity ||
     filters.productPrice[0] ||
     filters.productPrice[1] ||
     filters.prodQuantVariants.length ||
@@ -126,6 +129,7 @@ export const AdminProductFilter: React.FC<Props> = ({
       prodVolumeVariants: [],
       prodManufIds: [],
       prodIngredIds: [],
+      prodQuantity: '',
       prodCatIds: [],
     }));
   };

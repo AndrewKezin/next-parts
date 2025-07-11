@@ -9,7 +9,7 @@ import {
 import { createPayment, sendEmail } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
-import { OrderStatus, Prisma, UserRole, UserStatus } from '@prisma/client';
+import { OrderStatus, Prisma, UserAddresses, UserRole, UserStatus } from '@prisma/client';
 import { compareSync, hashSync } from 'bcrypt';
 import { cookies } from 'next/headers';
 
@@ -56,6 +56,17 @@ export async function createOrder(data: CheckoutFormValues) {
       throw new Error('Корзина пуста');
     }
 
+    // найти адрес
+    const address = await prisma.userAddresses.findFirst({
+      where: {
+        id: data.address,
+      },
+    });
+
+    if (!address) {
+      throw new Error('Адрес не найден');
+    }
+
     // Создать заказ
     const order = await prisma.order.create({
       data: {
@@ -64,12 +75,32 @@ export async function createOrder(data: CheckoutFormValues) {
         fullName: data.firstName + ' ' + data.lastName,
         email: data.email,
         phone: data.phone,
-        address: data.address,
+        deliveryMethod: data.deliveryMethod,
+        address: address.address,
         comment: data.comment,
         totalAmount: userCart.totalAmount,
         status: OrderStatus.PENDING,
         items: JSON.stringify(userCart.items),
       },
+    });
+
+    // если заказ не создан, возвращаем ошибку
+    if (!order) {
+      throw new Error('Не удалось создать заказ');
+    }
+
+    // если заказ создан, то изменить количество товаров в БД
+    userCart.items.forEach(async (item) => {
+      await prisma.productItem.update({
+        where: {
+          id: item.productItemId,
+        },
+        data: {
+          quantity: {
+            decrement: item.quantity,
+          },
+        },
+      });
     });
 
     // очистить корзину:
@@ -162,12 +193,15 @@ export async function updateUserInfo(body: Prisma.UserUpdateInput) {
         fullName: body.fullName,
         email: body.email,
         phone: body.phone,
-        address: body.address,
         password: body.password ? hashSync(body.password as string, 10) : findUser?.password,
+        addresses: body.addresses,
       },
     });
+
+    return true;
   } catch (err) {
     console.log('[UpdateUserInfo] error: ', err);
+    return false;
   }
 }
 
@@ -219,52 +253,6 @@ export async function registerUser(body: Prisma.UserCreateInput) {
     throw err;
   }
 }
-
-// Удаление пользователя (вместо серверного экшена используется DELETE-запрос на роут api/users)
-// export async function deleteUserAccount({password}: {password: string}) {
-//   try {
-//     const currentUser = await getUserSession();
-
-//     if (!currentUser) {
-//       throw new Error('Пользователь не найден');
-//     }
-
-//     const findUser = await prisma.user.findFirst({
-//       where: {
-//         id: Number(currentUser.id),
-//       },
-//     });
-
-//     if (!findUser) {
-//       throw new Error('Пользователь не найден');
-//     }
-
-//     if (!compareSync(password, findUser.password)) {
-//       throw new Error('Неверный пароль');
-//     }
-
-//     await prisma.user.update({
-//       where: {
-//         id: Number(currentUser.id),
-//       },
-//       data: {
-//         status: UserStatus.DELETED,
-//         email: '',
-//         password: '',
-//       }
-//     })
-
-//     await sendEmail(
-//       findUser.email,
-//       'NEXT PARTS - Удаление аккаунта',
-//       DeleteUserTemplate({})
-//     );
-
-//     return true;
-//   } catch(err) {
-//   console.log('[DeleteUserInfo] error: ',err);
-//   };
-// };
 
 // Удаление cookies при выходе из аккаунта
 export async function logoutUser() {
@@ -397,5 +385,83 @@ export async function setUserVerified(id: number, password: string) {
     });
   } catch (err) {
     console.log('[SetUserVerified] error: ', err);
+  }
+}
+
+// Удаление адреса пользователя
+export async function deleteUserAddress(addressId: number) {
+  try {
+    const currentUser = await getUserSession();
+
+    if (!currentUser) {
+      throw new Error('Пользователь не найден');
+    }
+
+    const userAddresses: UserAddresses[] = await prisma.userAddresses.findMany({
+      where: {
+        userId: Number(currentUser.id),
+      },
+    });
+
+    if (!userAddresses) {
+      throw new Error('Ошибка получения данных');
+    }
+
+    const hasCurrentAddress = userAddresses.some((address) => address.id === addressId);
+
+    if (!hasCurrentAddress) {
+      throw new Error('Ошибка получения данных при удалении адреса');
+    }
+
+    await prisma.userAddresses.delete({
+      where: {
+        id: addressId,
+      },
+    });
+
+    return true;
+  } catch (err) {
+    console.log('[DeleteUserAddress] error: ', err);
+    return false;
+  }
+}
+
+// Добавление адреса пользователя
+export async function updateUserAddresses(newAddress: string) {
+  try {
+    const currentUser = await getUserSession();
+
+    if (!currentUser) {
+      throw new Error('Пользователь не найден');
+    }
+
+    const userAddresses: UserAddresses[] = await prisma.userAddresses.findMany({
+      where: {
+        userId: Number(currentUser.id),
+      },
+    });
+
+    if (!userAddresses) {
+      throw new Error('Ошибка получения данных');
+    }
+
+    const hasCurrentAddress = userAddresses.some((address) => address.address === newAddress);
+
+    if (hasCurrentAddress) {
+      throw new Error('Указанный адрес уже существует');
+    }
+
+    await prisma.userAddresses.create({
+      data: {
+        userId: Number(currentUser.id),
+        address: newAddress,
+      },
+    });
+
+    return true;
+  } catch (err) {
+    console.log('[UpdateUserAddresses] error: ', err);
+
+    return false;
   }
 }

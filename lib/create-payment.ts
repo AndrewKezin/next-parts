@@ -2,14 +2,14 @@ import { PaymentData } from '@/@types/onlinekassa';
 import axios from 'axios';
 
 interface Props {
-    description: string;
-    orderId: number;
-    amount: number;
+  description: string;
+  orderId: number;
+  amount: number;
 }
 
 export async function createPayment(details: Props) {
   const { data } = await axios.post<PaymentData>(
-    process.env.TEST_PAYODRER_PAGE_QUERY as string,
+    process.env.NEXT_PUBLIC_TEST_PAYODRER_QUERY_ENDPOINT as string,
     {
       // POST-информация (информация о платеже)
       amount: {
@@ -25,7 +25,11 @@ export async function createPayment(details: Props) {
       },
       confirmation: {
         type: 'redirect',
-        return_url: process.env.PAYORDER_CALLBACK_URL as string,
+        return_url: process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_URL as string,
+      },
+      recipient: {
+        account_id: '',
+        gateway_is: '',
       },
     },
     {

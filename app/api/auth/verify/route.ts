@@ -2,6 +2,9 @@ import { prisma } from '@/prisma/prisma-client';
 import { UserStatus } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
+// это эквивалентно getServerSideProps
+export const dynamic = 'force-dynamic';
+
 export async function GET(req: NextRequest) {
   try {
     // вытаскиваем код из адресной строки
@@ -41,7 +44,7 @@ export async function GET(req: NextRequest) {
       select: {
         email: true,
         password: true,
-      }
+      },
     });
 
     if (!findUser) {
@@ -50,7 +53,6 @@ export async function GET(req: NextRequest) {
 
     // !!!доделать автоматическую авторизацию пользователя после подтверждения кода
 
-    
     // удаление кода из БД
     await prisma.verificationCode.delete({
       where: {

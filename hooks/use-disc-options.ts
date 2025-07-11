@@ -8,6 +8,7 @@ interface ReturnProps {
   thickness: number;
   quantityOfTeeth: number;
   currentItemId: string | undefined;
+  currentItemIdCount: number | undefined;
   selectedIngredients: Set<string>;
   availableDiscThicknesses: Variant[];
   setThickness: (thickness: number) => void;
@@ -39,7 +40,12 @@ export const useDiscOptions = (
   );
 
   // id диска, который имеет нужное количество зубьев и нужную толщину
-  const currentItemId = items.find((item) => item.quantityOfTeeth === quantityOfTeeth && item.thickness === thickness)?.id;
+  const currentItemId = items.find(
+    (item) => item.quantityOfTeeth === quantityOfTeeth && item.thickness === thickness,
+  )?.id;
+
+  // количество выбранного варианта товара
+  const currentItemIdCount = items.find((item) => item.id === currentItemId)?.quantity;
 
   useEffect(() => {
     if (availableDiscThicknesses.length > 0) {
@@ -59,6 +65,7 @@ export const useDiscOptions = (
     thickness,
     quantityOfTeeth,
     currentItemId,
+    currentItemIdCount,
     selectedIngredients,
     availableDiscThicknesses,
     setThickness,

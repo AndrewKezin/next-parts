@@ -1,29 +1,25 @@
-import { ProfileForm } from "@/components/shared";
-import { getUserSession } from "@/lib/get-user-session";
-import { prisma } from "@/prisma/prisma-client";
-import { redirect } from "next/navigation";
+import { ProfileForm } from '@/components/shared';
+import { getUserProfile } from '@/lib';
+import { getUserSession } from '@/lib/get-user-session';
+import { redirect } from 'next/navigation';
 
 export default async function ProfilePage() {
-    // проверка авторизации на уровне сервера
-    const session = await getUserSession();
+  // проверка авторизации на уровне сервера
+  const session = await getUserSession();
 
-    if (!session) {
-        return redirect('/not-auth');
-    }
+  if (!session) {
+    return redirect('/not-auth');
+  }
 
-    const user = await prisma.user.findFirst({
-        where: {
-            id: Number(session?.id)
-        }
-    });
+  const user = await getUserProfile(session.id);
 
-    if (!user) {
-        return redirect('/not-auth');
-    }
+  if (!user) {
+    return redirect('/not-auth');
+  }
 
-    if (user.role === 'ADMIN') {
-        return redirect('/dashboard');
-    }
-    
-    return <ProfileForm data={user} />
+  if (user.role === 'ADMIN') {
+    return redirect('/dashboard');
+  }
+
+  return <ProfileForm data={user} />;
 }

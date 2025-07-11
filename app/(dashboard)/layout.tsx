@@ -20,7 +20,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <main className="min-h-screen bg-[#f4f1ee]">
+    <main className="min-h-screen bg-[#f4f1ee] pb-10">
       <Container>
         <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
         {children}

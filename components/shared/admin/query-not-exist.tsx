@@ -42,7 +42,7 @@ export const QueryNotExist: React.FC<Props> = ({ query, handleClearSearch, class
         <Button variant={'outline'} className="w-[250px] mb-3" onClick={handleClearSearch}>
           Сбросить параметры поиска
         </Button>
-        <p>или нажмите "backspace" на клавиатуре</p>
+        <p>или нажмите &quot;backspace&quot; на клавиатуре</p>
       </div>
     </div>
   );

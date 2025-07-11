@@ -23,14 +23,9 @@ import { useCart } from '@/hooks';
 
 // Выезжающее окно корзины справа
 export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const {totalAmount, items, updateItemQuantity, removeCartItem} = useCart();
-
   const [redirecting, setRedirecting] = useState(false);
 
-  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
-    const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
-    updateItemQuantity(id, newQuantity);
-  };
+  const { totalAmount, items, updateItemQuantity, removeCartItem } = useCart();
 
   return (
     <Sheet>
@@ -41,6 +36,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
       <SheetContent
         aria-describedby={undefined}
         className="flex flex-col justify-between pb-0 bg-[#f4f1ee]">
+        <SheetTitle className="hidden">Корзина</SheetTitle>
         <div className={cn('flex flex-col h-full', !totalAmount && 'justify-center')}>
           {totalAmount > 0 && (
             <SheetHeader>
@@ -66,14 +62,14 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
               />
               <Title size="sm" text="Корзина пуста" className="text-center font-bold my-2" />
               <p className="text-center text-neutral-500 mb-5">
-                Вы еще не добавили товаров в корзину
+                Вы еще не добавили товары в корзину
               </p>
 
               {/* SheetClose добавит onclick на кнопку закрытия */}
-              <SheetClose>
-                <Button className="w-65 h-12 text-base" size="lg">
+              <SheetClose className="w-full">
+                <div className="w-65 h-12 flex items-center justify-center rounded-md bg-primary text-white hover:bg-primary/85 text-base">
                   <ArrowLeft className="w-5 mr-2" /> Вернуться назад
-                </Button>
+                </div>
               </SheetClose>
             </div>
           )}
@@ -86,6 +82,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                   <div className="mb-2" key={item.id}>
                     <CartDrawerItem
                       id={item.id}
+                      productItemId={item.productItemId}
                       imageUrl={item.imageUrl}
                       details={
                         ((item.thickness || item.quantityOfTeeth) &&
@@ -96,15 +93,14 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                           )) ||
                         (item.volume &&
                           getCartItemDetails(item.ingredients, null, null, item.volume)) ||
-                        ''
+                        getCartItemDetails(item.ingredients)
                       }
                       disabled={item.disabled}
                       name={item.name}
                       price={item.price}
+                      availableQuantity={item.availableQuantity}
                       quantity={item.quantity}
-                      onClickCountButton={(type) =>
-                        onClickCountButton(item.id, item.quantity, type)
-                      }
+                      handleSetQuantity={(value) => updateItemQuantity(item.id, value)}
                       onClickRemove={() => removeCartItem(item.id)}
                     />
                   </div>
@@ -123,12 +119,16 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                   </div>
 
                   <Link href="/checkout">
-                    <Button onClick={() => setRedirecting(true)} disabled={redirecting} type="submit" className="w-full h-12 text-base">
+                    <Button
+                      onClick={() => setRedirecting(true)}
+                      disabled={redirecting}
+                      type="submit"
+                      className="w-full h-12 text-base">
                       Оформить заказ
                       <ArrowRight className="w-5 ml-2" />
                     </Button>
                   </Link>
-                </div> 
+                </div>
               </SheetFooter>
             </>
           )}

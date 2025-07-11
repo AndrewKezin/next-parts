@@ -9,16 +9,12 @@ export interface CartState {
   error: boolean;
   totalAmount: number;
   items: CartStateItem[];
-
   // Запрос на получение товаров из корзины
   fetchCartItems: () => Promise<void>;
-
   // Запрос на обновление количества товара
   updateItemQuantity: (id: number, quantity: number) => Promise<void>;
-
   // Запрос на добавление товара в корзину
   addCartItem: (values: CreateCartItemValues) => Promise<void>;
-
   // Запрос на удаление товара из корзины
   removeCartItem: (id: number) => Promise<void>;
 }
@@ -32,14 +28,21 @@ export const useCartStore = create<CartState>((set, get) => ({
   // получение товаров в корзине
   fetchCartItems: async () => {
     try {
-      set({ loading: true, error: false });
+      set((state) => ({
+        loading: true,
+        error: false,
+        items: state.items.map((item) => ({ ...item, disabled: true })),
+      }));
       const data = await Api.cart.getCart();
       set(getCartDetails(data));
     } catch (err) {
       console.error(err);
       set({ error: true });
     } finally {
-      set({ loading: false });
+      set((state) => ({
+        loading: false,
+        items: state.items.map((item) => ({ ...item, disabled: false })),
+      }));
     }
   },
 
@@ -47,7 +50,8 @@ export const useCartStore = create<CartState>((set, get) => ({
   updateItemQuantity: async (id: number, quantity: number) => {
     try {
       set((state) => ({
-        loading: true,
+        // loading не активировать, чтобы не загружать скелетон вместо товара. Вместо этого сделать его неактивным
+        // loading: true,
         error: false,
         items: state.items.map((item) => (item.id === id ? { ...item, disabled: true } : item)),
       }));
@@ -68,7 +72,7 @@ export const useCartStore = create<CartState>((set, get) => ({
   removeCartItem: async (id: number) => {
     try {
       set((state) => ({
-        loading: true,
+        // loading: true,
         error: false,
         // сделать элемент неактивным, пока он удаляется
         items: state.items.map((item) => (item.id === id ? { ...item, disabled: true } : item)),

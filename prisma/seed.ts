@@ -46,7 +46,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'ACTIVE',
-        address: '123 Main St',
         phone: '1234567890',
       },
       {
@@ -73,7 +72,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'BANNED',
-        address: '456 Elm St',
       },
       {
         fullName: 'Alexandr Petrov',
@@ -90,7 +88,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'ACTIVE',
-        address: '789 Pine St',
       },
       {
         fullName: 'Ekaterina Ekaterinova',
@@ -116,7 +113,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'BANNED',
-        address: '321 Oak St',
       },
       {
         fullName: 'Evgeniy Evgeniev',
@@ -142,7 +138,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'INACTIVE',
-        address: '654 Spruce St',
       },
       {
         fullName: 'Natalia Nikolaeva',
@@ -176,7 +171,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'ACTIVE',
-        address: '987 Birch St',
       },
       {
         fullName: 'Aleksandr Petrov',
@@ -210,7 +204,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'DELETED',
-        address: '159 Cedar St',
       },
       {
         fullName: 'Nikolay Nikolaev',
@@ -252,7 +245,6 @@ async function up() {
         verified: new Date(),
         role: 'USER',
         status: 'DELETED',
-        address: '753 Maple St',
       },
       {
         fullName: 'Ivan Ivanov',
@@ -317,7 +309,7 @@ async function up() {
   //     data: products,
   //   });
 
-  // создаем тестовыепродукты отдельно, чтобы через connect связать их с ингредиентами и производителями коробок передач
+  // создаем тестовые продукты отдельно, чтобы через connect связать их с ингредиентами и производителями коробок передач
   const d194002a = await prisma.product.create({
     data: {
       id: 'd19402a',
@@ -325,6 +317,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/06/05/d194002a_1.jpg',
       categoryId: 1,
       gearboxesManufacturers: { connect: [{ id: 14 }] },
+      ingredients: { connect: [{ id: 'pack002' }] },
     },
   });
 
@@ -335,6 +328,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2023/11/19/P156002A_1.jpg',
       categoryId: 1,
       gearboxesManufacturers: { connect: [{ id: 6 }] },
+      ingredients: { connect: [{ id: 'pack002' }] },
     },
   });
 
@@ -345,6 +339,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/11/21/d458004a_1.jpg',
       categoryId: 1,
       gearboxesManufacturers: { connect: [{ id: 11 }] },
+      ingredients: { connect: [{ id: 'pack002' }] },
     },
   });
 
@@ -355,6 +350,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/11/21/s745002a_1.jpg',
       categoryId: 1,
       gearboxesManufacturers: { connect: [{ id: 7 }] },
+      ingredients: { connect: [{ id: 'pack002' }] },
     },
   });
 
@@ -365,6 +361,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2023/05/28/A745012C_1.jpg',
       categoryId: 2,
       gearboxesManufacturers: { connect: [{ id: 1 }] },
+      ingredients: { connect: [{ id: 'pack001' }] },
     },
   });
 
@@ -375,6 +372,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2023/06/11/D251010A_1.jpg',
       categoryId: 2,
       gearboxesManufacturers: { connect: [{ id: 12 }] },
+      ingredients: { connect: [{ id: 'pack002' }] },
     },
   });
 
@@ -385,6 +383,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/04/a765010a_1.jpg',
       categoryId: 2,
       gearboxesManufacturers: { connect: [{ id: 10 }] },
+      ingredients: { connect: [{ id: 'pack002' }] },
     },
   });
 
@@ -415,6 +414,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/04/15/a757420a_1.jpg',
       categoryId: 5,
       gearboxesManufacturers: { connect: [{ id: 5 }] },
+      ingredients: { connect: [{ id: 'pack001' }] },
     },
   });
 
@@ -425,6 +425,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/04/d46420_1.jpg',
       categoryId: 5,
       gearboxesManufacturers: { connect: [{ id: 13 }] },
+      ingredients: { connect: [{ id: 'calib001' }, { id: 'flash001' }, { id: 'pack001' }] },
     },
   });
 
@@ -435,6 +436,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2024/04/07/D663410A_1.jpg',
       categoryId: 5,
       gearboxesManufacturers: { connect: [{ id: 9 }] },
+      ingredients: { connect: [{ id: 'pack001' }] },
     },
   });
 
@@ -445,6 +447,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/f030_1.jpg',
       categoryId: 6,
       gearboxesManufacturers: { connect: [{ id: 15 }] },
+      ingredients: { connect: [{ id: 'calib001' }, { id: 'flash001' }, { id: 'pack002' }] },
     },
   });
 
@@ -455,6 +458,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/09/26/d19740a_1.jpg',
       categoryId: 6,
       gearboxesManufacturers: { connect: [{ id: 2 }] },
+      ingredients: { connect: [{ id: 'calib001' }, { id: 'flash001' }, { id: 'pack002' }] },
     },
   });
 
@@ -465,6 +469,7 @@ async function up() {
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/13/d666740a_1.jpg',
       categoryId: 6,
       gearboxesManufacturers: { connect: [{ id: 3 }] },
+      ingredients: { connect: [{ id: 'calib001' }, { id: 'flash001' }, { id: 'pack002' }] },
     },
   });
 
@@ -505,9 +510,7 @@ async function up() {
       name: 'Диск фрикционный',
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/l98100_1.jpg',
       categoryId: 3,
-      ingredients: {
-        connect: [{ id: 'a1b2c3d' }, { id: 'e4f5g6h' }, { id: 'i7j8k9l' }],
-      },
+      ingredients: { connect: [{ id: 'pack001' }] },
       gearboxesManufacturers: {
         connect: [{ id: 1 }],
       },
@@ -520,9 +523,7 @@ async function up() {
       name: 'Диск фрикционный',
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/l68116c_1.jpg',
       categoryId: 3,
-      ingredients: {
-        connect: [{ id: 'a1b2c3d' }, { id: 'e4f5g6h' }, { id: 'i7j8k9l' }],
-      },
+      ingredients: { connect: [{ id: 'pack001' }] },
       gearboxesManufacturers: {
         connect: [{ id: 2 }],
       },
@@ -535,9 +536,7 @@ async function up() {
       name: 'Диск фрикционный',
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/01/02/a147108d_1.jpg',
       categoryId: 3,
-      ingredients: {
-        connect: [{ id: 'a1b2c3d' }, { id: 'e4f5g6h' }, { id: 'i7j8k9l' }],
-      },
+      ingredients: { connect: [{ id: 'pack001' }] },
       gearboxesManufacturers: {
         connect: [{ id: 3 }],
       },
@@ -550,18 +549,10 @@ async function up() {
       name: 'Масло трансмиссионное Honda CVT HMMF',
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/12/19/d704840b_1.jpg',
       categoryId: 7,
-      ingredients: {
-        connect: [
-          { id: 'a1b2c3d' },
-          { id: 'e4f5g6h' },
-          { id: 'i7j8k9l' },
-          { id: 'm4n5o6p' },
-          { id: 'q1r2s3t' },
-        ],
-      },
       gearboxesManufacturers: {
         connect: [{ id: 1 }, { id: 2 }, { id: 3 }],
       },
+      ingredients: { connect: [{ id: 'oilutil005' }, { id: 'oilutil010' }, { id: 'oilutil020' }] },
     },
   });
 
@@ -571,18 +562,10 @@ async function up() {
       name: 'Масло трансмиссионное Mobil ATF 3309',
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/10/17/d160840a_1.jpg',
       categoryId: 7,
-      ingredients: {
-        connect: [
-          { id: 'a1b2c3d' },
-          { id: 'e4f5g6h' },
-          { id: 'i7j8k9l' },
-          { id: 'm4n5o6p' },
-          { id: 'q1r2s3t' },
-        ],
-      },
       gearboxesManufacturers: {
         connect: [{ id: 3 }, { id: 4 }, { id: 5 }],
       },
+      ingredients: { connect: [{ id: 'oilutil005' }, { id: 'oilutil010' }, { id: 'oilutil020' }] },
     },
   });
 
@@ -592,18 +575,10 @@ async function up() {
       name: 'Масло трансмиссионное Nissan ATF Matic-S',
       imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/11/21/d322840a_1.jpg',
       categoryId: 7,
-      ingredients: {
-        connect: [
-          { id: 'a1b2c3d' },
-          { id: 'e4f5g6h' },
-          { id: 'i7j8k9l' },
-          { id: 'm4n5o6p' },
-          { id: 'q1r2s3t' },
-        ],
-      },
       gearboxesManufacturers: {
         connect: [{ id: 3 }, { id: 4 }, { id: 5 }],
       },
+      ingredients: { connect: [{ id: 'oilutil005' }, { id: 'oilutil010' }, { id: 'oilutil020' }] },
     },
   });
 
@@ -780,13 +755,7 @@ async function up() {
       cartId: 1,
       quantity: 2,
       ingredients: {
-        connect: [
-          { id: 'a1b2c3d' },
-          { id: 'e4f5g6h' },
-          { id: 'i7j8k9l' },
-          { id: 'm4n5o6p' },
-          { id: 'q1r2s3t' },
-        ],
+        connect: [{ id: 'oilutil010' }, { id: 'pack001' }],
       },
     },
   });
@@ -796,13 +765,7 @@ async function up() {
       cartId: 2,
       quantity: 1,
       ingredients: {
-        connect: [ 
-          { id: 'a1b2c3d' },
-          { id: 'e4f5g6h' },
-          { id: 'i7j8k9l' },
-          { id: 'm4n5o6p' },
-          { id: 'q1r2s3t' },
-        ],
+        connect: [{ id: 'oilutil010' }, { id: 'pack002' }],
       },
     },
   });
@@ -812,11 +775,7 @@ async function up() {
       cartId: 3,
       quantity: 3,
       ingredients: {
-        connect: [{ id: 'a1b2c3d' },
-          { id: 'e4f5g6h' },
-          { id: 'i7j8k9l' },
-          { id: 'm4n5o6p' },
-          { id: 'q1r2s3t' },],
+        connect: [{ id: 'oilutil010' }, { id: 'pack001' }],
       },
     },
   });
@@ -826,11 +785,7 @@ async function up() {
       cartId: 4,
       quantity: 3,
       ingredients: {
-        connect: [{ id: 'a1b2c3d' },
-          { id: 'e4f5g6h' },
-          { id: 'i7j8k9l' },
-          { id: 'm4n5o6p' },
-          { id: 'q1r2s3t' },],
+        connect: [{ id: 'oilutil010' }, { id: 'pack001' }],
       },
     },
   });
@@ -844,9 +799,10 @@ async function up() {
         totalAmount: 10300,
         status: 'PENDING',
         fullName: 'John Doe',
+        deliveryMethod: 'DELIVERY',
         email: 'john@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         comment: 'test comment',
         items: JSON.stringify([
           {
@@ -858,36 +814,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -942,9 +878,10 @@ async function up() {
         totalAmount: 10300,
         status: 'PENDING',
         fullName: 'John Doe 1',
+        deliveryMethod: 'PICKUP',
         email: 'john1@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -955,36 +892,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1039,9 +956,10 @@ async function up() {
         totalAmount: 6500,
         status: 'CANCELED',
         fullName: 'Jane Doe 2',
+        deliveryMethod: 'PICKUP',
         email: 'jane2@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1052,36 +970,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1137,9 +1035,10 @@ async function up() {
         status: 'SUCCESS',
         paymentId: '12345',
         fullName: 'John Doe 3',
+        deliveryMethod: 'DELIVERY',
         email: 'john3@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1150,36 +1049,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1234,9 +1113,10 @@ async function up() {
         totalAmount: 3200,
         status: 'SUCCESS',
         fullName: 'Jane Doe 4',
+        deliveryMethod: 'DELIVERY',
         email: 'jane4@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1247,36 +1127,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1331,9 +1191,10 @@ async function up() {
         totalAmount: 5300,
         status: 'PROCESSING',
         fullName: 'John Doe 5',
+        deliveryMethod: 'DELIVERY',
         email: 'john5@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1344,36 +1205,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1428,9 +1269,10 @@ async function up() {
         totalAmount: 5300,
         status: 'CANCELED',
         fullName: 'Jane Doe 6',
+        deliveryMethod: 'DELIVERY',
         email: 'jane6@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1441,36 +1283,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1525,9 +1347,10 @@ async function up() {
         totalAmount: 5300,
         status: 'SUCCESS',
         fullName: 'John Doe 7',
+        deliveryMethod: 'DELIVERY',
         email: 'john7@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1538,36 +1361,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1622,9 +1425,10 @@ async function up() {
         totalAmount: 5300,
         status: 'SUCCESS',
         fullName: 'Jane Doe 8',
+        deliveryMethod: 'DELIVERY',
         email: 'jane8@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1635,36 +1439,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1719,9 +1503,10 @@ async function up() {
         totalAmount: 5300,
         status: 'SUCCESS',
         fullName: 'John Doe 9',
+        deliveryMethod: 'DELIVERY',
         email: 'john9@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1732,36 +1517,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1816,9 +1581,10 @@ async function up() {
         totalAmount: 5300,
         status: 'SUCCESS',
         fullName: 'Jane Doe 10',
+        deliveryMethod: 'DELIVERY',
         email: 'jane10@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1829,36 +1595,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -1913,9 +1659,10 @@ async function up() {
         totalAmount: 5300,
         status: 'PROCESSING',
         fullName: 'John Doe 11',
+        deliveryMethod: 'DELIVERY',
         email: 'john11@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -1926,36 +1673,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -2010,9 +1737,10 @@ async function up() {
         totalAmount: 5300,
         status: 'PROCESSING',
         fullName: 'Jane Doe 12',
+        deliveryMethod: 'DELIVERY',
         email: 'jane12@example.com',
         phone: '+70000000000',
-        address: 'Энск, Тестовый б-р, д. 1',
+        address: 'Москва, ул. Айтишников, д. 10100',
         items: JSON.stringify([
           {
             id: 2,
@@ -2023,36 +1751,16 @@ async function up() {
             updatedAt: '2025-05-25T14:16:25.545Z',
             ingredients: [
               {
-                id: 1,
-                name: 'Герметик силиконовый (красный, от -60°C до +200°C, 500ml)',
-                price: 2350,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blm_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'oilutil010',
+                name: 'Утилизация отработанного масла (до 10л)',
+                price: 50,
+                imageUrl: '../public/assets/images/ingredients/oilutil.png',
               },
               {
-                id: 2,
-                name: 'Герметик силиконовый EVO300 (серый, от -70°C до +300°C, 70ml)',
-                price: 435,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/05/12/m469blg_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 3,
-                name: 'Аэрозоль для установки обрезиненных поршней (step 1, 200ml)',
-                price: 1100,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2022/02/27/19500_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
-              },
-              {
-                id: 4,
-                name: 'Стабилизатор трансмиссионной жидкости',
-                price: 1520,
-                imageUrl: 'https://at-cvt.com/wp-content/uploads/2021/01/05/m465l_1.jpg',
-                createdAt: '2025-05-25T14:15:23.070Z',
-                updatedAt: '2025-05-25T14:15:23.070Z',
+                id: 'pack002',
+                name: 'Дополнительная упаковка от повреждений для транспортировки (большая)',
+                price: 300,
+                imageUrl: '../public/assets/images/ingredients/pack.png',
               },
             ],
             productItem: {
@@ -2103,11 +1811,30 @@ async function up() {
       },
     ],
   });
+
+  // создать базу адресов
+  await prisma.userAddresses.createMany({
+    data: [
+      {
+        userId: 1,
+        address: 'Москва, ул. Айтишников, д. 10100',
+      },
+      {
+        userId: 1,
+        address: 'Москва, ул. Электронная", д. 11100',
+      },
+      {
+        userId: 1,
+        address: 'Москва, ул. Компьютерная", д. 10',
+      },
+    ],
+  })
 }
+
 
 // удаление тестовых данных
 async function down() {
-  // если запустить этот скрипт, то счетчики id не обнулятся
+  // если запустить скрипт ниже, то счетчики id не обнулятся
   // await prisma.user.deleteMany({});
   // поэтому пишем sql-запрос на удаление всех записей и связанных с ними данных (CASCADE), тогда счетчики id будут обнуляться
   await prisma.$executeRaw`TRUNCATE TABLE "User" RESTART IDENTITY CASCADE`;

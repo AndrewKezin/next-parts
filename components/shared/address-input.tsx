@@ -15,7 +15,7 @@ export const AddressInput: React.FC<Props> = ({ onChange, defaultQuery }) => {
 
   return (
     <AddressSuggestions
-      inputProps={{ className: 'h-[48px] w-full rounded-md border px-3 border focus:outline-none' }}
+      inputProps={{ className: 'h-[48px] w-full rounded-md border px-3 border focus:outline-none mb-5' }}
       token="798989e81b52c69e0521f85d547db8c67dbeb544"
       onChange={(data) => onChange?.(data?.value)}
       delay={300}

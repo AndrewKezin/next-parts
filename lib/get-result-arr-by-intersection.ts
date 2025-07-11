@@ -8,9 +8,10 @@ export const getResultArrByIntersection = (
   arr5: string[],
   arr6: string[],
   arr7: string[],
+  arr8: string[],
 ): string[] => {
   // пропускаем пустые массивы
-  const tempArr = [arr1, arr2, arr3, arr4, arr5, arr6, arr7].filter((arr) => arr.length > 0);
+  const tempArr = [arr1, arr2, arr3, arr4, arr5, arr6, arr7, arr8].filter((arr) => arr.length > 0);
   // выполняем пересечение (получаем итоговый массив, в котором есть только элементы, которые есть во всех массивах)
   const resultArr = intersection(...tempArr).sort((a, b) => a.localeCompare(b));
   return resultArr;

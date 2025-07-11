@@ -1,35 +1,63 @@
-import Link from 'next/link';
+import { ContactRound, PackageOpen, ScrollText, Settings2, UserRoundCog } from 'lucide-react';
+import { AdminNavMenuItem } from './admin-nav-menu-item';
 
 interface Props {
-  page: 'profile' | 'orders' | 'products' | 'users';
+  page: 'dashboard' | 'profile' | 'orders' | 'products' | 'users';
 }
 
 export const AdminNavMenu: React.FC<Props> = ({ page }) => {
   return (
-    <>
-      <Link href="/dashboard" className="text-primary font-bold text-2xl mb-3">
-        Вернуться в панель администратора
-      </Link>
+    <div className="flex flex-col gap-1 mb-5">
+      {page !== 'dashboard' && (
+        <AdminNavMenuItem url="/dashboard">
+          <>
+            <div className="w-9">
+              <Settings2 className="w-6 h-6 text-primary" />
+            </div>
+            <span className="flex-1 text-center">Вернуться в панель администратора</span>
+          </>
+        </AdminNavMenuItem>
+      )}
       {page !== 'profile' && (
-        <Link href="/dashboard/profile" className="text-primary font-bold text-xl mb-3">
-          Перейти в профиль администратора
-        </Link>
+        <AdminNavMenuItem url="/dashboard/profile">
+          <>
+            <div className="w-9">
+              <UserRoundCog className="w-6 h-6 text-primary" />
+            </div>
+            <span className="flex-1 text-center">Перейти в профиль администратора</span>
+          </>
+        </AdminNavMenuItem>
       )}
       {page !== 'orders' && (
-        <Link href="/dashboard/orders" className="text-primary font-bold text-xl mb-3">
-          Перейти к управлению заказами
-        </Link>
+        <AdminNavMenuItem url="/dashboard/orders">
+          <>
+            <div className="w-9">
+              <ScrollText className="w-6 h-6 text-primary" />
+            </div>
+            <span className="flex-1 text-center">Перейти к управлению заказами</span>
+          </>
+        </AdminNavMenuItem>
       )}
       {page !== 'products' && (
-        <Link href="/dashboard/products" className="text-primary font-bold text-xl mb-3">
-          Перейти к управлению товарами
-        </Link>
+        <AdminNavMenuItem url="/dashboard/products">
+          <>
+            <div className="w-9">
+              <PackageOpen className="w-6 h-6 text-primary" />
+            </div>
+            <span className="flex-1 text-center">Перейти к управлению товарами</span>
+          </>
+        </AdminNavMenuItem>
       )}
       {page !== 'users' && (
-        <Link href="/dashboard/users" className="text-primary font-bold text-xl mb-3">
-          Перейти к управлению профилями пользователей
-        </Link>
+        <AdminNavMenuItem url="/dashboard/users">
+          <>
+            <div className="w-9">
+              <ContactRound className="w-6 h-6 text-primary" />
+            </div>
+            <span className="flex-1 text-center">Перейти к управлению профилями пользователей</span>
+          </>
+        </AdminNavMenuItem>
       )}
-    </>
+    </div>
   );
 };

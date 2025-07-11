@@ -9,19 +9,19 @@ import { checkoutFormSchema, CheckoutFormValues } from '@/components/checkout/ch
 import { createOrder } from '@/app/actions';
 import toast from 'react-hot-toast';
 import { useEffect, useState } from 'react';
-import { useTestPayStore } from '@/store';
 import { Api } from '@/services/api-client';
 import { useSession } from 'next-auth/react';
-import { User } from '@prisma/client';
+import { UserAddresses } from '@prisma/client';
+import { UserWithAddresses } from '@/services/dto/cart.dto';
+import { getExceedingAvailQuant } from '@/lib';
 
 export default function CheckoutPage() {
-  const { totalAmount, items, updateItemQuantity, removeCartItem, loading } = useCart();
   const [submitting, setSubmitting] = useState(false);
-  
+  const [addresses, setAddresses] = useState<UserAddresses[]>([]);
+
   const session = useSession();
 
-  // стор для тестового платежа
-  const payStore = useTestPayStore((state) => state);
+  const { totalAmount, items, updateItemQuantity, removeCartItem, loading } = useCart();
 
   const form = useForm<CheckoutFormValues>({
     resolver: zodResolver(checkoutFormSchema),
@@ -29,7 +29,8 @@ export default function CheckoutPage() {
       firstName: '',
       lastName: '',
       phone: '',
-      address: '',
+      deliveryMethod: 'DELIVERY',
+      address: undefined,
       email: '',
       comment: '',
     },
@@ -38,60 +39,87 @@ export default function CheckoutPage() {
   // вшить в поля формы данные о пользователе, когда придут данные о сессии
   useEffect(() => {
     async function fetchUserInfo() {
-      const data: User = await Api.auth.getMe();
-      
+      // @ts-ignore
+      const data: UserWithAddresses = await Api.auth.getMe();
+
       const [firstName, lastName] = data.fullName.split(' ');
 
       form.setValue('firstName', firstName);
       form.setValue('lastName', lastName);
       form.setValue('email', data.email);
-      if (data.phone) {form.setValue('phone', data.phone)};
-      if (data.address) {form.setValue('address', data.address)};
+      if (data.phone) {
+        form.setValue('phone', data.phone);
+      }
+      if (data.addresses.length > 0) {
+        setAddresses(data.addresses);
+      }
     }
 
     if (session) {
       fetchUserInfo();
     }
   }, [session]);
- 
+
+  // получение товаров с превышением доступного количества
+  const { countOfSameItems, isExceedingItems } = getExceedingAvailQuant(items);
+
+  const deliveryMethod = form.watch('deliveryMethod');
+  const isAddress = Boolean(form.watch('address'));
+
+  const totalCountDisabled = items.some((item) => item.disabled);
+
+  const checkDeliveryAddress = () => {
+    return isAddress || deliveryMethod === 'PICKUP';
+  };
+
   const onSubmit: SubmitHandler<CheckoutFormValues> = async (data) => {
     try {
+      // включаем индикатор загрузки
       setSubmitting(true);
+
       // серверный экшн. Вернет ссылку (по учебному курсу)
       // const url = await createOrder(data);
 
       const orderData = await createOrder(data);
+
+      if (!orderData) {
+        return toast.error('Не удалось создать заказ', {
+          icon: '❌',
+        });
+      }
+
       const url = orderData?.confirmation.confirmation_url;
 
       toast.success('Заказ успешно оформлен! Переход на страницу оплаты заказа...', {
         icon: '✅',
-      })
+      });
 
-      // отправить данные в стор для тестового платежа (не в рамках учебного курса). Zustand стор с middleware persist сохранит данные в localStorage, чтобы затем достать эти данные на группе роута test-pay.
-      if (orderData) {
-        payStore.setData(orderData);
+      if (!url) {
+        return toast.error('При создании заказа произошла ошибка', {
+          icon: '❌',
+        });
       }
-
       // редирект на страницу оплаты заказа, если серверный экшн вернул ссылку
-      if (url) {
-        location.href = url;
-      }
-      
+      window.location.href = url;
     } catch (err) {
       setSubmitting(false);
       console.log(err);
-      
+
       toast.error('Не удалось создать заказ', {
         icon: '❌',
       });
-    } 
+    }
   };
 
-
-  const onClickCountButton = (id: number, quantity: number, type: 'plus' | 'minus') => {
-    const newQuantity = type === 'plus' ? quantity + 1 : quantity - 1;
-    updateItemQuantity(id, newQuantity);
-  };
+  if (session.status === 'unauthenticated') {
+    return (
+      <Container>
+        <h2 className="text-3xl font-bold mt-20 mb-5 text-center">
+          Вы не авторизованы! Авторизуйтесь, пожалуйста!
+        </h2>
+      </Container>
+    );
+  }
 
   return (
     <Container className="mt-10">
@@ -101,22 +129,32 @@ export default function CheckoutPage() {
         <form onSubmit={form.handleSubmit(onSubmit)}>
           <div className="flex gap-40">
             {/* Левая часть */}
-            <div className="flex flex-col gap-10 flex-1 mb-20">
+            <div className="flex flex-col gap-5 flex-1 mb-20">
               <CheckoutCart
                 items={items}
-                onClickCountButton={onClickCountButton}
+                updateItemQuantity={updateItemQuantity}
                 removeCartItem={removeCartItem}
                 loading={loading}
+                isExceedingItems={isExceedingItems}
+                countOfSameItems={countOfSameItems}
               />
 
               <CheckoutPersonalForm className={loading ? 'opacity-40 cursor-pointer-none' : ''} />
 
-              <CheckoutAddressForm inputValue={form.getValues('address')} className={loading ? 'opacity-40 cursor-pointer-none' : ''}  />
+              <CheckoutAddressForm
+                addresses={addresses}
+                className={loading ? 'opacity-40 cursor-pointer-none' : ''}
+              />
             </div>
 
             {/* Правая часть */}
             <div className="w-[450px]">
-              <CheckoutSidebar totalAmount={totalAmount} loading={loading || submitting} />
+              <CheckoutSidebar
+                totalAmount={totalAmount}
+                btnDisabled={isExceedingItems || !checkDeliveryAddress()}
+                hasDelivery={deliveryMethod === 'DELIVERY'}
+                loading={totalCountDisabled || loading || submitting}
+              />
             </div>
           </div>
         </form>

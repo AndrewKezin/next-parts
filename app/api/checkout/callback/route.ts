@@ -1,25 +1,26 @@
-import { PaymentData } from '@/@types/onlinekassa';
 import { OrderSuccessTemplate } from '@/components/shared';
 import { sendEmail } from '@/lib';
 import { prisma } from '@/prisma/prisma-client';
 import { CartItemDTO } from '@/services/dto/cart.dto';
-import { OrderStatus } from '@prisma/client';
+import { OrderStatus, TestPayment } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
     // для ukassa есть интерфейс PaymentCallbackData
-    const body = (await req.json()) as PaymentData;
+    const body: TestPayment = await req.json();
+
+    const { order_id: orderId } = JSON.parse(body.metadata as string);
 
     // найти заказ в БД по id из тела запроса
     const order = await prisma.order.findFirst({
       where: {
-        id: Number(body.metadata.order_id),
+        id: Number(orderId),
       },
     });
 
     if (!order) {
-      return NextResponse.json({ error: 'Order not found' });
+      return NextResponse.json({ error: 'Заказ не найден' }, { status: 404 });
     }
 
     // обновить статус заказа в БД
@@ -47,6 +48,6 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(body);
   } catch (err) {
     console.log('[Checkout Callback] Error: ', err);
-    return NextResponse.json({ error: 'Server error' });
+    return NextResponse.json({ error: 'Server error' }, { status: 500 });
   }
 }

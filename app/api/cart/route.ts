@@ -4,6 +4,7 @@ import { findOrCreateCart } from '@/lib/find-or-create-cart';
 import { CreateCartItemValues } from '@/services/dto/cart.dto';
 import { updateCartTotalAmount } from '@/lib/update-cart-total-amount';
 import { getUserSession } from '@/lib/get-user-session';
+import { CARTTOKENAGE } from '@/constants/tokensAge';
 
 // GET-запрос на получение корзины
 export async function GET(req: NextRequest) {
@@ -126,7 +127,8 @@ export async function POST(req: NextRequest) {
     const findCartItemWithSameIngredients = findCartItemId.find(
       (item) =>
         (item.ingredients.length === data.ingredients?.length &&
-        item.ingredients.every((ingredient) => data.ingredients?.includes(ingredient.id))) || (item.ingredients.length === 0 && item.productItemId === data.productItemId),
+          item.ingredients.every((ingredient) => data.ingredients?.includes(ingredient.id))) ||
+        (item.ingredients.length === 0 && item.productItemId === data.productItemId),
     );
 
     // если одинаковый товар нашелся, то прибавить его количество. Если такого нет, то добавить его в корзину
@@ -136,7 +138,7 @@ export async function POST(req: NextRequest) {
           id: findCartItemWithSameIngredients.id,
         },
         data: {
-          quantity: findCartItemWithSameIngredients.quantity + 1,
+          quantity: findCartItemWithSameIngredients.quantity + data.quantity,
         },
       });
     } else {
@@ -144,7 +146,7 @@ export async function POST(req: NextRequest) {
         data: {
           cartId: userCart.id,
           productItemId: data.productItemId,
-          quantity: 1,
+          quantity: data.quantity,
           ingredients: { connect: data.ingredients?.map((id) => ({ id })) },
         },
       });
@@ -159,7 +161,7 @@ export async function POST(req: NextRequest) {
     resp.cookies.set('cartToken', userCart.token as string, {
       httpOnly: true,
       path: '/',
-      maxAge: 60 * 60 * 24 * 30,
+      maxAge: CARTTOKENAGE,
     });
     // возвращаем ответ
     return resp;

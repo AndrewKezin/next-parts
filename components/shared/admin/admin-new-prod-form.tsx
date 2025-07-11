@@ -167,7 +167,7 @@ export const AdminNewProdForm: React.FC<Props> = ({
           />
 
           <label htmlFor="imageUrl" className="mt-3">
-            URL фото (символ "-" - отсутствие фото):
+            URL фото (символ &quot;-&quot; - отсутствие фото):
           </label>
           <Controller
             name="imageUrl"

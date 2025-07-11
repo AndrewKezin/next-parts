@@ -1,11 +1,14 @@
-import {cn} from '@/lib/utils';
-
 interface Props {
   value: number;
+  endText?: string;
   className?: string;
 }
 
 // рендерит стоимость товара в корзине
-export const CartItemDetailsPrice: React.FC<Props> = ({ value, className }) => {
-  return <h2 className={cn('font-bold', className)}>{value} ₽</h2>;
+export const CartItemDetailsPrice: React.FC<Props> = ({ value, endText, className }) => {
+  return (
+    <h2 className={className}>
+      {value} ₽{endText}
+    </h2>
+  );
 };

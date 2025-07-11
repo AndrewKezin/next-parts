@@ -1,5 +1,6 @@
 export interface CartItemProps {
   id: number;
+  productItemId: string;
   imageUrl: string;
   details: string;
   name: string;

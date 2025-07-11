@@ -23,6 +23,7 @@ export async function GET(req: NextRequest) {
     const prodManufIds = req.nextUrl.searchParams.get('manuf') || '';
     const prodIngredIds = req.nextUrl.searchParams.get('ingred') || '';
     const prodCatIds = req.nextUrl.searchParams.get('cat') || '';
+    const prodQuantity = req.nextUrl.searchParams.get('quant') || '';
     const productPriceFrom = req.nextUrl.searchParams.get('priceFrom') || SEARCHPRICERANGE.FROM;
     const productPriceTo = req.nextUrl.searchParams.get('priceTo') || SEARCHPRICERANGE.TO;
     const prodQuantVariants = req.nextUrl.searchParams.get('quantOfTeeth') || '';
@@ -47,6 +48,7 @@ export async function GET(req: NextRequest) {
       !productName &&
       !prodManufIds &&
       !prodIngredIds &&
+      !prodQuantity &&
       !prodCatIds &&
       !prodQuantVariants &&
       !prodThicknVariants &&
@@ -82,6 +84,7 @@ export async function GET(req: NextRequest) {
       prodManufIds,
       prodIngredIds,
       prodCatIds,
+      prodQuantity,
       productPriceFrom,
       productPriceTo,
       prodQuantVariants,
