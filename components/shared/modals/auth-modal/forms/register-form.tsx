@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/ui/button';
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { TFormRegisterValues, formRegisterSchema } from './schemas';
@@ -18,8 +18,22 @@ interface Props {
 }
 
 export const RegisterForm: React.FC<Props> = ({ onClose, onClickLogin }) => {
-  const [isVisible, setIsVisible] = React.useState(false);
-  const [type, setType] = React.useState<'password' | 'text'>('password');
+  const [isVisible, setIsVisible] = useState(false);
+  const [type, setType] = useState<'password' | 'text'>('password');
+
+  useEffect(() => {
+    const handleEnter = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        form.handleSubmit(onSubmit)();
+      }
+    };
+
+    document.addEventListener('keydown', handleEnter);
+
+    return () => {
+      document.removeEventListener('keydown', handleEnter);
+    };
+  }, []);
 
   const toggleVisible = () => {
     setIsVisible(!isVisible);
@@ -74,9 +88,18 @@ export const RegisterForm: React.FC<Props> = ({ onClose, onClickLogin }) => {
           </div>
           <FormInput name="confirmPassword" label="Подтвердите пароль" type={type} required />
           <div className="flex items-center gap-5 mt-5">
-            <input {...form.register('privacyconfirm')} required type="checkbox" id="privacyconfirm" className="w-6 h-6" />
+            <input
+              {...form.register('privacyconfirm')}
+              required
+              type="checkbox"
+              id="privacyconfirm"
+              className="w-6 h-6"
+            />
             <label htmlFor="privacyconfirm" className="text-primary">
-              Я соглашаюсь на <Link href="/legal/consentprivacy" target='_blank' className='underline'>обработку моих персональных данных</Link>
+              Я соглашаюсь на{' '}
+              <Link href="/legal/consentprivacy" target="_blank" className="underline">
+                обработку моих персональных данных
+              </Link>
               <span className="text-red-500">*</span>
             </label>
           </div>

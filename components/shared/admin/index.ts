@@ -19,6 +19,7 @@ export { AdminNewProdForm } from './admin-new-prod-form';
 export { AdminNewProdItemForm } from './admin-new-proditem-form';
 export {AdminPagination} from './admin-pagination';
 export {AdminNavMenu} from './admin-nav-menu';
+export {AdminNavMenuItem} from './admin-nav-menu-item';
 export {AdminProdCardItem} from './admin-prod-card-item';
 export {AdminProdCardItemProp} from './admin-prod-card-item-prop';
 export * from './skeletons';

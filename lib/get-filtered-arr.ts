@@ -8,6 +8,7 @@ import { searchProdByParams } from './search-prod-by-params';
  * @param prodManufIds
  * @param prodIngredIds
  * @param prodCatIds
+ * @param prodQuantity
  * @param productPriceFrom
  * @param productPriceTo
  * @param prodQuantVariants
@@ -21,6 +22,7 @@ export const getFilteredArr = async (
   prodManufIds: string,
   prodIngredIds: string,
   prodCatIds: string,
+  prodQuantity: string,
   productPriceFrom: string,
   productPriceTo: string,
   prodQuantVariants: string,
@@ -29,17 +31,26 @@ export const getFilteredArr = async (
   modifiedQuery: string,
 ) => {
   // массивы товаров, удовлетворяющих условиям фильтров (из запроса)
-  const { arrByName, arrByManuf, arrByIngred, arrByCat, arrByQuant, arrByThickn, arrByVolume } =
-    await searchProdByParams(
-      productName,
-      prodManufIds,
-      prodIngredIds,
-      prodCatIds,
-      prodQuantVariants,
-      prodThicknVariants,
-      prodVolumeVariants,
-      modifiedQuery,
-    );
+  const {
+    arrByName,
+    arrByManuf,
+    arrByIngred,
+    arrByProdQuantity,
+    arrByCat,
+    arrByQuant,
+    arrByThickn,
+    arrByVolume,
+  } = await searchProdByParams(
+    productName,
+    prodManufIds,
+    prodIngredIds,
+    prodCatIds,
+    prodQuantity,
+    prodQuantVariants,
+    prodThicknVariants,
+    prodVolumeVariants,
+    modifiedQuery,
+  );
 
   // массивы товаров, отфильтрованные по диапазону цен
   const nameInPriceRange =
@@ -50,6 +61,10 @@ export const getFilteredArr = async (
     arrByIngred.length > 0 ? filterProdByPrice(productPriceFrom, productPriceTo, arrByIngred) : [];
   const catInPriceRange =
     arrByCat.length > 0 ? filterProdByPrice(productPriceFrom, productPriceTo, arrByCat) : [];
+  const prodQuantInPriceRange =
+    arrByProdQuantity.length > 0
+      ? filterProdByPrice(productPriceFrom, productPriceTo, null, arrByProdQuantity)
+      : [];
   const quantInPriceRange =
     arrByQuant.length > 0
       ? filterProdByPrice(productPriceFrom, productPriceTo, null, arrByQuant)
@@ -69,6 +84,7 @@ export const getFilteredArr = async (
     manufInPriceRange,
     ingredInPriceRange,
     catInPriceRange,
+    prodQuantInPriceRange,
     quantInPriceRange,
     thicknInPriceRange,
     volumeInPriceRange,

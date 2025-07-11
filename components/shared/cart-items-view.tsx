@@ -14,7 +14,7 @@ export const CartItemsView: React.FC<Props> = ({ items, className }) => {
       {!items || items.length === 0 ? (
         <p className="text-xl mb-5 text-center">Нет товаров/услуг</p>
       ) : (
-        <table className="table-auto w-full mb-10 border-collapse border border-black">
+        <table className="table-auto w-full border-collapse border border-black">
           <thead className="bg-slate-200 border border-black">
             <tr>
               <th className="border border-black px-2">ID товара</th>

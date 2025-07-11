@@ -11,6 +11,7 @@ interface Props {
   disableClearInput: (value: boolean) => void;
   placeholder?: string;
   isDisabled?: boolean;
+  isNumeric?: boolean;
   className?: string;
   inputClassName?: string;
 }
@@ -23,6 +24,7 @@ export const AdminSearchInput: React.FC<Props> = ({
   disableClearInput,
   placeholder='Поиск',
   isDisabled=false,
+  isNumeric=false,
   className,
   inputClassName='w-full h-[30px] rounded-[3px] outline outline-1 bg-gray-100 pl-8 pr-3',
 }) => {
@@ -54,11 +56,11 @@ export const AdminSearchInput: React.FC<Props> = ({
 
         {/* Поле ввода */}
         <input
-          type="text"
+          type={isNumeric ? 'number' : "text"}
           className={cn(inputClassName, {'bg-[#f1f1f1]': isDisabled})}
           placeholder={placeholder}
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
+          onChange={isNumeric ? (e) => setQuery(String(e.target.value)) : (e) => setQuery(e.target.value)}
           disabled={isDisabled}
         />
       </div>

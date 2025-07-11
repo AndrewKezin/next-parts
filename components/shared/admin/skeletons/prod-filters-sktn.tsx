@@ -26,8 +26,11 @@ export const ProdFiltersSktn: React.FC = () => {
       </div>
 
       <div className="flex border border-gray-300 items-center justify-around gap-3 mb-3 p-3">
-        <div className="flex flex-col items-center justify-center gap-1">
+        <div className="flex flex-col items-center justify-between gap-1">
           <ItemSktn text="Дополнительно к товару" width={250} isFilterItem />
+        </div>
+        <div className="flex flex-col items-center justify-center gap-1">
+          <ItemSktn text="Остаток товара (не более), шт" width={150} isFilterItem />
         </div>
 
         <div className="flex items-center justify-center gap-5">

@@ -1,3 +1,5 @@
+'use client';
+
 import { FormProvider, useForm } from 'react-hook-form';
 import { formLoginSchema, TFormLoginValues } from './schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -6,7 +8,7 @@ import { FormInput } from '@/components/shared';
 import { Button } from '@/components/ui';
 import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Eye, EyeOff } from 'lucide-react';
 
 interface Props {
@@ -14,8 +16,22 @@ interface Props {
 }
 
 export const LoginForm: React.FC<Props> = ({ onClose }) => {
-  const [isVisible, setIsVisible] = React.useState(false);
-  const [type, setType] = React.useState<'password' | 'text'>('password');
+  const [isVisible, setIsVisible] = useState(false);
+  const [type, setType] = useState<'password' | 'text'>('password');
+
+  useEffect(() => {
+    const handleEnter = (e: KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        form.handleSubmit(onSubmit)();
+      }
+    };
+
+    document.addEventListener('keydown', handleEnter);
+
+    return () => {
+      document.removeEventListener('keydown', handleEnter);
+    };
+  }, []);
 
   const toggleVisible = () => {
     setIsVisible(!isVisible);

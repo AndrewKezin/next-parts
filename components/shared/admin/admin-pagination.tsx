@@ -35,7 +35,7 @@ export const AdminPagination: React.FC<Props> = ({
   React.useEffect(() => {
     setStartIndex((page - 1) * Number(itemsPerPageInPag.value));
     setItemsPerPage(Number(itemsPerPageInPag.value));
-  }, [page, itemsPerPageInPag]);
+  }, [page, itemsPerPageInPag, setStartIndex, setItemsPerPage]);
 
   const totalPages = totalCount ? totalCount : 1;
   const maxPages = Math.ceil(totalPages / Number(itemsPerPageInPag.value));
@@ -66,7 +66,7 @@ export const AdminPagination: React.FC<Props> = ({
     } else {
       setPage(pageNumber);
     }
-  }
+  };
 
   return (
     <div className={className}>

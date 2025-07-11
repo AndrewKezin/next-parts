@@ -2,8 +2,8 @@ import { cn } from '@/lib/utils';
 
 interface Props {
   name: string;
-  productItemId: string;
   details: string;
+  productItemId?: string;
   isExceeding?: boolean;
   className?: string;
 }

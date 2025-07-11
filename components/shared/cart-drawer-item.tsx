@@ -9,7 +9,6 @@ import { Trash2Icon } from 'lucide-react';
 
 interface Props extends CartItemProps {
   availableQuantity: number;
-  // onClickCountButton: (type: 'plus' | 'minus') => void;
   handleSetQuantity: (value: number) => void;
   onClickRemove?: () => void;
   className?: string;
@@ -18,6 +17,7 @@ interface Props extends CartItemProps {
 export const CartDrawerItem: React.FC<Props> = ({
   imageUrl,
   name,
+  productItemId,
   price,
   availableQuantity,
   quantity,
@@ -37,7 +37,7 @@ export const CartDrawerItem: React.FC<Props> = ({
       <CartItem.Image src={imageUrl} />
 
       <div className="flex-1">
-        <CartItem.Info name={name} details={details} />
+        <CartItem.Info name={name} details={details} productItemId={productItemId} />
 
         <hr className="my-3" />
 

@@ -3,21 +3,23 @@ import { prisma } from '@/prisma/prisma-client';
 
 /**
  * Функция получает списки из запроса (из searchParams) и возвращает списки товаров, удовлетворяющих условиям
- * @param productName 
- * @param prodManufIds 
- * @param prodIngredIds 
- * @param prodCatIds 
- * @param prodQuantVariants 
- * @param prodThicknVariants 
- * @param prodVolumeVariants 
- * @param modifiedQuery 
- * @returns 
+ * @param productName
+ * @param prodManufIds
+ * @param prodIngredIds
+ * @param prodCatIds
+ * @param prodQuantity
+ * @param prodQuantVariants
+ * @param prodThicknVariants
+ * @param prodVolumeVariants
+ * @param modifiedQuery
+ * @returns
  */
 export const searchProdByParams = async (
   productName: string,
   prodManufIds: string,
   prodIngredIds: string,
   prodCatIds: string,
+  prodQuantity: string,
   prodQuantVariants: string,
   prodThicknVariants: string,
   prodVolumeVariants: string,
@@ -104,6 +106,23 @@ export const searchProdByParams = async (
       ]
     : [];
 
+  // поиск по остатку товара
+  const arrByProdQuantity: ItemsType[] = prodQuantity
+    ? [
+        ...(await prisma.productItem.findMany({
+          where: {
+            quantity: {
+              lte: Number(prodQuantity),
+            },
+          },
+          select: {
+            id: true,
+            price: true,
+          },
+        })),
+      ]
+    : [];
+
   // поиск по категориям
   const arrByCat: FilteredArray[] = prodCatIds
     ? [
@@ -181,5 +200,14 @@ export const searchProdByParams = async (
       ]
     : [];
 
-  return { arrByName, arrByManuf, arrByIngred, arrByCat, arrByQuant, arrByThickn, arrByVolume };
+  return {
+    arrByName,
+    arrByManuf,
+    arrByIngred,
+    arrByProdQuantity,
+    arrByCat,
+    arrByQuant,
+    arrByThickn,
+    arrByVolume,
+  };
 };

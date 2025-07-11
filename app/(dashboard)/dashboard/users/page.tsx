@@ -12,7 +12,6 @@ import { Button } from '@/components/ui';
 import { useUsersProfile } from '@/hooks';
 import { UserRole, UserStatus } from '@prisma/client';
 import { X } from 'lucide-react';
-import Link from 'next/link';
 import React from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -56,7 +55,7 @@ export default function DashboardUsers() {
     setCurrentUserRole(event.target.value as UserRole);
 
   if (loading) {
-    return <p className="text-xl text-center">Загрузка пользователей...</p>;
+    return <h3 className="text-xl text-center mt-3 mb-3">Загрузка пользователей...</h3>;
   }
 
   return (
@@ -112,13 +111,13 @@ export default function DashboardUsers() {
         </Button>
       </div>
 
-      <AdminUsersView fetchUsers={users} handleClearSearch={handleClearSearch} className='w-full' />
+      <AdminUsersView fetchUsers={users} handleClearSearch={handleClearSearch} className="w-full" />
 
       <AdminPagination
         totalCount={users?.totalCount || 0}
         setStartIndex={setStartIndex}
         setItemsPerPage={setItemsPerPage}
-        className='flex items-center justify-center w-full gap-7 p-3 mb-5'
+        className="flex items-center justify-center w-full gap-7 p-3 mb-5"
       />
 
       <AdminNavMenu page="users" />

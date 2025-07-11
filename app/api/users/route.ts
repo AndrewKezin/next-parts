@@ -1,12 +1,13 @@
 import { DeleteUserTemplate } from '@/components/shared';
 import { sendEmail } from '@/lib';
+import { authOptions } from '@/lib/auth-options';
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
 import { UserRole, UserStatus } from '@prisma/client';
 import { compareSync } from 'bcrypt';
 import { getServerSession } from 'next-auth';
 import { NextRequest, NextResponse } from 'next/server';
-import { authOptions } from '../auth/[...nextauth]/route';
+// import { authOptions } from '../auth/[...nextauth]/route';
 
 // роутами мы отлавливаем запросы на api/users
 // GET-запрос на получение всех пользователей для админки

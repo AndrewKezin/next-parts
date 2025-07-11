@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useCallback, useState } from 'react';
+import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { CountIconButton } from './count-icon-button';
 import { getDebounceFunc } from '@/lib';
@@ -22,9 +22,7 @@ export const CountButton: React.FC<CountButtonProps> = ({
 }) => {
   const [inputValue, setInputValue] = useState<number | null>(value);
 
-  const debouncedValueLogging = useCallback(getDebounceFunc(handleSetQuantity, 1000), [
-    handleSetQuantity,
-  ]);
+  const debouncedValueLogging = getDebounceFunc(handleSetQuantity, 1000);
 
   const onClickCountButton = (type: 'plus' | 'minus') => {
     const newQuantity =
