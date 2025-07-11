@@ -9,7 +9,9 @@ interface Props {
 
 export async function createPayment(details: Props) {
   const { data } = await axios.post<PaymentData>(
-    process.env.NEXT_PUBLIC_TEST_PAYODRER_QUERY_ENDPOINT as string,
+    ((((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+      process.env.NEXT_PUBLIC_API_URL) as string) +
+      process.env.NEXT_PUBLIC_TEST_PAYODRER_QUERY_ENDPOINT) as string,
     {
       // POST-информация (информация о платеже)
       amount: {
@@ -25,7 +27,8 @@ export async function createPayment(details: Props) {
       },
       confirmation: {
         type: 'redirect',
-        return_url: process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_URL as string,
+        return_url: ((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+          process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_URL) as string,
       },
       recipient: {
         account_id: '',

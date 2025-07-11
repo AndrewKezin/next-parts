@@ -25,7 +25,9 @@ export const TestCard: React.FC<Props> = ({ isPaid, testpayData }) => {
 
         // передать данные на эндпоинт, который будет обрабатывать оплату и запишет данные в БД TestPayment
         const { data: result } = await axios.post<PaymentData>(
-          process.env.NEXT_PUBLIC_TEST_PAYORDER_PAID_ENDPOINT as string,
+          ((((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+            process.env.NEXT_PUBLIC_API_URL) as string) +
+            process.env.NEXT_PUBLIC_TEST_PAYORDER_PAID_ENDPOINT) as string,
           testpayData,
         );
 
@@ -38,7 +40,9 @@ export const TestCard: React.FC<Props> = ({ isPaid, testpayData }) => {
 
         // передать данные на эндпоинт, который будет обрабатывать проведенную оплату и запишет данные в БД Order
         const { data } = await axios.post<PaymentData>(
-          process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_DATATRANSFER as string,
+          ((((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+            process.env.NEXT_PUBLIC_API_URL) as string) +
+            process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_DATATRANSFER) as string,
           testpayData,
         );
 

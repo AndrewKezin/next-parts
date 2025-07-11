@@ -52,7 +52,11 @@ export default async function TestPayOrderPage({ params: { id } }: { params: { i
 
       {/* Кнопка перехода на главную */}
       {isPaid && (
-        <Link href={process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_URL as string}>
+        <Link
+          href={
+            ((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+              process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_URL) as string
+          }>
           <Button className="w-[300px] h-[50px] font-bold text-xl">На главную</Button>
         </Link>
       )}

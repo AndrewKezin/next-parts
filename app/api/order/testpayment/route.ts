@@ -13,7 +13,11 @@ export async function POST(req: NextRequest) {
 
     // не в рамках курса
     const paymentId = crypto.randomUUID();
-    const redirectPaymentUrl = process.env.NEXT_PUBLIC_TEST_PAYODRER_PAGE_URL + '/' + paymentId;
+    const redirectPaymentUrl =
+      (process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+      process.env.NEXT_PUBLIC_TEST_PAYODRER_PAGE_URL +
+      '/' +
+      paymentId;
 
     data.id = paymentId;
 
