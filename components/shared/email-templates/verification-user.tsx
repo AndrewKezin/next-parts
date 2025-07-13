@@ -13,7 +13,12 @@ export const VerificationUserTemplate: React.FC<Props> = ({ code }) => {
       </p>
 
       <p>
-        <a href={`{http://localhost:3000/api/auth/verify?code=${code}`}>
+        <a
+          href={`${
+            ((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+              process.env.NEXT_PUBLIC_API_URL) as string
+          }/auth/verify?code=${code}`}>
+          {/* <a href={`{http://localhost:3000/api/auth/verify?code=${code}`}> */}
           Подтвердить регистрацию аккаунта в NEXT PARTS
         </a>
       </p>

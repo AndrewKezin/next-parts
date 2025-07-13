@@ -20,24 +20,31 @@ export const AutoUpdate: React.FC<Props> = ({
   setAutoUpdatePeriod,
   className,
 }) => {
-
-    const setIntervalTimeHandler = (value: string) => {
-        if (Number(value) < 1 || Number(value) > 99) {
-            setIntervalTime(1);
-        } else {
-            setIntervalTime(Number(value));
-        }
+  const [value, setValue] = React.useState(1);
+  const setIntervalTimeHandler = (value: number) => {
+    if (isNaN(value)) {
+      setValue(1);
+      return;
     }
+    
+    if (Number(value) < 0 || Number(value) > 99) {
+      setValue(1);
+      return;
+    }
+
+    setValue(value);
+    autoUpdatePeriod === 'minutes' ? setIntervalTime(value * 60000) : setIntervalTime(value * 1000);
+  };
 
   return (
     <div
       className={cn(
-        'flex justify-center items-center w-[550px] gap-2 p-5 mb-5 border border-gray-500 rounded',
+        'flex justify-center items-center w-[550px] gap-2 p-5 border border-gray-500 rounded',
         className,
       )}>
       <input
         type="checkbox"
-        className='w-[16px] h-[16px]'
+        className="w-[16px] h-[16px]"
         checked={autoUpdate}
         onChange={(e) => setAutoUpdate(e.target.checked)}
       />
@@ -45,11 +52,12 @@ export const AutoUpdate: React.FC<Props> = ({
       {autoUpdate && (
         <div className="flex items-center gap-3">
           <input
-            type="number"
-            value={intervalTime}
-            onChange={(e) => setIntervalTimeHandler(e.target.value)}
+            type="text"
+            value={value}
+            onChange={(e) => setIntervalTimeHandler(Number(e.target.value))}
             className="w-[50px] border px-1 border-slate-500"
           />
+
           <fieldset className="flex gap-2">
             <input
               type="radio"

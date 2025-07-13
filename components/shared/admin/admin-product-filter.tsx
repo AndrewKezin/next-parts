@@ -3,12 +3,13 @@
 import React, { useEffect, useState } from 'react';
 import { X } from 'lucide-react';
 import { Button } from '@/components/ui';
-import { useGetAllProductsQuery, useGetProductItemQuery, useGetProductQuery } from '@/store/redux';
 import { AdminProdFilter1stBlock } from './admin-prod-filter-1st-block';
 import { AdminProdFilter2ndBlock } from './admin-prod-filter-2nd-block';
 import { AdminProdFilter3rdBlock } from './admin-prod-filter-3rd-block';
 import { FetchProducts } from '@/services/dto/cart.dto';
 import { ProdFiltersSktn } from './skeletons';
+import { useGetAllProductsQuery, useGetProductItemQuery, useGetProductQuery } from '@/store/redux/productsApi';
+
 
 interface Props {
   startIndex: number;

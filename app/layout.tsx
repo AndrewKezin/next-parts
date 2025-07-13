@@ -1,5 +1,3 @@
-'use client';
-
 import { Nunito } from 'next/font/google';
 import './globals.css';
 import { Footer, Providers } from '@/components/shared';
@@ -17,7 +15,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en/ru">
+    <html lang="ru/ru">
       <head>
         {/* favicon */}
         <link data-rh="true" rel="icon" href="/logo.png" />

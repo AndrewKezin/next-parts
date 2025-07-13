@@ -9,8 +9,9 @@ export const productsApi = createApi({
     baseUrl: ((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
       process.env.NEXT_PUBLIC_API_URL) as string,
   }),
+  // тэги
   tagTypes: ['Products', 'Product', 'ProductItem'],
-  // endpoints
+  // эндпоинты
   endpoints: (build) => ({
     // получить все товары по фильтрам
     getAllProducts: build.query({
@@ -60,7 +61,7 @@ export const productsApi = createApi({
         method: 'POST',
         body,
       }),
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Products', 'Product'],
     }),
     // удалить товар
     deleteProduct: build.mutation({
@@ -68,7 +69,7 @@ export const productsApi = createApi({
         url: `/products/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Products', 'Product'],
     }),
     // удалить вариант товара
     deleteProductItem: build.mutation({
@@ -76,7 +77,7 @@ export const productsApi = createApi({
         url: `/productitems/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Products', 'Product', 'ProductItem'],
     }),
     // изменить товар
     createOrUpdateProduct: build.mutation({
@@ -85,7 +86,7 @@ export const productsApi = createApi({
         method: 'PUT',
         body,
       }),
-      invalidatesTags: ['Products'],
+      invalidatesTags: ['Products', 'Product', 'ProductItem'],
     }),
   }),
 });

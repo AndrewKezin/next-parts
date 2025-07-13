@@ -7,6 +7,7 @@ import {
   AdminSearchInput,
   AdminSearchSelect,
   AdminUsersView,
+  AutoUpdate,
 } from '@/components/shared';
 import { Button } from '@/components/ui';
 import { useUsersProfile } from '@/hooks';
@@ -26,6 +27,7 @@ export default function DashboardUsers() {
   const [date, setDate] = React.useState<DateRange | undefined>(undefined);
   const [startIndex, setStartIndex] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
+  const [autoUpdatePeriod, setAutoUpdatePeriod] = React.useState('minutes');
 
   const { users, loading } = useUsersProfile({
     isInterval,
@@ -55,15 +57,15 @@ export default function DashboardUsers() {
     setCurrentUserRole(event.target.value as UserRole);
 
   if (loading) {
-    return <h3 className="text-xl text-center mt-3 mb-3">Загрузка пользователей...</h3>;
+    return <h3 className="text-2xl text-center mt-10 mb-10">Загрузка пользователей...</h3>;
   }
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
       <h1 className="text-4xl font-bold mt-10 mb-5">Панель управления профилями пользователей</h1>
 
-      <div className=" w-full flex flex-col border border-gray-500 rounded px-2 py-2 mb-5">
-        <div className="flex w-full justify-around gap-1 border border-gray-500 rounded px-2 py-2 mb-5">
+      <div className="w-full flex flex-col gap-3 border border-gray-500 rounded px-2 py-2 mb-5">
+        <div className="flex w-full justify-around gap-1 border border-gray-500 rounded px-2 py-3">
           <AdminSearchInput
             searchQuery={userId}
             title="ID пользователя"
@@ -102,13 +104,24 @@ export default function DashboardUsers() {
           />
         </div>
 
-        <Button
-          variant={'outline'}
-          className="w-[250px] mb-5 border-black text-black bg-slate-100"
-          onClick={handleClearSearch}>
-          <X className="mr-2" />
-          Сбросить параметры поиска
-        </Button>
+        <div className="flex w-full justify-around items-center gap-1 px-2 py-2">
+          <Button
+            variant={'outline'}
+            className="w-[250px] border-black text-black bg-slate-100"
+            onClick={handleClearSearch}>
+            <X className="mr-2" />
+            Сбросить параметры поиска
+          </Button>
+
+          <AutoUpdate
+            autoUpdate={isInterval}
+            setAutoUpdate={setIsInterval}
+            intervalTime={intervalTime}
+            setIntervalTime={setIntervalTime}
+            autoUpdatePeriod={autoUpdatePeriod}
+            setAutoUpdatePeriod={setAutoUpdatePeriod}
+          />
+        </div>
       </div>
 
       <AdminUsersView fetchUsers={users} handleClearSearch={handleClearSearch} className="w-full" />

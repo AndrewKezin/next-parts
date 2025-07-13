@@ -12,7 +12,7 @@ interface Props {
 export const AdminProdCardItemProp: React.FC<Props> = ({ text, value, arrows, endText, className }) => {
   return (
     <div className={cn('flex flex-col items-center justify-center', className)}>
-      <p className="underline">{text}:</p>
+      <p className="underline text-gray-400">{text}:</p>
       <div className="flex items-center mb-2">
         {arrows && <button className="w-7 h-7 mr-2 border border-gray-500 rounded-[5px]">-</button>}
         <p>

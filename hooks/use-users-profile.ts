@@ -1,5 +1,7 @@
 import { Api } from '@/services/api-client';
+import { useGetAllUsersQuery, useGetUserQuery } from '@/store/redux/usersApi';
 import { User } from '@prisma/client';
+import { all } from 'axios';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -42,38 +44,91 @@ export const useUsersProfile = ({
   startIndex,
   itemsPerPage,
 }: Props): ReturnProps => {
-  const [users, setUsers] = useState<FetchUsers>({users: []});
-  const [loading, setLoading] = useState(true);
+  const [users, setUsers] = useState<FetchUsers>({ users: [] });
+  const [loading, setLoading] = useState(false);
+
+  const { data, isLoading, isError } = useGetUserQuery(userId);
+
+  const {
+    data: allUsers,
+    isLoading: isLoadingAll,
+    isError: isErrorAll,
+  } = useGetAllUsersQuery(
+    {
+      searchQuery,
+      currentUserStatus,
+      currentUserRole,
+      date,
+      startIndex,
+      itemsPerPage,
+    },
+    { pollingInterval: isInterval ? intervalTime : 0,
+      refetchOnFocus: true
+     },
+  );
 
   useEffect(() => {
-    async function fetchUsers() {
-      try {
-        userId
-          ? setUsers({users: [await Api.users.getUser(userId)]})
-          : setUsers(
-              await Api.users.getUsers(searchQuery, currentUserStatus, currentUserRole, date, String(startIndex), String(itemsPerPage)),
-            );
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
+    setLoading(true);
+    if (isError || isErrorAll) {
+      console.log('Error fetching users');
+      setLoading(false);
+      return;
     }
 
-    let fetchInterval: NodeJS.Timeout;
-    if (!isInterval) {
-      fetchUsers();
-    } else {
-      fetchInterval = setInterval(() => {
-        fetchUsers();
-      }, intervalTime);
-    }
+    if (userId && data) setUsers({ users: [data] });
+    if (!userId && allUsers) setUsers(allUsers);
 
-    return () => {
-      clearInterval(fetchInterval);
-    };
-  }, [isInterval, intervalTime, userId, searchQuery, currentUserStatus, currentUserRole, date, startIndex, itemsPerPage]);
+    if (!isLoading && !isLoadingAll) {
+      setLoading(false);
+    }
+  }, [isLoading, isError, isLoadingAll, isErrorAll, data, allUsers]);
+
+  // useEffect(() => {
+  //   async function fetchUsers() {
+  //     try {
+  //       setLoading(true);
+  //       userId
+  //         ? setUsers({ users: [await Api.users.getUser(userId)] })
+  //         : setUsers(
+  //             await Api.users.getUsers(
+  //               searchQuery,
+  //               currentUserStatus,
+  //               currentUserRole,
+  //               date,
+  //               String(startIndex),
+  //               String(itemsPerPage),
+  //             ),
+  //           );
+  //     } catch (err) {
+  //       console.log(err);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   let fetchInterval: NodeJS.Timeout;
+  //   if (!isInterval) {
+  //     fetchUsers();
+  //   } else {
+  //     fetchInterval = setInterval(() => {
+  //       fetchUsers();
+  //     }, intervalTime);
+  //   }
+
+  //   return () => {
+  //     clearInterval(fetchInterval);
+  //   };
+  // }, [
+  //   isInterval,
+  //   intervalTime,
+  //   userId,
+  //   searchQuery,
+  //   currentUserStatus,
+  //   currentUserRole,
+  //   date,
+  //   startIndex,
+  //   itemsPerPage,
+  // ]);
 
   return { users, loading };
 };

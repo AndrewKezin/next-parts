@@ -7,9 +7,9 @@ import { cn } from '@/lib/utils';
 import { ConfirmPassword } from '../confirm-password';
 import { Trash } from 'lucide-react';
 import { confirmAdminPassword } from '@/lib/confirm-admin-password';
-import { useDeleteProductItemMutation } from '@/store/redux';
 import toast from 'react-hot-toast';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { useDeleteProductItemMutation } from '@/store/redux/productsApi';
 
 interface Props {
   item: ProductItem;

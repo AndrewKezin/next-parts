@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { ProductDTO } from '@/services/dto/cart.dto';
-import { useDeleteProductMutation } from '@/store/redux';
 import { FilePen, SearchCheck, Trash } from 'lucide-react';
 import Link from 'next/link';
 import { ConfirmPassword } from '../confirm-password';
@@ -11,6 +10,7 @@ import { AdminProdCardItem } from './admin-prod-card-item';
 import { confirmAdminPassword } from '@/lib/confirm-admin-password';
 import toast from 'react-hot-toast';
 import { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { useDeleteProductMutation } from '@/store/redux/productsApi';
 
 interface Props {
   product: ProductDTO;
@@ -46,7 +46,7 @@ export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }
         {/* Верхний блок */}
         <div className="w-full flex bg-white p-2">
           <div className="w-[150px] flex flex-col items-center justify-center border border-gray-300">
-            <div className="underline">ID товара:</div>
+            <div className="underline text-gray-400">ID товара:</div>
             <div className="flex flex-col gap-3 justify-center items-center relative">
               {/* Посмотреть товар в новом окне */}
               <Link
@@ -89,22 +89,22 @@ export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }
             </div>
           </div>
           <div className="w-[300px] flex flex-col flex-1 items-center justify-center border border-gray-300">
-            <div className="underline">Название:</div>
+            <div className="underline text-gray-400">Название:</div>
             <div>{product.name}</div>
           </div>
           <div className="w-[100px] flex flex-col items-center justify-center border border-gray-300">
-            <div className="underline">Категория:</div>
+            <div className="underline text-gray-400">Категория:</div>
             <div>{product.category.name}</div>
           </div>
           <div className="w-[150px] min-h-full flex items-center justify-center border border-gray-300">
             {product.imageUrl === '-' ? (
-              <div className='flex justify-center items-centertext-gray-300'>Нет фото</div>
+              <div className="flex justify-center items-centertext-gray-300">Нет фото</div>
             ) : (
               <img src={product.imageUrl} alt={product.name} />
             )}
           </div>
           <div className="w-[200px] flex flex-col items-center justify-center border border-gray-300">
-            <div className="underline">Производители:</div>
+            <div className="underline text-gray-400">Производители:</div>
             <div>{product.gearboxesManufacturers.map((item) => item.name).join(', ')}</div>
           </div>
         </div>
@@ -114,7 +114,7 @@ export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }
           {/* Нижний левый блок */}
           {product.ingredients.length > 0 && (
             <div className="w-[500px] flex flex-col items-start justify-center p-2 gap-2">
-              <div className="underline">Дополнительно к товару:</div>
+              <div className="underline text-gray-400">Дополнительно к товару:</div>
               {product.ingredients.map((item) => (
                 <div className="flex items-center justify-center gap-1 " key={item.id}>
                   <div>
@@ -131,7 +131,7 @@ export const AdminProductCard: React.FC<Props> = ({ product, handleProductEdit }
 
           {/* Нижний правый блок */}
           <div className="flex flex-1 flex-col items-center justify-center p-2 gap-2">
-            {product.items.length > 1 && <div className="underline">Варианты:</div>}
+            {product.items.length > 1 && <div className="underline text-gray-400">Варианты:</div>}
             {product.items.length >= 1 &&
               product.items.map((item) => (
                 <AdminProdCardItem item={item} hasBorder={product.items.length > 1} key={item.id} />

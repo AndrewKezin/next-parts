@@ -7,12 +7,8 @@ import { AdminNewProdForm, IProductForm } from './admin-new-prod-form';
 import { AdminNewProdItemForm, IProductItemForm } from './admin-new-proditem-form';
 import { cn } from '@/lib/utils';
 import { AddProductDTO, ProductDTO } from '@/services/dto/cart.dto';
-import {
-  useAddProductMutation,
-  useCreateOrUpdateProductMutation,
-  useGetProductQuery,
-} from '@/store/redux';
 import { NewProductSktn } from './skeletons';
+import { useCreateOrUpdateProductMutation, useGetProductQuery } from '@/store/redux/productsApi';
 
 type Props = {
   productId?: string;
@@ -173,7 +169,7 @@ export const AdminNewProduct: React.FC<Props> = ({
   }
 
   error && console.log(error);
-  
+
   return (
     <div className="w-full flex flex-col items-center justify-center mb-2">
       <h2 className="text-2xl font-bold mb-3">

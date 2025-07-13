@@ -79,14 +79,14 @@ export default function DashboardOrders() {
       <h1 className="text-4xl font-bold mt-10 mb-7">Администрирование заказов</h1>
 
       {/* Фильтрация */}
-      <AutoUpdate
+      {/* <AutoUpdate
         autoUpdate={autoUpdate}
         setAutoUpdate={setAutoUpdate}
         intervalTime={intervalTime}
         setIntervalTime={setIntervalTime}
         autoUpdatePeriod={autoUpdatePeriod}
         setAutoUpdatePeriod={setAutoUpdatePeriod}
-      />
+      /> */}
       <div className="flex flex-col border border-gray-500 rounded px-2 py-2 mb-5">
         <div className="flex w-full justify-around gap-2 border border-gray-500 rounded px-2 py-2 mb-5">
           <AdminSearchInput
