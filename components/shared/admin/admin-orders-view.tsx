@@ -14,7 +14,7 @@ interface Props {
 export const AdminOrdersView: React.FC<Props> = ({ fetchOrders, handleClearSearch, className }) => {
   const { orders, totalCount } = fetchOrders;
 
-  if (orders.every((order) => order === null)) {
+  if (orders?.every((order) => order === null)) {
     return <QueryNotExist query={QUERY.ORDER} handleClearSearch={handleClearSearch} />;
   }
 

@@ -14,7 +14,7 @@ interface Props {
 export const AdminUsersView: React.FC<Props> = ({ fetchUsers, handleClearSearch, className }) => {
   const { users, totalCount } = fetchUsers;
 
-  if (users.every((order) => order === null)) {
+  if (users?.every((order) => order === null)) {
     return <QueryNotExist query={QUERY.USER} handleClearSearch={handleClearSearch} />;
   }
 
