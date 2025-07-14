@@ -42,7 +42,7 @@ export default async function UserOrderPage({ params: { id } }: { params: { id: 
 
   const orderPayData = await prisma.testPayment.findFirst({
     where: {
-      id: String(order.id),
+      id: String(order.paymentId),
     },
     select: {
       paid: true,

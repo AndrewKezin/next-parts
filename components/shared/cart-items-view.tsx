@@ -10,7 +10,7 @@ interface Props {
 
 export const CartItemsView: React.FC<Props> = ({ items, className }) => {
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full mb-5', className)}>
       {!items || items.length === 0 ? (
         <p className="text-xl mb-5 text-center">Нет товаров/услуг</p>
       ) : (
@@ -21,7 +21,7 @@ export const CartItemsView: React.FC<Props> = ({ items, className }) => {
               <th className="border border-black px-2">Наименование</th>
               <th className="border border-black px-2">Цена, ₽</th>
               <th className="border border-black px-2">Кол-во</th>
-              <th className="border border-black px-2">Доп. товары</th>
+              <th className="border border-black px-2">Доп. товары/услуги</th>
               <th className="border border-black px-2">Общая стоимость, ₽</th>
               <th className="border border-black px-2">Характеристики товара</th>
             </tr>
@@ -63,17 +63,13 @@ export const CartItemsView: React.FC<Props> = ({ items, className }) => {
                     item.ingredients.reduce((acc, ingredient) => acc + ingredient.price, 0)}
                 </th>
                 <th className="border border-black px-2 font-normal">
-                  {item.ingredients.length === 0 ? (
-                    <p>Нет характеристик</p>
-                  ) : (
-                    <>
-                      {item.productItem.quantityOfTeeth && (
-                        <p>{item.productItem.quantityOfTeeth} зубьев</p>
-                      )}
-                      {item.productItem.thickness && <p>{item.productItem.thickness} мм</p>}
-                      {item.productItem.volume && <p>{item.productItem.volume} л</p>}
-                    </>
-                  )}
+                  <>
+                    {item.productItem.quantityOfTeeth && (
+                      <p>{item.productItem.quantityOfTeeth} зубьев</p>
+                    )}
+                    {item.productItem.thickness && <p>{item.productItem.thickness} мм</p>}
+                    {item.productItem.volume && <p>{item.productItem.volume} л</p>}
+                  </>
                 </th>
               </tr>
             ))}
