@@ -1,8 +1,10 @@
 import { FetchUsers } from '@/hooks/use-users-profile';
+import { axiosInstance } from '@/services/instance';
 import { User } from '@prisma/client';
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import { createApi } from '@reduxjs/toolkit/query/react';
 import { DateRange } from 'react-day-picker';
 
+// RTK Query
 interface Props {
   searchQuery: string;
   currentUserStatus: string;
@@ -12,14 +14,23 @@ interface Props {
   itemsPerPage: number;
 }
 
-// RTK Query
+const axiosBaseQuery =
+  ({ baseUrl } = { baseUrl: '' }) =>
+  async ({ url, method, data, params, headers }) => {
+    try {
+      const result = await axiosInstance({ url: baseUrl + url, method, data, params, headers });
+      return { data: result.data };
+    } catch (axiosError) {
+      const err = axiosError;
+      return { error: { status: err.response?.status, data: err.response?.data || err.message } };
+    }
+  };
+
 export const usersApi = createApi({
   // редьюсер
   reducerPath: 'usersApi',
   // базовый url
-  baseQuery: fetchBaseQuery({
-    baseUrl: (process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) + process.env.NEXT_PUBLIC_API_URL,
-  }),
+  baseQuery: axiosBaseQuery({ baseUrl: '' }),
   // тэги
   tagTypes: ['Users', 'User'],
   // эндпоинты
@@ -33,20 +44,26 @@ export const usersApi = createApi({
         date,
         startIndex,
         itemsPerPage,
-      }) =>
-        `/users?${new URLSearchParams({
+      }) => ({
+        url: `/users`,
+        method: 'GET',
+        params: {
           searchQuery,
           currentUserStatus,
           currentUserRole,
           date: date?.toString() || '',
           startIndex: String(startIndex),
           itemsPerPage: String(itemsPerPage),
-        }).toString()}`,
+        },
+      }),
       providesTags: ['Users'],
     }),
     // получить пользователя по id
     getUser: build.query<User, string>({
-      query: (id) => `/users/${id}`,
+      query: (id) => ({
+        url: `/users/${id}`,
+        method: 'GET',
+      }),
       providesTags: ['User'],
     }),
     // удаление пользователя

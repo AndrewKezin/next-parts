@@ -2,6 +2,7 @@ import { cn } from '@/lib/utils';
 import React from 'react';
 import Link from 'next/link';
 import { Order } from '@prisma/client';
+import { getLocalFormatDate } from '@/lib';
 
 interface Props {
   orders: Order[];
@@ -68,9 +69,11 @@ export const UserOrdersView: React.FC<Props> = ({ orders, type, className }) => 
                   {order.status === 'PROCESSING' && 'В доставке'}
                 </td>
                 <td className="border border-black px-2">{order.comment}</td>
-                <td className="border border-black px-2">{order.createdAt.toLocaleString()}</td>
+                <td className="border border-black px-2">{getLocalFormatDate(order?.createdAt)}</td>
                 {type === 'admin' && (
-                  <td className="border border-black px-2">{order.updatedAt.toLocaleString()}</td>
+                  <td className="border border-black px-2">
+                    {getLocalFormatDate(order?.updatedAt)}
+                  </td>
                 )}
               </tr>
             ))}
