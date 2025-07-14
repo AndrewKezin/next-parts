@@ -1,14 +1,29 @@
+import { axiosInstance } from '@/services/instance';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // RTK Query
+
+const axiosBaseQuery =
+  ({ baseUrl } = { baseUrl: '' }) =>
+  async ({ url, method, data, params, headers } : { url: string; method?: string; data?: any; params?: any; headers?: any }) => {
+    try {
+      const result = await axiosInstance({ url: baseUrl + url, method, data, params, headers });
+      return { data: result.data };
+    } catch (axiosError) {
+      const err: any = axiosError;
+      return { error: { status: err.response?.status, data: err.response?.data || err.message } };
+    }
+  };
+ 
 export const productsApi = createApi({
   // имя редюсера
   reducerPath: 'productsApi',
   // базовый url
-  baseQuery: fetchBaseQuery({
-    baseUrl: ((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
-      process.env.NEXT_PUBLIC_API_URL) as string,
-  }),
+  // baseQuery: fetchBaseQuery({
+  //   baseUrl: ((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
+  //     process.env.NEXT_PUBLIC_API_URL) as string,
+  // }),
+  baseQuery: axiosBaseQuery({ baseUrl: '' }),
   // тэги
   tagTypes: ['Products', 'Product', 'ProductItem'],
   // эндпоинты
@@ -27,8 +42,10 @@ export const productsApi = createApi({
         prodVolumeVariants,
         startIndex,
         itemsPerPage,
-      }) =>
-        `/products?${new URLSearchParams({
+      }) => ({
+        url: `/products`,
+        method: 'GET',
+        params: {
           prodName: productName,
           manuf: prodManufIds?.join(','),
           ingred: prodIngredIds?.join(','),
@@ -41,17 +58,38 @@ export const productsApi = createApi({
           volume: prodVolumeVariants?.join(','),
           itemsPerPage,
           startIndex,
-        }).toString()}`,
+        },
+      }),
+        // `/products?${new URLSearchParams({
+        //   prodName: productName,
+        //   manuf: prodManufIds?.join(','),
+        //   ingred: prodIngredIds?.join(','),
+        //   cat: prodCatIds?.join(','),
+        //   quant: prodQuantity,
+        //   priceFrom: productPrice[0],
+        //   priceTo: productPrice[1],
+        //   quantOfTeeth: prodQuantVariants?.join(','),
+        //   thickness: prodThicknVariants?.join(','),
+        //   volume: prodVolumeVariants?.join(','),
+        //   itemsPerPage,
+        //   startIndex,
+        // }).toString()}`,
       providesTags: ['Products'],
     }),
     // получить товар по id
     getProduct: build.query({
-      query: (id) => `/products/${id}`,
+      query: (id) => ({
+        url: `/products/${id}`,
+        method: 'GET',
+      }),
       providesTags: ['Product'],
     }),
     // получить товар по артикулу (itemId)
     getProductItem: build.query({
-      query: (id) => `/productitems/${id}`,
+      query: (id) => ({
+        url: `/productitems/${id}`,
+        method: 'GET',
+      }),
       providesTags: ['ProductItem'],
     }),
     // добавить товар

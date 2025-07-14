@@ -1,7 +1,5 @@
-import { Api } from '@/services/api-client';
 import { useGetAllUsersQuery, useGetUserQuery } from '@/store/redux/usersApi';
 import { User } from '@prisma/client';
-import { all } from 'axios';
 import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
@@ -62,9 +60,7 @@ export const useUsersProfile = ({
       startIndex,
       itemsPerPage,
     },
-    { pollingInterval: isInterval ? intervalTime : 0,
-      refetchOnFocus: true
-     },
+    { pollingInterval: isInterval ? intervalTime : 0, refetchOnFocus: true },
   );
 
   useEffect(() => {
