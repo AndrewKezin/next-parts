@@ -1,6 +1,6 @@
-import { Api } from '@/services/api-client';
+import { useGetAllOrdersQuery, useGetOrderQuery } from '@/store/redux/ordersApi';
 import { Order } from '@prisma/client';
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { DateRange } from 'react-day-picker';
 
 interface Props {
@@ -32,45 +32,53 @@ export interface FetchOrders {
  */
 export const useOrders = ({
   orderId,
-  isInterval=false,
-  intervalTime=60000,
+  isInterval = false,
+  intervalTime = 60000,
   searchQuery,
   orderStatus,
   date,
   startIndex,
   itemsPerPage,
 }: Props): ReturnProps => {
-  const [orders, setOrders] = React.useState<FetchOrders>({ orders: [] });
-  const [loading, setLoading] = React.useState(true);
+  const [orders, setOrders] = useState<FetchOrders>({ orders: [] });
+  const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    async function fetchOrders() {
-      try {
-        // отправить GET запрос на localhost:3000/api/orders?query=qwe чтобы через призму получить из БД список всех заказов
-        orderId
-          ? setOrders({ orders: [await Api.orders.getOrder(orderId)] })
-          : setOrders(await Api.orders.getOrders(searchQuery, orderStatus, date, String(startIndex), String(itemsPerPage)));
-        setLoading(false);
-      } catch (err) {
-        console.log(err);
-      } finally {
-        setLoading(false);
-      }
+  const { data, isLoading, isError } = useGetOrderQuery(orderId);
+
+  const {
+    data: allOrders,
+    isLoading: isLoadingAll,
+    isError: isErrorAll,
+  } = useGetAllOrdersQuery(
+    {
+      searchQuery,
+      orderStatus,
+      dateFrom: date?.from?.toISOString() || '',
+      dateTo: date?.to?.toISOString() || '',
+      startIndex,
+      itemsPerPage,
+    },
+    { pollingInterval: isInterval ? intervalTime : 0, refetchOnFocus: true },
+  );
+
+  useEffect(() => {
+    setLoading(true);
+    if (isError || isErrorAll) {
+      console.log('Error fetching users');
+      setLoading(false);
+      return;
     }
 
-    let fetchInterval: NodeJS.Timeout;
-    if (!isInterval) {
-      fetchOrders();
-    } else {
-      fetchInterval = setInterval(() => {
-        fetchOrders();
-      }, intervalTime);
+    if (!data) setOrders({ orders: [] });
+    if (orderId && data?.id === Number(orderId)) {
+      setOrders({ orders: [data] });
     }
+    if (!orderId && allOrders) setOrders(allOrders);
 
-    return () => {
-      clearInterval(fetchInterval);
-    };
-  }, [orderId, isInterval, intervalTime, searchQuery, orderStatus, date, startIndex, itemsPerPage]);
+    if (!isLoading && !isLoadingAll) {
+      setLoading(false);
+    }
+  }, [isLoading, isError, isLoadingAll, isErrorAll, data, allOrders, orderId]);
 
   return { orders, loading };
 };

@@ -56,7 +56,8 @@ export const useUsersProfile = ({
       searchQuery,
       currentUserStatus,
       currentUserRole,
-      date,
+      dateFrom: date?.from?.toISOString() || '',
+      dateTo: date?.to?.toISOString() || '',
       startIndex,
       itemsPerPage,
     },
@@ -71,60 +72,14 @@ export const useUsersProfile = ({
       return;
     }
 
-    if (userId && data) setUsers({ users: [data] });
+    if (!data) setUsers({ users: [] });
+    if (userId && data?.id === Number(userId)) setUsers({ users: [data] });
     if (!userId && allUsers) setUsers(allUsers);
 
     if (!isLoading && !isLoadingAll) {
       setLoading(false);
     }
-  }, [isLoading, isError, isLoadingAll, isErrorAll, data, allUsers]);
-
-  // useEffect(() => {
-  //   async function fetchUsers() {
-  //     try {
-  //       setLoading(true);
-  //       userId
-  //         ? setUsers({ users: [await Api.users.getUser(userId)] })
-  //         : setUsers(
-  //             await Api.users.getUsers(
-  //               searchQuery,
-  //               currentUserStatus,
-  //               currentUserRole,
-  //               date,
-  //               String(startIndex),
-  //               String(itemsPerPage),
-  //             ),
-  //           );
-  //     } catch (err) {
-  //       console.log(err);
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   }
-
-  //   let fetchInterval: NodeJS.Timeout;
-  //   if (!isInterval) {
-  //     fetchUsers();
-  //   } else {
-  //     fetchInterval = setInterval(() => {
-  //       fetchUsers();
-  //     }, intervalTime);
-  //   }
-
-  //   return () => {
-  //     clearInterval(fetchInterval);
-  //   };
-  // }, [
-  //   isInterval,
-  //   intervalTime,
-  //   userId,
-  //   searchQuery,
-  //   currentUserStatus,
-  //   currentUserRole,
-  //   date,
-  //   startIndex,
-  //   itemsPerPage,
-  // ]);
+  }, [isLoading, isError, isLoadingAll, isErrorAll, data, allUsers, userId]);
 
   return { users, loading };
 };

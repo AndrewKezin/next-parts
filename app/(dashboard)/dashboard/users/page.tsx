@@ -12,6 +12,7 @@ import {
 import { Button } from '@/components/ui';
 import { useUsersProfile } from '@/hooks';
 import { UserRole, UserStatus } from '@prisma/client';
+import { addDays } from 'date-fns';
 import { X } from 'lucide-react';
 import React from 'react';
 import { DateRange } from 'react-day-picker';
@@ -20,6 +21,7 @@ export default function DashboardUsers() {
   const [isInputClear, setIsInputClear] = React.useState(false);
   const [isInterval, setIsInterval] = React.useState(false);
   const [intervalTime, setIntervalTime] = React.useState(60000);
+  const [autoUpdatePeriod, setAutoUpdatePeriod] = React.useState('minutes');
   const [userId, setUserId] = React.useState<string>('');
   const [currentUserStatus, setCurrentUserStatus] = React.useState<string>('');
   const [searchQuery, setSearchQuery] = React.useState<string>('');
@@ -27,7 +29,6 @@ export default function DashboardUsers() {
   const [date, setDate] = React.useState<DateRange | undefined>(undefined);
   const [startIndex, setStartIndex] = React.useState(0);
   const [itemsPerPage, setItemsPerPage] = React.useState(10);
-  const [autoUpdatePeriod, setAutoUpdatePeriod] = React.useState('minutes');
 
   const { users, loading } = useUsersProfile({
     isInterval,
@@ -36,7 +37,8 @@ export default function DashboardUsers() {
     currentUserStatus,
     searchQuery,
     currentUserRole,
-    date,
+    // прибавить 1 день к дате "до", чтобы выбранный день входил в диапазон поиска
+    date: date && date.to && { from: date.from, to: addDays(date.to, 1) },
     startIndex,
     itemsPerPage,
   });
@@ -64,8 +66,8 @@ export default function DashboardUsers() {
     <div className="flex flex-col items-center justify-center w-full">
       <h1 className="text-4xl font-bold mt-10 mb-5">Панель управления профилями пользователей</h1>
 
-      <div className="w-full flex flex-col gap-3 border border-gray-500 rounded px-2 py-2 mb-5">
-        <div className="flex w-full justify-around gap-1 border border-gray-500 rounded px-2 py-3">
+      <div className="w-full flex flex-col gap-3 px-2 py-2 mb-5">
+        <div className="flex w-full justify-around gap-1 px-2 py-3">
           <AdminSearchInput
             searchQuery={userId}
             title="ID пользователя"

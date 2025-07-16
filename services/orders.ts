@@ -1,3 +1,5 @@
+// НЕ ИСПОЛЬЗУЕТСЯ. ПЕРЕДЕЛАНО НА RTK Query
+
 import { Order } from '@prisma/client';
 import { ApiRoutes } from './constants';
 import { axiosInstance } from './instance';

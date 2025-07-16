@@ -2,21 +2,33 @@ import { FetchUsers } from '@/hooks/use-users-profile';
 import { axiosInstance } from '@/services/instance';
 import { User } from '@prisma/client';
 import { createApi } from '@reduxjs/toolkit/query/react';
-import { DateRange } from 'react-day-picker';
 
 // RTK Query
 interface Props {
   searchQuery: string;
   currentUserStatus: string;
   currentUserRole: string;
-  date: DateRange | undefined;
+  dateFrom: string;
+  dateTo: string;
   startIndex: number;
   itemsPerPage: number;
 }
 
 const axiosBaseQuery =
   ({ baseUrl } = { baseUrl: '' }) =>
-  async ({ url, method, data, params, headers } : { url: string; method?: string; data?: any; params?: any; headers?: any }) => {
+  async ({
+    url,
+    method,
+    data,
+    params,
+    headers,
+  }: {
+    url: string;
+    method?: string;
+    data?: any;
+    params?: any;
+    headers?: any;
+  }) => {
     try {
       const result = await axiosInstance({ url: baseUrl + url, method, data, params, headers });
       return { data: result.data };
@@ -35,13 +47,14 @@ export const usersApi = createApi({
   tagTypes: ['Users', 'User'],
   // эндпоинты
   endpoints: (build) => ({
-    // получить всех пользователей
+    // получить всех пользователей с учетом фильтрации
     getAllUsers: build.query<FetchUsers, Props>({
       query: ({
         searchQuery,
         currentUserStatus,
         currentUserRole,
-        date,
+        dateFrom,
+        dateTo,
         startIndex,
         itemsPerPage,
       }) => ({
@@ -51,7 +64,8 @@ export const usersApi = createApi({
           searchQuery,
           currentUserStatus,
           currentUserRole,
-          date: date?.toString() || '',
+          dateFrom,
+          dateTo,
           startIndex: String(startIndex),
           itemsPerPage: String(itemsPerPage),
         },

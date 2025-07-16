@@ -18,30 +18,30 @@ import { Button } from '@/components/ui';
 import { X } from 'lucide-react';
 
 export default function DashboardOrders() {
-  const [autoUpdate, setAutoUpdate] = useState(false);
+  const [isInterval, setIsInterval] = useState(false);
   const [intervalTime, setIntervalTime] = useState(1);
   const [autoUpdatePeriod, setAutoUpdatePeriod] = useState('minutes');
-  const [interval, setInterval] = useState(60000);
   const [searchQuery, setSearchQuery] = useState('');
   const [orderId, setOrderId] = useState('');
   const [currentOrderStatus, setCurrentOrderStatus] = useState('');
-  // const [date, setDate] = React.useState<DateRange | undefined>({
-  //   from: addDays(new Date(Date.now()), -7),
-  //   to: new Date(Date.now()),
-  // });
   const [date, setDate] = useState<DateRange | undefined>(undefined);
   const [isInputClear, setIsInputClear] = useState(false);
   const [startIndex, setStartIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  useEffect(() => {
+    if (searchQuery.length > 0) setIsInterval(false);
+  }, [searchQuery]);
+
   // получение списка заказов с учетом фильтров
   const { orders, loading } = useOrders({
     orderId,
-    isInterval: autoUpdate,
+    isInterval,
     intervalTime,
     searchQuery,
     orderStatus: currentOrderStatus,
-    date,
+    // прибавить 1 день к дате "до", чтобы выбранный день входил в диапазон поиска
+    date: date && date.to && { from: date.from, to: addDays(date.to, 1) },
     startIndex,
     itemsPerPage,
   });
@@ -60,18 +60,8 @@ export default function DashboardOrders() {
   const handleSelectStatus = (event: React.ChangeEvent<HTMLSelectElement>) =>
     setCurrentOrderStatus(event.target.value as OrderStatus);
 
-  useEffect(() => {
-    if (autoUpdatePeriod === 'minutes') {
-      setInterval(intervalTime * 60000);
-    } else {
-      setInterval(intervalTime * 1000);
-    }
-
-    if (searchQuery.length > 0) setAutoUpdate(false);
-  }, [autoUpdatePeriod, intervalTime, searchQuery]);
-
   if (loading) {
-    return <p className="text-xl text-center">Загрузка заказов...</p>;
+    return <h3 className="text-xl font-bold mt-20 mb-5 text-center">Загрузка заказов...</h3>;
   }
 
   return (
@@ -79,16 +69,8 @@ export default function DashboardOrders() {
       <h1 className="text-4xl font-bold mt-10 mb-7">Администрирование заказов</h1>
 
       {/* Фильтрация */}
-      {/* <AutoUpdate
-        autoUpdate={autoUpdate}
-        setAutoUpdate={setAutoUpdate}
-        intervalTime={intervalTime}
-        setIntervalTime={setIntervalTime}
-        autoUpdatePeriod={autoUpdatePeriod}
-        setAutoUpdatePeriod={setAutoUpdatePeriod}
-      /> */}
-      <div className="flex flex-col border border-gray-500 rounded px-2 py-2 mb-5">
-        <div className="flex w-full justify-around gap-2 border border-gray-500 rounded px-2 py-2 mb-5">
+      <div className="flex flex-col px-2 py-2 mb-5">
+        <div className="flex w-full justify-around gap-2 px-2 py-3 mb-5">
           <AdminSearchInput
             searchQuery={orderId}
             title="Поиск по номеру заказа"
@@ -120,13 +102,24 @@ export default function DashboardOrders() {
           />
         </div>
 
-        <Button
-          variant={'outline'}
-          className="w-[250px] mb-5 border-black text-black bg-slate-100"
-          onClick={handleClearSearch}>
-          <X className="mr-2" />
-          Сбросить параметры поиска
-        </Button>
+        <div className="flex w-full justify-around items-center gap-1 px-2 py-2">
+          <Button
+            variant={'outline'}
+            className="w-[250px] mb-5 border-black text-black bg-slate-100"
+            onClick={handleClearSearch}>
+            <X className="mr-2" />
+            Сбросить параметры поиска
+          </Button>
+
+          <AutoUpdate
+            autoUpdate={isInterval}
+            setAutoUpdate={setIsInterval}
+            intervalTime={intervalTime}
+            setIntervalTime={setIntervalTime}
+            autoUpdatePeriod={autoUpdatePeriod}
+            setAutoUpdatePeriod={setAutoUpdatePeriod}
+          />
+        </div>
       </div>
 
       {/* Список заказов */}

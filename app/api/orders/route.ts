@@ -10,10 +10,10 @@ import { checkAdminRules } from '@/lib/check-admin-rules';
 
 export async function GET(req: NextRequest) {
   // вытащить значения параметров из адресной строки. Если нет параметра, то вернет пустую строку
-  const query = req.nextUrl.searchParams.get('query') || '';
+  const query = req.nextUrl.searchParams.get('searchQuery') || '';
   const orderStatus = req.nextUrl.searchParams.get('orderStatus') || '';
-  const dateFrom = req.nextUrl.searchParams.get('date[from]') || '';
-  const dateTo = req.nextUrl.searchParams.get('date[to]') || '';
+  const dateFrom = req.nextUrl.searchParams.get('dateFrom') || '';
+  const dateTo = req.nextUrl.searchParams.get('dateTo') || '';
   const startIndex = req.nextUrl.searchParams.get('startIndex');
   const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
 

@@ -1,3 +1,5 @@
+// НЕ ИСПОЛЬЗУЕТСЯ. ПЕРЕДЕЛАНО НА RTK Query
+
 import { axiosInstance } from './instance';
 import { ApiRoutes } from './constants';
 import { DateRange } from 'react-day-picker';

@@ -4,9 +4,7 @@ import * as React from 'react';
 import { addDays, format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
-
 import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
 
@@ -21,14 +19,6 @@ export const DatePickerWithRange: React.FC<Props> = ({ date, setDate, className 
     <div className={cn('grid gap-2', className)}>
       <Popover>
         <PopoverTrigger asChild>
-          {/* <Button
-            id="date"
-            variant={'datepicker'}
-            size={'datepicker'}
-            className={cn(
-              'w-[250px] justify-start text-left font-normal',
-              !date && 'text-muted-foreground',
-            )}> */}
           <button
             id="date"
             className="flex justify-start items-center text-left font-normal w-[250px] h-[30px] rounded-[3px] outline outline-1 bg-gray-100 px-2">

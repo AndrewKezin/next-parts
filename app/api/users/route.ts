@@ -16,8 +16,8 @@ export async function GET(req: NextRequest) {
   const searchQuery = req.nextUrl.searchParams.get('searchQuery') || '';
   const currentUserStatus = req.nextUrl.searchParams.get('currentUserStatus') || '';
   const currentUserRole = req.nextUrl.searchParams.get('currentUserRole') || '';
-  const dateFrom = req.nextUrl.searchParams.get('date[from]') || '';
-  const dateTo = req.nextUrl.searchParams.get('date[to]') || '';
+  const dateFrom = req.nextUrl.searchParams.get('dateFrom') || '';
+  const dateTo = req.nextUrl.searchParams.get('dateTo') || '';
   const startIndex = req.nextUrl.searchParams.get('startIndex');
   const itemsPerPage = req.nextUrl.searchParams.get('itemsPerPage');
 
