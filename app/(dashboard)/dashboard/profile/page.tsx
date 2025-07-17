@@ -26,8 +26,6 @@ export default async function DashboardProfile() {
       <h1 className="text-4xl font-bold mt-10 mb-5">Профиль администратора</h1>
 
       <ProfileForm data={user} />
-
-      <AdminNavMenu page={'profile'} />
     </div>
   );
 }

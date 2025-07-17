@@ -22,4 +22,5 @@ export {AdminNavMenu} from './admin-nav-menu';
 export {AdminNavMenuItem} from './admin-nav-menu-item';
 export {AdminProdCardItem} from './admin-prod-card-item';
 export {AdminProdCardItemProp} from './admin-prod-card-item-prop';
+export {AdminDropdownMenu} from './admin-dropdown-menu';
 export * from './skeletons';

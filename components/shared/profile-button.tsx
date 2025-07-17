@@ -6,6 +6,7 @@ import React from 'react';
 import { Button } from '../ui';
 import Link from 'next/link';
 import logOut from '@/lib/log-out';
+import { AdminDropdownMenu } from './admin';
 
 interface Props {
   // эта функция будет открывать модальное окно авторизации
@@ -28,20 +29,17 @@ export const ProfileButton: React.FC<Props> = ({ className, onClickSignIn }) => 
 
       <div className="flex gap-2">
         {session && (
-          <Button variant="outline" className="flex items-center gap-2" onClick={() => logOut()} title='Выход'>
+          <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            onClick={() => logOut()}
+            title="Выход">
             <LogOut size={18} />
             Выход
           </Button>
         )}
 
-        {session && session?.user.role === 'ADMIN' && (
-          <Link href="/profile">
-            <Button variant="outline" className="flex items-center gap-2">
-              <UserCog size={18} />
-              Администрирование
-            </Button>
-          </Link>
-        )}
+        {session && session?.user.role === 'ADMIN' && <AdminDropdownMenu />}
         {session && session?.user.role === 'USER' && (
           <Link href="/profile">
             <Button variant="outline" className="flex items-center gap-2">

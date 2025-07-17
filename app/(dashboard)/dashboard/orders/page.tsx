@@ -134,8 +134,6 @@ export default function DashboardOrders() {
           className="flex items-center justify-center w-full gap-7 p-3 mb-5"
         />
       )}
-
-      <AdminNavMenu page="orders" />
     </div>
   );
 }

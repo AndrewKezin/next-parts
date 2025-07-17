@@ -96,7 +96,11 @@ export default function DashboardProducts() {
       {isNewProduct && <AdminNewProduct />}
 
       {/* Список товаров */}
-      {!isNewProduct && isLoading && Array(5).fill(0).map((_, index) => <ProductSktn key={index} />)}
+      {!isNewProduct &&
+        isLoading &&
+        Array(5)
+          .fill(0)
+          .map((_, index) => <ProductSktn key={index} />)}
       {!isLoading && (!products || products?.length === 0) && (
         <p className="text-2xl p-5">Товары по выбранным параметрам не найдены</p>
       )}
@@ -124,8 +128,6 @@ export default function DashboardProducts() {
           className="flex items-center justify-center w-full gap-7 p-3 mb-5"
         />
       )}
-
-      <AdminNavMenu page="products" />
     </div>
   );
 }
