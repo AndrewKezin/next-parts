@@ -1,5 +1,6 @@
 'use server';
 
+import { MessageArr } from '@/@types/monitor';
 import { CheckoutFormValues } from '@/components/checkout/checkout-form-schema';
 import {
   DeleteUserTemplate,
@@ -9,7 +10,7 @@ import {
 import { createPayment, sendEmail } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
-import { OrderStatus, Prisma, UserAddresses, UserRole, UserStatus } from '@prisma/client';
+import { OrderStatus, Prisma, UserAddresses, UserRole, UserStatus, WarnEvent } from '@prisma/client';
 import { compareSync, hashSync } from 'bcrypt';
 import { cookies } from 'next/headers';
 
@@ -88,6 +89,15 @@ export async function createOrder(data: CheckoutFormValues) {
     if (!order) {
       throw new Error('Не удалось создать заказ');
     }
+
+    // добавить заказ в монитор (не по кукрсу)
+    await prisma.monitor.create({
+      data: {
+        warnEvent: WarnEvent.ORDER,
+        message: MessageArr.NewOrder,
+        orderId: order.id,
+      }
+    })
 
     // если заказ создан, то изменить количество товаров в БД
     userCart.items.forEach(async (item) => {
@@ -248,6 +258,15 @@ export async function registerUser(body: Prisma.UserCreateInput) {
       'NEXT PARTS - Подтверждение регистрации',
       VerificationUserTemplate({ code }),
     );
+
+    // добавить пользователя в монитор (не по курсу)
+    await prisma.monitor.create({
+      data: {
+        warnEvent: WarnEvent.USER,
+        message: MessageArr.NewClient,
+        userId: createdUser.id,
+      }
+    });
   } catch (err) {
     console.log('[RegisterUser] error: ', err);
     throw err;

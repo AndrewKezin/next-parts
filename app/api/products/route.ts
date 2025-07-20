@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/prisma/prisma-client';
 import { AddProductDTO, FetchProducts } from '@/services/dto/cart.dto';
-import { ProductItem } from '@prisma/client';
+import { ProductItem, WarnEvent } from '@prisma/client';
 import { checkAdminRules } from '@/lib/check-admin-rules';
 import { SEARCHPRICERANGE } from '@/@types/products';
 import { getFilteredArr } from '@/lib';
+import { MessageArr } from '@/@types/monitor';
 
 // запрос на получение всех товаров для админки
 //  поиск по товарам (api/products?query=qweqwe)
@@ -142,66 +143,66 @@ export async function GET(req: NextRequest) {
 }
 
 // Добавление товара (не используется, потому что ниже прописана логика для PUT запроса)
-export async function POST(req: NextRequest) {
-  try {
-    const adminRules = await checkAdminRules(true);
+// export async function POST(req: NextRequest) {
+//   try {
+//     const adminRules = await checkAdminRules(true);
 
-    if (adminRules.status !== 200) {
-      return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
-    }
+//     if (adminRules.status !== 200) {
+//       return NextResponse.json({ message: adminRules.message }, { status: adminRules.status });
+//     }
 
-    const data: AddProductDTO = await req.json();
+//     const data: AddProductDTO = await req.json();
 
-    const resProduct = await prisma.product.create({
-      data: {
-        id: data.id,
-        name: data.name,
-        imageUrl: data.imageUrl,
-        categoryId: data.categoryId,
-        gearboxesManufacturers: {
-          connect: data.gearboxesManufacturers,
-        },
-        ingredients: {
-          connect: data.ingredients,
-        },
-      },
-    });
+//     const resProduct = await prisma.product.create({
+//       data: {
+//         id: data.id,
+//         name: data.name,
+//         imageUrl: data.imageUrl,
+//         categoryId: data.categoryId,
+//         gearboxesManufacturers: {
+//           connect: data.gearboxesManufacturers,
+//         },
+//         ingredients: {
+//           connect: data.ingredients,
+//         },
+//       },
+//     });
 
-    const resProdItems =
-      data.items.length > 0 &&
-      data.items.map(
-        async (item) =>
-          await prisma.productItem.create({
-            data: {
-              id: item.id,
-              productId: resProduct.id,
-              thickness: item.thickness ? item.thickness : undefined,
-              quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
-              volume: item.volume ? item.volume : undefined,
-              quantity: item.quantity,
-              price: item.price,
-            },
-          }),
-      );
+//     const resProdItems =
+//       data.items.length > 0 &&
+//       data.items.map(
+//         async (item) =>
+//           await prisma.productItem.create({
+//             data: {
+//               id: item.id,
+//               productId: resProduct.id,
+//               thickness: item.thickness ? item.thickness : undefined,
+//               quantityOfTeeth: item.quantityOfTeeth ? item.quantityOfTeeth : undefined,
+//               volume: item.volume ? item.volume : undefined,
+//               quantity: item.quantity,
+//               price: item.price,
+//             },
+//           }),
+//       );
 
-    const res = await prisma.product.findFirst({
-      where: {
-        id: resProduct.id,
-      },
-      include: {
-        category: true,
-        ingredients: true,
-        items: true,
-        gearboxesManufacturers: true,
-      },
-    });
+//     const res = await prisma.product.findFirst({
+//       where: {
+//         id: resProduct.id,
+//       },
+//       include: {
+//         category: true,
+//         ingredients: true,
+//         items: true,
+//         gearboxesManufacturers: true,
+//       },
+//     });
 
-    return NextResponse.json(res);
-  } catch (err) {
-    console.log('[POST_PRODUCT] Error', err);
-    return NextResponse.json({ message: '[POST_PRODUCT] Error', err }, { status: 500 });
-  }
-}
+//     return NextResponse.json(res);
+//   } catch (err) {
+//     console.log('[POST_PRODUCT] Error', err);
+//     return NextResponse.json({ message: '[POST_PRODUCT] Error', err }, { status: 500 });
+//   }
+// }
 
 // Обновление товара или добавление товара, если его нет в БД
 export async function PUT(req: NextRequest) {
@@ -279,6 +280,15 @@ export async function PUT(req: NextRequest) {
         }),
       ),
     );
+
+    // добавить продукт в монитор (не по курсу)
+    await prisma.monitor.create({
+      data: {
+        warnEvent: WarnEvent.PRODUCT,
+        message: MessageArr.NewProduct,
+        productId: data.id,
+      },
+    });
 
     return NextResponse.json({ message: 'Товар обновлен' }, { status: 200 });
   } catch (err) {
