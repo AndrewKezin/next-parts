@@ -5,7 +5,7 @@ export const MessageArr = {
   NewOrder: 'Добавлен новый заказ',
   NewClient: 'Зарегистрировался новый клиент',
 } as const;
-export type messageKeys = (typeof MessageArr)[keyof typeof MessageArr];
+export type MessageKeys = (typeof MessageArr)[keyof typeof MessageArr];
 
 export interface IOrderWarn {
   id: number;
@@ -13,3 +13,10 @@ export interface IOrderWarn {
   deliveryMethod: string | null;
   comment: string | null;
 }
+
+// интервалы событий
+export const EventIntervals = {
+  New: 300000,
+  Old: 600000,
+} as const;
+export type EventIntervalsKeys = (typeof EventIntervals)[keyof typeof EventIntervals];

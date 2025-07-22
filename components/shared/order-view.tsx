@@ -1,4 +1,3 @@
-import { getLocalFormatDate } from '@/lib';
 import { cn } from '@/lib/utils';
 import { Order } from '@prisma/client';
 import Link from 'next/link';
@@ -74,11 +73,11 @@ export const OrderView: React.FC<Props> = ({ order, paymentUrl, className }) => 
         </tr>
         <tr>
           <td className="px-4 py-2 border border-black font-bold">Создан</td>
-          <td className="px-4 py-2 border border-black">{getLocalFormatDate(order?.createdAt)}</td>
+          <td className="px-4 py-2 border border-black">{new Date(order?.createdAt).toLocaleString()}</td>
         </tr>
         <tr>
           <td className="px-4 py-2 border border-black font-bold">Обновлен</td>
-          <td className="px-4 py-2 border border-black">{getLocalFormatDate(order?.updatedAt)}</td>
+          <td className="px-4 py-2 border border-black">{new Date(order?.updatedAt).toLocaleString()}</td>
         </tr>
         <tr>
           <td className="px-4 py-2 border border-black font-bold">Телефон</td>

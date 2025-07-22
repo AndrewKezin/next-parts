@@ -7,14 +7,14 @@ interface Props {
 
 export const AdminNavMenu: React.FC<Props> = ({ page }) => {
   return (
-    <div className="flex flex-col gap-1 mb-5">
+    <div className="flex flex-col items-center justify-center w-[250px] gap-1 p-3">
       {page !== 'dashboard' && (
         <AdminNavMenuItem url="/dashboard">
           <>
             <div className="w-9">
               <Settings2 className="w-6 h-6 text-primary" />
             </div>
-            <span className="flex-1 text-center">Вернуться в панель администратора</span>
+            <span className="flex-1 text-center">Админпанель</span>
           </>
         </AdminNavMenuItem>
       )}
@@ -24,7 +24,7 @@ export const AdminNavMenu: React.FC<Props> = ({ page }) => {
             <div className="w-9">
               <UserRoundCog className="w-6 h-6 text-primary" />
             </div>
-            <span className="flex-1 text-center">Перейти в профиль администратора</span>
+            <span className="flex-1 text-center">Профиль</span>
           </>
         </AdminNavMenuItem>
       )}
@@ -34,7 +34,7 @@ export const AdminNavMenu: React.FC<Props> = ({ page }) => {
             <div className="w-9">
               <ScrollText className="w-6 h-6 text-primary" />
             </div>
-            <span className="flex-1 text-center">Перейти к управлению заказами</span>
+            <span className="flex-1 text-center">Заказы</span>
           </>
         </AdminNavMenuItem>
       )}
@@ -44,7 +44,7 @@ export const AdminNavMenu: React.FC<Props> = ({ page }) => {
             <div className="w-9">
               <PackageOpen className="w-6 h-6 text-primary" />
             </div>
-            <span className="flex-1 text-center">Перейти к управлению товарами</span>
+            <span className="flex-1 text-center">Товары</span>
           </>
         </AdminNavMenuItem>
       )}
@@ -54,7 +54,7 @@ export const AdminNavMenu: React.FC<Props> = ({ page }) => {
             <div className="w-9">
               <ContactRound className="w-6 h-6 text-primary" />
             </div>
-            <span className="flex-1 text-center">Перейти к управлению профилями пользователей</span>
+            <span className="flex-1 text-center">Клиенты</span>
           </>
         </AdminNavMenuItem>
       )}

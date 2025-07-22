@@ -12,4 +12,3 @@ export { useUsersProfile } from './use-users-profile';
 export { useCategories } from './use-categories';
 export { useProductItemsVariants } from './use-productitems-variants';
 export { useAdminSelectsOptions } from './use-admin-selects-options';
-export { useNewMonitor } from './use-new-monitor';

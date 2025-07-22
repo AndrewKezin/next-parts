@@ -1,7 +1,6 @@
 import { cn } from '@/lib/utils';
 import React from 'react';
 import Link from 'next/link';
-import { getLocalFormatDate } from '@/lib';
 import { QUERY, QueryNotExist } from './query-not-exist';
 import { FetchOrders } from '@/hooks/use-orders';
 
@@ -82,7 +81,7 @@ export const AdminOrdersView: React.FC<Props> = ({ fetchOrders, handleClearSearc
                   <td className="border border-black px-2">{order.comment}</td>
                   <td className="border border-black px-2">{order.phone}</td>
                   <td className="border border-black px-2">
-                    {getLocalFormatDate(order.createdAt)}
+                    {new Date(order.createdAt).toLocaleString()}
                   </td>
                 </tr>
               ))}

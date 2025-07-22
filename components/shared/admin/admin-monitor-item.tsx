@@ -1,11 +1,12 @@
 'use client';
 
-import { getLocalFormatDate } from '@/lib';
 import { Monitor, WarnEvent } from '@prisma/client';
 import Link from 'next/link';
 import React from 'react';
 import { MonitorItemButton } from './mon-item-button';
 import { useDeleteItemMutation } from '@/store/redux/monitorApi';
+import { cn } from '@/lib/utils';
+import { EventIntervals } from '@/@types/monitor';
 
 interface Props {
   item: Monitor;
@@ -18,28 +19,38 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
     className: 'ml-2',
   };
 
-  const [ deleteItem ] = useDeleteItemMutation();
+  const [deleteItem] = useDeleteItemMutation();
 
   const handleChecked = (id: number) => {
-    console.log('id', id);
     deleteItem(id);
   };
 
-  const handleTimer = (id: number) => {
-    console.log('id-timer', id);
-  };
+  // const handleTimer = (id: number) => {
+  //   console.log('id-timer', id);
+  // };
+
+  const createdTime = new Date(item.createdAt).getTime();
 
   return (
-    <div className="flex justify-between items-center gap-5 px-2 w-[600px] h-[50px] rounded-[5px] bg-gray-300 font-semibold">
+    <div
+      className={cn(
+        'flex justify-between items-center gap-5 px-2 w-[600px] h-[50px] rounded-[5px] bg-gray-200 font-semibold',
+        { 'bg-green-200 animate-pulse': createdTime + EventIntervals.New > Date.now() },
+        { 'bg-red-200 animate-pulse': createdTime + EventIntervals.Old < Date.now() },
+      )}>
       {item.warnEvent === WarnEvent.ORDER && (
         <>
           <Link href={`/dashboard/orders/${item.orderId}`} {...linkProps}>
-            {item.message} #{item.orderId} {getLocalFormatDate(item.createdAt)}
+            {item.message} #{item.orderId} {new Date(item.createdAt).toLocaleString()}
           </Link>
 
           <div className="flex gap-2">
-            <MonitorItemButton handleChecked={() => handleChecked(item.id)} type="check" />
-            <MonitorItemButton handleChecked={() => handleTimer(item.id)} type="timer" />
+            <MonitorItemButton
+              handleChecked={() => handleChecked(item.id)}
+              type="check"
+              title="Обработано"
+            />
+            {/* <MonitorItemButton handleChecked={() => handleTimer(item.id)} type="timer" title='Отложить' /> */}
           </div>
         </>
       )}
@@ -47,20 +58,28 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
       {item.warnEvent === WarnEvent.PRODUCT && (
         <>
           <Link href={`/product/${item.productId}`} {...linkProps}>
-            {item.message} {item.productId} {getLocalFormatDate(item.createdAt)}
+            {item.message} {item.productId} {new Date(item.createdAt).toLocaleString()}
           </Link>
 
-          <MonitorItemButton handleChecked={() => handleChecked(item.id)} type="check" />
+          <MonitorItemButton
+            handleChecked={() => handleChecked(item.id)}
+            type="check"
+            title="Прочитано"
+          />
         </>
       )}
 
       {item.warnEvent === WarnEvent.USER && (
         <>
           <Link href={`/dashboard/users/${item.userId}`} {...linkProps}>
-            {item.message} {getLocalFormatDate(item.createdAt)}
+            {item.message} {new Date(item.createdAt).toLocaleString()}
           </Link>
 
-          <MonitorItemButton handleChecked={() => handleChecked(item.id)} type="check" />
+          <MonitorItemButton
+            handleChecked={() => handleChecked(item.id)}
+            type="check"
+            title="Прочитано"
+          />
         </>
       )}
 
@@ -70,7 +89,11 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
             {item.message} {item.productItemId}
           </Link>
 
-          <MonitorItemButton handleChecked={() => handleChecked(item.id)} type="check" />
+          <MonitorItemButton
+            handleChecked={() => handleChecked(item.id)}
+            type="check"
+            title="Прочитано"
+          />
         </>
       )}
     </div>
