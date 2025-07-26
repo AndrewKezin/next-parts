@@ -39,11 +39,16 @@ export async function POST(req: NextRequest) {
     const items = JSON.parse(order?.items as string) as CartItemDTO[];
 
     // отправить письмо
-    await sendEmail(
-      order.email,
-      'Next Parts | Ваш заказ успешно оформлен',
-      OrderSuccessTemplate({ orderId: order.id, items }),
-    );
+    try {
+      await sendEmail(
+        order.email,
+        'Next Parts | Ваш заказ успешно оформлен',
+        OrderSuccessTemplate({ orderId: order.id, items }),
+      );
+    } catch (err) {
+      console.log('[Checkout Callback] Error: ', err);
+      return NextResponse.json({ error: 'Email error' }, { status: 500 });
+    }
 
     return NextResponse.json(body);
   } catch (err) {

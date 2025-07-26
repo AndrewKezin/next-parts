@@ -1,8 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
-  AdminNavMenu,
   AdminNewProduct,
   AdminPagination,
   AdminProductCard,
@@ -13,6 +12,7 @@ import { Button } from '@/components/ui';
 import { PackagePlus, PackageSearch } from 'lucide-react';
 import { ProductDTO } from '@/services/dto/cart.dto';
 import { FetchProducts } from '@/services/dto/cart.dto';
+import { useSearchParams } from 'next/navigation';
 
 export default function DashboardProducts() {
   const [isNewProduct, setIsNewProduct] = useState(false);
@@ -23,6 +23,15 @@ export default function DashboardProducts() {
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const [productEditId, setProductEditId] = useState<string>('');
   const [isProductEdit, setIsProductEdit] = useState(false);
+  const [productItemId, setProductItemId] = useState<string>('');
+
+  // пролучить productItemId из url, для перехода из админ-монитора
+  const searchParams = useSearchParams();
+  useEffect(() => {
+    if (searchParams.has('id')) {
+      setProductItemId(searchParams.get('id') || '');
+    }
+  }, [searchParams]);
 
   const handleSetData = (product: FetchProducts) => {
     if (product) {
@@ -73,6 +82,7 @@ export default function DashboardProducts() {
           itemsPerPage={itemsPerPage}
           handleSetData={handleSetData}
           setIsLoading={setIsLoading}
+          productItemId={productItemId}
         />
       )}
 

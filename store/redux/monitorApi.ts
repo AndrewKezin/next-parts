@@ -43,6 +43,7 @@ export const monitorApi = createApi({
       }),
       providesTags: ['Monitor'],
     }),
+
     deleteItem: build.mutation({
       query: (id) => ({
         url: `/monitor/${id}`,
@@ -50,7 +51,15 @@ export const monitorApi = createApi({
       }),
       invalidatesTags: ['Monitor'],
     }),
+
+    deleteAllItems: build.mutation({
+      query: () => ({
+        url: `/monitor`,
+        method: 'DELETE',
+      }),
+      invalidatesTags: ['Monitor'],
+    }),
   }),
 });
 
-export const { useGetMonitorQuery, useDeleteItemMutation } = monitorApi;
+export const { useGetMonitorQuery, useDeleteItemMutation, useDeleteAllItemsMutation } = monitorApi;

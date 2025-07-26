@@ -14,6 +14,7 @@ interface Props {
   isNumeric?: boolean;
   className?: string;
   inputClassName?: string;
+  defaultValue?: string;
 }
 
 export const AdminSearchInput: React.FC<Props> = ({
@@ -22,11 +23,12 @@ export const AdminSearchInput: React.FC<Props> = ({
   title,
   isClearInput,
   disableClearInput,
-  placeholder='Поиск',
-  isDisabled=false,
-  isNumeric=false,
+  placeholder = 'Поиск',
+  isDisabled = false,
+  isNumeric = false,
   className,
-  inputClassName='w-full h-[30px] rounded-[3px] outline outline-1 bg-gray-100 pl-8 pr-3',
+  defaultValue,
+  inputClassName = 'w-full h-[30px] rounded-[3px] outline outline-1 bg-gray-100 pl-8 pr-3',
 }) => {
   const [query, setQuery] = React.useState('');
 
@@ -37,6 +39,12 @@ export const AdminSearchInput: React.FC<Props> = ({
     }
   }, [isClearInput]);
 
+  React.useEffect(() => {
+    if (defaultValue) {
+      setQuery(defaultValue);
+    }
+  }, [defaultValue]);
+
   // Запрос на поиск
   useDebounce(
     () => {
@@ -44,7 +52,7 @@ export const AdminSearchInput: React.FC<Props> = ({
     },
     300,
     [query],
-  );  
+  );
 
   return (
     <div className={cn('flex flex-col gap-2 items-center', className)}>
@@ -52,15 +60,20 @@ export const AdminSearchInput: React.FC<Props> = ({
       <div className="flex rounded-xl flex-1 justify-between relative">
         {/* Lucide-значок поиска */}
         <Search className="absolute top-1/2 translate-y-[-50%] left-1 h-5 text-gray-400" />
-        <X className='absolute top-1/2 translate-y-[-50%] right-1 h-5 text-gray-400 cursor-pointer' onClick={() => setQuery('')} />
+        <X
+          className="absolute top-1/2 translate-y-[-50%] right-1 h-5 text-gray-400 cursor-pointer"
+          onClick={() => setQuery('')}
+        />
 
         {/* Поле ввода */}
         <input
-          type={isNumeric ? 'number' : "text"}
-          className={cn(inputClassName, {'bg-[#f1f1f1]': isDisabled})}
+          type={isNumeric ? 'number' : 'text'}
+          className={cn(inputClassName, { 'bg-[#f1f1f1]': isDisabled })}
           placeholder={placeholder}
           value={query}
-          onChange={isNumeric ? (e) => setQuery(String(e.target.value)) : (e) => setQuery(e.target.value)}
+          onChange={
+            isNumeric ? (e) => setQuery(String(e.target.value)) : (e) => setQuery(e.target.value)
+          }
           disabled={isDisabled}
         />
       </div>

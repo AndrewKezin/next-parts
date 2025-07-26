@@ -8,12 +8,16 @@ import { AdminProdFilter2ndBlock } from './admin-prod-filter-2nd-block';
 import { AdminProdFilter3rdBlock } from './admin-prod-filter-3rd-block';
 import { FetchProducts } from '@/services/dto/cart.dto';
 import { ProdFiltersSktn } from './skeletons';
-import { useGetAllProductsQuery, useGetProductItemQuery, useGetProductQuery } from '@/store/redux/productsApi';
-
+import {
+  useGetAllProductsQuery,
+  useGetProductItemQuery,
+  useGetProductQuery,
+} from '@/store/redux/productsApi';
 
 interface Props {
   startIndex: number;
   itemsPerPage: number;
+  productItemId: string;
   handleSetData: (product: FetchProducts) => void;
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
@@ -35,6 +39,7 @@ export interface IFilters {
 export const AdminProductFilter: React.FC<Props> = ({
   startIndex,
   itemsPerPage,
+  productItemId,
   handleSetData,
   setIsLoading,
 }) => {
@@ -149,6 +154,7 @@ export const AdminProductFilter: React.FC<Props> = ({
         disableClearInput={disableClearInput}
         isProductOrItemIdDisabled={disabledInputs.isProductOrItemIdDisabled}
         filters={filters}
+        productItemId={productItemId}
         updateFilters={updateFilters}
       />
 

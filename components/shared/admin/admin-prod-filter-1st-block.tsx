@@ -9,6 +9,7 @@ interface Props {
   disableClearInput: (value: boolean) => void;
   isProductOrItemIdDisabled: boolean;
   filters: IFilters;
+  productItemId: string;
   updateFilters: (value: keyof IFilters, data: any) => void;
 }
 
@@ -17,6 +18,7 @@ export const AdminProdFilter1stBlock: React.FC<Props> = ({
   disableClearInput,
   isProductOrItemIdDisabled,
   filters,
+  productItemId,
   updateFilters,
 }) => {
   const isProdDisabled = !!filters.productItemId;
@@ -46,6 +48,7 @@ export const AdminProdFilter1stBlock: React.FC<Props> = ({
         className="w-full mb-3"
         inputClassName="w-full h-[38px] rounded-[5px] border border-gray-300 bg-white pl-8 pr-3"
         isDisabled={isProductOrItemIdDisabled || isProdItemDisabled}
+        defaultValue={productItemId}
       />
     </div>
   );

@@ -25,10 +25,6 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
     deleteItem(id);
   };
 
-  // const handleTimer = (id: number) => {
-  //   console.log('id-timer', id);
-  // };
-
   const createdTime = new Date(item.createdAt).getTime();
 
   return (
@@ -38,6 +34,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
         { 'bg-green-200 animate-pulse': createdTime + EventIntervals.New > Date.now() },
         { 'bg-red-200 animate-pulse': createdTime + EventIntervals.Old < Date.now() },
       )}>
+      {/* Добавлен заказ */}
       {item.warnEvent === WarnEvent.ORDER && (
         <>
           <Link href={`/dashboard/orders/${item.orderId}`} {...linkProps}>
@@ -50,11 +47,11 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
               type="check"
               title="Обработано"
             />
-            {/* <MonitorItemButton handleChecked={() => handleTimer(item.id)} type="timer" title='Отложить' /> */}
           </div>
         </>
       )}
 
+      {/* Добавлен / редактирован товар */}
       {item.warnEvent === WarnEvent.PRODUCT && (
         <>
           <Link href={`/product/${item.productId}`} {...linkProps}>
@@ -69,6 +66,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
         </>
       )}
 
+      {/* Добавлен клиент */}
       {item.warnEvent === WarnEvent.USER && (
         <>
           <Link href={`/dashboard/users/${item.userId}`} {...linkProps}>
@@ -83,10 +81,11 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
         </>
       )}
 
+      {/* Остатки товаров */}
       {item.warnEvent === WarnEvent.OTHER && (
         <>
-          <Link href={`/dashboard/products`} {...linkProps}>
-            {item.message} {item.productItemId}
+          <Link href={`/dashboard/products?id=${String(item.productItemId)}`} {...linkProps}>
+            Товар {item.productItemId}: {item.message}
           </Link>
 
           <MonitorItemButton

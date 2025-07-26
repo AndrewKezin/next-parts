@@ -1,6 +1,6 @@
 'use server';
 
-import { MessageArr } from '@/@types/monitor';
+import { MessageArr, thresholdQuantity } from '@/@types/monitor';
 import { CheckoutFormValues } from '@/components/checkout/checkout-form-schema';
 import {
   DeleteUserTemplate,
@@ -10,7 +10,14 @@ import {
 import { createPayment, sendEmail } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
 import { prisma } from '@/prisma/prisma-client';
-import { OrderStatus, Prisma, UserAddresses, UserRole, UserStatus, WarnEvent } from '@prisma/client';
+import {
+  OrderStatus,
+  Prisma,
+  UserAddresses,
+  UserRole,
+  UserStatus,
+  WarnEvent,
+} from '@prisma/client';
 import { compareSync, hashSync } from 'bcrypt';
 import { cookies } from 'next/headers';
 
@@ -96,22 +103,48 @@ export async function createOrder(data: CheckoutFormValues) {
         warnEvent: WarnEvent.ORDER,
         message: MessageArr.NewOrder,
         orderId: order.id,
-      }
-    })
+      },
+    });
 
     // если заказ создан, то изменить количество товаров в БД
-    userCart.items.forEach(async (item) => {
-      await prisma.productItem.update({
-        where: {
-          id: item.productItemId,
-        },
-        data: {
-          quantity: {
-            decrement: item.quantity,
+    userCart.items.forEach(
+      async (item) =>
+        await prisma.productItem.update({
+          where: {
+            id: item.productItemId,
           },
-        },
-      });
-    });
+          data: {
+            quantity: {
+              decrement: item.quantity,
+            },
+          },
+        }),
+    );
+
+    // выбрать заканчивающиеся товары
+    const finishedProducts = await Promise.all(
+      userCart.items.map((item) =>
+        prisma.productItem.findFirst({
+          where: {
+            id: item.productItem.id,
+            quantity: {
+              lte: thresholdQuantity,
+            },
+          },
+        }),
+      ),
+    );
+    // записать эти товары в монитор
+    finishedProducts.forEach(
+      async (item) =>
+        await prisma.monitor.create({
+          data: {
+            warnEvent: WarnEvent.OTHER,
+            message: item?.quantity === 0 ? MessageArr.EndProdItem : MessageArr.FinishedProdItem,
+            productItemId: item?.id,
+          },
+        }),
+    );
 
     // очистить корзину:
     // обнулить общую стоимость
@@ -158,15 +191,19 @@ export async function createOrder(data: CheckoutFormValues) {
     const paymentUrl = paymentData.confirmation.confirmation_url;
 
     // отправляем письмо заказчику с ссылкой на оплату
-    await sendEmail(
-      data.email,
-      'NextParts - Заказ # ' + order.id,
-      PayOrderTemplate({
-        orderId: order.id,
-        totalAmount: order.totalAmount,
-        paymentUrl,
-      }),
-    );
+    try {
+      await sendEmail(
+        data.email,
+        'NextParts - Заказ # ' + order.id,
+        PayOrderTemplate({
+          orderId: order.id,
+          totalAmount: order.totalAmount,
+          paymentUrl,
+        }),
+      );
+    } catch (error) {
+      console.log('Ошибка при отправке email: ', error);
+    }
 
     // возвращаем ссылку на оплату (по курсу)
     // return paymentUrl;
@@ -265,7 +302,7 @@ export async function registerUser(body: Prisma.UserCreateInput) {
         warnEvent: WarnEvent.USER,
         message: MessageArr.NewClient,
         userId: createdUser.id,
-      }
+      },
     });
   } catch (err) {
     console.log('[RegisterUser] error: ', err);
