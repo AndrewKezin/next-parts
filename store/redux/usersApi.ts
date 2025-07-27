@@ -72,6 +72,7 @@ export const usersApi = createApi({
       }),
       providesTags: ['Users'],
     }),
+
     // получить пользователя по id
     getUser: build.query<User, string>({
       query: (id) => ({
@@ -80,11 +81,12 @@ export const usersApi = createApi({
       }),
       providesTags: ['User'],
     }),
+
     // удаление пользователя
     removeUser: build.mutation({
       query: (password: string) => ({
         url: `/users`,
-        body: password,
+        data: password,
         method: 'DELETE',
       }),
       invalidatesTags: ['Users', 'User'],

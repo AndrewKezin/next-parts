@@ -28,8 +28,8 @@ export default function DashboardProducts() {
   // пролучить productItemId из url, для перехода из админ-монитора
   const searchParams = useSearchParams();
   useEffect(() => {
-    if (searchParams.has('id')) {
-      setProductItemId(searchParams.get('id') || '');
+    if (searchParams.has('prodItemId')) {
+      setProductItemId(searchParams.get('prodItemId') || '');
     }
   }, [searchParams]);
 

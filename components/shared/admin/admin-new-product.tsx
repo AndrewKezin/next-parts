@@ -72,9 +72,6 @@ export const AdminNewProduct: React.FC<Props> = ({
     }
   }, [data]);
 
-  // const [addProduct, { isError: addError, isLoading: addLoading, isSuccess: addSuccess }] =
-  //   useAddProductMutation();
-
   const [createOrUpdateProduct, { isError, error, isLoading, isSuccess }] =
     useCreateOrUpdateProductMutation();
 

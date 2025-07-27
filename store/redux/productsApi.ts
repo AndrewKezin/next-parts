@@ -95,7 +95,7 @@ export const productsApi = createApi({
       query: (body) => ({
         url: `/products`,
         method: 'POST',
-        body,
+        data: body,
       }),
       invalidatesTags: ['Products', 'Product'],
     }),
@@ -106,7 +106,7 @@ export const productsApi = createApi({
         url: `/products/${id}`,
         method: 'DELETE',
       }),
-      invalidatesTags: ['Products', 'Product'],
+      invalidatesTags: ['Products', 'Product', 'ProductItem'],
     }),
 
     // удалить вариант товара
@@ -123,9 +123,8 @@ export const productsApi = createApi({
       query: (body) => ({
         url: `/products`,
         method: 'PUT',
-        body,
+        data: body,
       }),
-      invalidatesTags: ['Products', 'Product', 'ProductItem'],
     }),
 
     // получить productItems, остаток которых менее указанного количества

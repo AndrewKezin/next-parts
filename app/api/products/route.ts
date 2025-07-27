@@ -215,6 +215,10 @@ export async function PUT(req: NextRequest) {
 
     const data: AddProductDTO = await req.json();
 
+    if (!data) {
+      return NextResponse.json({ message: 'Некорректные данные' }, { status: 400 });
+    }
+
     const itemsArr: ProductItem[] = data.items.map((item: ProductItem) => ({
       id: item.id,
       productId: data.id,
@@ -225,6 +229,7 @@ export async function PUT(req: NextRequest) {
       quantity: item.quantity,
     }));
 
+    // upsert обновит или создаст запись в БД
     await prisma.product.upsert({
       where: {
         id: data.id,
@@ -254,7 +259,6 @@ export async function PUT(req: NextRequest) {
       },
     });
 
-    // upsert обновит или создаст запись в БД
     await Promise.all(
       itemsArr.map((item) =>
         prisma.productItem.upsert({

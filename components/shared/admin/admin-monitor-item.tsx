@@ -19,9 +19,9 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
     className: 'ml-2',
   };
 
-  const [deleteItem] = useDeleteItemMutation();
+  const [deleteItem, { isLoading: loading }] = useDeleteItemMutation();
 
-  const handleChecked = (id: number) => {
+  const setChecked = (id: number) => {
     deleteItem(id);
   };
 
@@ -33,6 +33,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
         'flex justify-between items-center gap-5 px-2 w-[600px] h-[50px] rounded-[5px] bg-gray-200 font-semibold',
         { 'bg-green-200 animate-pulse': createdTime + EventIntervals.New > Date.now() },
         { 'bg-red-200 animate-pulse': createdTime + EventIntervals.Old < Date.now() },
+        { 'bg-gray-300 bg-transparent': loading },
       )}>
       {/* Добавлен заказ */}
       {item.warnEvent === WarnEvent.ORDER && (
@@ -43,9 +44,10 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
 
           <div className="flex gap-2">
             <MonitorItemButton
-              handleChecked={() => handleChecked(item.id)}
+              setChecked={() => setChecked(item.id)}
               type="check"
               title="Обработано"
+              disabled={loading}
             />
           </div>
         </>
@@ -59,7 +61,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
           </Link>
 
           <MonitorItemButton
-            handleChecked={() => handleChecked(item.id)}
+            setChecked={() => setChecked(item.id)}
             type="check"
             title="Прочитано"
           />
@@ -74,7 +76,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
           </Link>
 
           <MonitorItemButton
-            handleChecked={() => handleChecked(item.id)}
+            setChecked={() => setChecked(item.id)}
             type="check"
             title="Прочитано"
           />
@@ -84,12 +86,14 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
       {/* Остатки товаров */}
       {item.warnEvent === WarnEvent.OTHER && (
         <>
-          <Link href={`/dashboard/products?id=${String(item.productItemId)}`} {...linkProps}>
+          <Link
+            href={`/dashboard/products?prodItemId=${String(item.productItemId)}`}
+            {...linkProps}>
             Товар {item.productItemId}: {item.message}
           </Link>
 
           <MonitorItemButton
-            handleChecked={() => handleChecked(item.id)}
+            setChecked={() => setChecked(item.id)}
             type="check"
             title="Прочитано"
           />
