@@ -51,34 +51,36 @@ export const Header: React.FC<Props> = ({ hasSearch = true, hasCart = true, clas
   return (
     <header className={cn('border-b min-h-[100px] px-2', className)}>
       <Container className="flex items-center justify-between py-8">
-        {/* Левая часть */}
-        <Link href="/">
-          <div className="flex items-center gap-4">
-            <Image src="/logo.png" alt="logo" width={40} height={40} />
-            <div>
-              <h1 className="text-2xl uppercase font-black">Next Parts</h1>
-              <p className="text-sm text-black-400 leading-3">все для ремонта</p>
+        <div className="flex flex-col items-center justify-center lg:flex-row">
+          {/* Левая часть */}
+          <Link href="/">
+            <div className="flex items-center gap-4">
+              <Image src="/logo.png" alt="logo" width={40} height={40} />
+              <div>
+                <h1 className="text-2xl uppercase font-black">Next Parts</h1>
+                <p className="text-sm text-black-400 leading-3">все для ремонта</p>
+              </div>
             </div>
+          </Link>
+
+          {/* Строка поиска */}
+          {hasSearch && (
+            <div className="sm:mx-1 lg:mx-2 xl:mx-10 flex-1">
+              <SearchInput />
+            </div>
+          )}
+
+          {/* Правая часть */}
+          {/* Кнопка авторизации / профиля */}
+          <div className="flex items-center gap-3">
+            {/* Модальное окно авторизации */}
+            <AuthModal open={openAuthModal} onClose={() => setOpenAuthModal(false)} />
+
+            <ProfileButton onClickSignIn={() => setOpenAuthModal(true)} />
+
+            {/* Кнопка корзины */}
+            {hasCart && <CartButton />}
           </div>
-        </Link>
-
-        {/* Строка поиска */}
-        {hasSearch && (
-          <div className="mx-10 flex-1">
-            <SearchInput />
-          </div>
-        )}
-
-        {/* Правая часть */}
-        {/* Кнопка авторизации / профиля */}
-        <div className="flex items-center gap-3">
-          {/* Модальное окно авторизации */}
-          <AuthModal open={openAuthModal} onClose={() => setOpenAuthModal(false)} />
-
-          <ProfileButton onClickSignIn={() => setOpenAuthModal(true)} />
-
-          {/* Кнопка корзины */}
-          {hasCart && <CartButton />}
         </div>
       </Container>
     </header>

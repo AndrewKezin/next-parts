@@ -16,9 +16,9 @@ export default async function Home({ searchParams }: { searchParams: GetSearchPa
       <TopBar categories={categories.filter((category) => category.products.length > 0)} />
 
       <Container>
-        <div className="flex gap-[80px]">
+        <div className="flex lg:gap-[20px] xl:gap-[80px]">
           {/* Фильтрация (левая часть окна) */}
-          <div className="w-[250px]">
+          <div className="hidden lg:block lg:w-[250px]">
             {/* Компонент Suspense необходим для рендеринга html на сервере */}
             <Suspense>
               <Filters />

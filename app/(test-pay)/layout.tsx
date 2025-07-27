@@ -1,5 +1,6 @@
 import { Container, Header } from '@/components/shared';
 import { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Next Parts | Оплата заказа',
@@ -10,7 +11,9 @@ export default function TestPayLayout({ children }: { children: React.ReactNode 
   return (
     <main className="min-h-screen bg-[#f4f1ee]">
       <Container>
-        <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
+        <Suspense>
+          <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
+        </Suspense>
         {children}
       </Container>
     </main>

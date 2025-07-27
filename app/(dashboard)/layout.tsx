@@ -1,6 +1,7 @@
 import { Container, Header } from '@/components/shared';
 import { getUserSession } from '@/lib/get-user-session';
 import { redirect } from 'next/navigation';
+import { Suspense } from 'react';
 
 export const metadata = {
   title: 'Панель администратора',
@@ -22,7 +23,9 @@ export default async function DashboardLayout({
   return (
     <main className="min-h-[calc(100vh-100px)] bg-[#f4f1ee] pb-10">
       <Container>
-        <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
+        <Suspense>
+          <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
+        </Suspense>
         {children}
       </Container>
     </main>
