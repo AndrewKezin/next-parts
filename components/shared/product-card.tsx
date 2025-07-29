@@ -44,7 +44,7 @@ export const ProductCard: React.FC<Props> = ({
     <div className={classname}>
       <Link href={`product/${id}`}>
         {/* Изображение */}
-        <div className="flex justify-center p-6 bg-secondary rounded-lg  h-[260px]">
+        <div className="flex flex-col lg:flex-row justify-center p-6 bg-secondary rounded-lg">
           {!imageUrl || imageUrl === '-' ? (
             <div className="flex justify-center items-center w-[215px] h-[215px] bg-gray-100 text-gray-400">
               Нет фотографии

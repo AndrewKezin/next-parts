@@ -2,16 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Button } from '../ui';
 import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
-import {
-  ProductImage,
-  GroupVariants,
-  IngredientItem,
-  Title,
-  Counter,
-  ProdItemCounter,
-} from '@/components/shared';
+import { ProductImage, GroupVariants, IngredientItem, ProdItemCounter } from '@/components/shared';
 import { calcTotalDiscPrice } from '@/lib';
 import { useDiscOptions, useDiscAllVariants } from '@/hooks';
 
@@ -76,11 +68,12 @@ export const ChooseDiscForm: React.FC<Props> = ({
   };
 
   return (
-    <div className={cn(className, 'flex flex-1')}>
+    <div
+      className={cn(className, 'flex flex-col gap-1 py-3 lg:flex-row justify-center items-center')}>
       <ProductImage imageUrl={imageUrl} />
 
-      <div className="w-[490px] bg-[#f7f6f5] p-7">
-        <Title text={name} size="md" className="font-extrabold mb-1" />
+      <div className="flex-1 bg-[#f7f6f5] p-3 md:p-7 rounded-md">
+        <h2 className="text-md md:text-xl font-extrabold mb-1">{name}</h2>
 
         <p className="text-gray-400 mb-2">Артикул: {currentItemId}</p>
 
@@ -108,8 +101,8 @@ export const ChooseDiscForm: React.FC<Props> = ({
             {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
             {ingredients.length > 0 && (
               /* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/
-              <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
-                <div className="grid grid-cols-3 gap-3">
+              <div className="bg-gray-50 p-1 lg:p-3 rounded-md h-auto overflow-auto scrollbar">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {ingredients?.map((ingredients) => (
                     <IngredientItem
                       key={ingredients.id}

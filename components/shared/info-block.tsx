@@ -4,6 +4,7 @@ import { ArrowLeft } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Title } from './title';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface Props {
   title: string;
@@ -14,11 +15,15 @@ interface Props {
 
 export const InfoBlock: React.FC<Props> = ({ className, title, text, imageUrl }) => {
   return (
-    <div className={cn(className, 'flex items-center justify-between w-[840px] gap-12')}>
-      <div className="flex flex-col">
-        <div className="w-[445px]">
-          <Title size="lg" text={title} className="font-extrabold" />
-          <p className="text-gray-400 text-lg">{text}</p>
+    <div
+      className={cn(
+        className,
+        `flex flex-col md:flex-row items-center justify-center w-full gap-5`,
+      )}>
+      <div className="flex flex-col justify-center items-center">
+        <div className="px-10">
+          <Title size="lg" text={title} className="font-extrabold text-center" />
+          <p className="text-gray-400 text-lg text-center">{text}</p>
         </div>
 
         <div className="flex gap-5 mt-11">
@@ -36,7 +41,17 @@ export const InfoBlock: React.FC<Props> = ({ className, title, text, imageUrl })
         </div>
       </div>
 
-      <img src={imageUrl} alt={title} width={300} />
+      <div className="hidden sm:block sm:w-[200px] xl:w-[350px]">
+        {imageUrl && (
+          <Image
+            src={imageUrl}
+            alt={title}
+            width={640}
+            height={758}
+            className="object-scale-down"
+          />
+        )}
+      </div>
     </div>
   );
 };

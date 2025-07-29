@@ -16,11 +16,11 @@ export const AdminOrderInfo: React.FC<Props> = ({ order, paymentUrl, className }
 
   return (
     <div className={cn('w-full', className)}>
-      <OrderView order={order} paymentUrl={paymentUrl} />
+      <OrderView order={order} paymentUrl={paymentUrl} className="overflow-x-auto" />
 
       <h3 className="text-xl font-bold mb-3 text-center">Товары</h3>
 
-      {items && items.length > 0 && <CartItemsView items={items} />}
+      {items && items.length > 0 && <CartItemsView items={items} className="overflow-x-auto" />}
     </div>
   );
 };

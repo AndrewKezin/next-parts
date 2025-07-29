@@ -41,6 +41,7 @@ export {Counter} from './counter';
 export {ProfileMenu} from './profile-menu';
 export {ProfileAddresses} from './profile-addresses';
 export {ProdItemCounter} from './prod-item-counter';
+export {UserDropdownMenu} from './user-dropdown-menu';
 export * from './email-templates';
 export * from '../form';
 export * from './modals';

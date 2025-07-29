@@ -30,8 +30,10 @@ export default async function ProductPage({ params: { id } }: { params: { id: st
   }
 
   return (
-    <Container className="flex flex-col my-10">
-      <ProductForm product={product} />
+    <Container>
+      <div className="flex justify-center my-10 border border-primary">
+        <ProductForm product={product} />
+      </div>
     </Container>
   );
 }

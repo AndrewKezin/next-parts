@@ -31,7 +31,9 @@ export default async function OrdersPage() {
         )}
 
         <Link href={'/profile'}>
-          <Button className="w-[300px] h-[50px] text-xl font-bold mt-10 mb-5">Назад</Button>
+          <Button className="w-[150px] md:w-[300px] h-[50px] text-xl font-bold mt-10 mb-5">
+            Назад
+          </Button>
         </Link>
       </div>
     </Container>

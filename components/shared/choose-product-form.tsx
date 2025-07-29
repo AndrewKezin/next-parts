@@ -2,17 +2,8 @@
 
 import { cn } from '@/lib/utils';
 import React from 'react';
-import { Button } from '../ui';
 import { GearboxManufacturer, Ingredient, ProductItem } from '@prisma/client';
-import { useSet } from 'react-use';
-import {
-  Counter,
-  GroupVariants,
-  IngredientItem,
-  ProdItemCounter,
-  ProductImage,
-  Title,
-} from '@/components/shared';
+import { GroupVariants, IngredientItem, ProdItemCounter, ProductImage } from '@/components/shared';
 import { useProductOptions } from '@/hooks';
 import { calcTotalProductPrice } from '@/lib';
 
@@ -70,11 +61,12 @@ export const ChooseProductForm: React.FC<Props> = ({
   };
 
   return (
-    <div className={cn(className, 'flex flex-1')}>
+    <div
+      className={cn(className, 'flex flex-col gap-1 py-3 lg:flex-row justify-center items-center')}>
       <ProductImage imageUrl={imageUrl} />
 
-      <div className="w-[490px] bg-[#f7f6f5] p-7">
-        <Title text={name} size="md" className="font-extrabold mb-1" />
+      <div className="flex-1 bg-[#f7f6f5] p-3 md:p-7 rounded-md">
+        <h2 className="text-md md:text-xl font-extrabold mb-1">{name}</h2>
 
         <p className="text-gray-400 mb-2">Артикул: {currentItemId}</p>
 
@@ -82,18 +74,21 @@ export const ChooseProductForm: React.FC<Props> = ({
 
         <p className="text-gray-400 mb-5">{textManufacturer}</p>
 
-        <GroupVariants
-          items={availableProdVariants}
-          value={String(prodItemVariant)}
-          onClick={(value) => setProdItemVariant(String(value))}
-        />
+        {/* Группа вариантов */}
+        <div className="flex flex-col gap-4 mt-5 mb-3">
+          <GroupVariants
+            items={availableProdVariants}
+            value={String(prodItemVariant)}
+            onClick={(value) => setProdItemVariant(String(value))}
+          />
+        </div>
 
         {currentItemIdCount !== undefined && (
           <>
             {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
             {ingredients.length > 0 && currentItemIdCount > 0 && (
-              <div className="bg-gray-50 p-5 rounded-md h-[320px] overflow-auto scrollbar">
-                <div className="grid grid-cols-3 gap-3">
+              <div className="bg-gray-50 p-1 lg:p-3 rounded-md h-auto overflow-auto invisible-scrollbar">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
                   {ingredients?.map((ingredients) => (
                     <IngredientItem
                       key={ingredients.id}

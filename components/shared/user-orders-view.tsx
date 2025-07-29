@@ -11,7 +11,7 @@ interface Props {
 
 export const UserOrdersView: React.FC<Props> = ({ orders, type, className }) => {
   return (
-    <div className={cn('w-full', className)}>
+    <div className={cn('w-full overflow-x-auto', className)}>
       {!orders || orders.length === 0 ? (
         <p className="text-xl mb-5 text-center">Нет заказов</p>
       ) : (
@@ -68,7 +68,9 @@ export const UserOrdersView: React.FC<Props> = ({ orders, type, className }) => 
                   {order.status === 'PROCESSING' && 'В доставке'}
                 </td>
                 <td className="border border-black px-2">{order.comment}</td>
-                <td className="border border-black px-2">{new Date(order?.createdAt).toLocaleString()}</td>
+                <td className="border border-black px-2">
+                  {new Date(order?.createdAt).toLocaleString()}
+                </td>
                 {type === 'admin' && (
                   <td className="border border-black px-2">
                     {new Date(order?.updatedAt).toLocaleString()}

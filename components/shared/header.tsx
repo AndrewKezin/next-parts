@@ -49,9 +49,9 @@ export const Header: React.FC<Props> = ({ hasSearch = true, hasCart = true, clas
   }, []);
 
   return (
-    <header className={cn('border-b min-h-[100px] px-2', className)}>
-      <Container className="flex items-center justify-between py-8">
-        <div className="flex flex-col items-center justify-center lg:flex-row">
+    <header className={cn('border-b min-h-[100px]', className)}>
+      <Container>
+        <div className="flex flex-col items-center justify-center gap-3 py-5 md:flex-row md:justify-between lg:py-8 md:gap-1 lg:gap-2">
           {/* Левая часть */}
           <Link href="/">
             <div className="flex items-center gap-4">

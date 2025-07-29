@@ -1,12 +1,11 @@
 'use client';
 
-import { CircleUser, LogOut, User, UserCog } from 'lucide-react';
+import { User } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import React from 'react';
 import { Button } from '../ui';
-import Link from 'next/link';
-import logOut from '@/lib/log-out';
 import { AdminDropdownMenu } from './admin';
+import { UserDropdownMenu } from './user-dropdown-menu';
 
 interface Props {
   // эта функция будет открывать модальное окно авторизации
@@ -28,26 +27,8 @@ export const ProfileButton: React.FC<Props> = ({ className, onClickSignIn }) => 
       )}
 
       <div className="flex gap-2">
-        {session && (
-          <Button
-            variant="outline"
-            className="flex items-center gap-2"
-            onClick={() => logOut()}
-            title="Выход">
-            <LogOut size={18} />
-            Выход
-          </Button>
-        )}
-
         {session && session?.user.role === 'ADMIN' && <AdminDropdownMenu />}
-        {session && session?.user.role === 'USER' && (
-          <Link href="/profile">
-            <Button variant="outline" className="flex items-center gap-2">
-              <CircleUser size={18} />
-              Профиль
-            </Button>
-          </Link>
-        )}
+        {session && session?.user.role === 'USER' && <UserDropdownMenu />}
       </div>
     </div>
   );

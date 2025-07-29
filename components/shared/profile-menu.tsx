@@ -70,7 +70,7 @@ export const ProfileMenu: React.FC<Props> = ({ className }) => {
   };
 
   return (
-    <div className="flex flex-col gap-5 w-96 mt-3 mb-5">
+    <div className="flex flex-col gap-5 w-full sm:w-96 mt-3 mb-5">
       <Button
         onClick={onClickViewOrders}
         variant="outline"
