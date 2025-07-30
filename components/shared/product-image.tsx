@@ -25,7 +25,7 @@ export const ProductImage: React.FC<Props> = ({ imageUrl, size, className }) => 
   return (
     <div
       className={cn(
-        'flex items-center justify-center relative w-[150px] sm:w-[250px] md:w-[300px] lg:w-[500px]',
+        'flex items-center justify-center relative w-[200px] sm:w-[300px] md:w-[300px] lg:w-[400px] xl:w-[500px]',
         className,
       )}>
       {!imageUrl || imageUrl === '-' ? (

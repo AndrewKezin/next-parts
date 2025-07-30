@@ -42,10 +42,10 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
             <SheetHeader>
               <SheetTitle>
                 В корзине{' '}
-                <span className="font-bold">
+                <span>
                   {items.length}{' '}
                   {(items.length % 10 === 1 && 'товар') ||
-                    (items.length % 10 === (2 | 3 | 4) && 'товара') ||
+                    (items.length % 10 >= 2 && items.length % 10 <= 4 && 'товара') ||
                     (items.length % 10 >= 5 && 'товаров')}
                 </span>
               </SheetTitle>
@@ -53,7 +53,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
           )}
 
           {!totalAmount && (
-            <div className="flex flex-col items-center justify-center w-72 mx-auto">
+            <div className="flex flex-col items-center justify-center w-full mx-auto">
               <Image
                 src="/assets/images/empty-cart.png"
                 alt="Корзина пуста"
@@ -107,15 +107,15 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                 ))}
               </div>
 
-              <SheetFooter className="-mx-6 bg-white p-8">
+              <SheetFooter className="-mx-6 bg-white p-3 md:p-6 xl:p-8">
                 <div className="w-full">
                   <div className="flex mb-4">
-                    <span className="flex flex-1 text-lg  text-neutral-500">
+                    <span className="flex flex-1 text-md md:text-lg  text-neutral-500">
                       Итого
                       <div className="flex-1 border-b border-dashed border-b-neutral-200 relative -top-1 mx-2" />
                     </span>
 
-                    <span className="font-bold text-lg">{totalAmount} ₽</span>
+                    <span className="font-bold text-md md:text-lg">{totalAmount} ₽</span>
                   </div>
 
                   <Link href="/checkout">
@@ -123,7 +123,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                       onClick={() => setRedirecting(true)}
                       disabled={redirecting}
                       type="submit"
-                      className="w-full h-12 text-base">
+                      className="w-full h-10 md:h-12 text-base">
                       Оформить заказ
                       <ArrowRight className="w-5 ml-2" />
                     </Button>

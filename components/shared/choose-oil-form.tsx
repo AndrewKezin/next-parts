@@ -88,7 +88,7 @@ export const ChooseOilForm: React.FC<Props> = ({
             {/* Группа ингредиентов. Первый div для скроллбара. Класс scrollbar не из тэйлвинда, а кастомный и прописан в css*/}
             {ingredients.length > 0 && (
               <div className="bg-gray-50 p-1 lg:p-3 rounded-md h-auto overflow-auto scrollbar">
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-2">
                   {ingredients?.map((ingredients) => (
                     <IngredientItem
                       key={ingredients.id}

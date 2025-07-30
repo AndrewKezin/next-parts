@@ -31,7 +31,7 @@ export default async function ProductPage({ params: { id } }: { params: { id: st
 
   return (
     <Container>
-      <div className="flex justify-center my-10 border border-primary">
+      <div className="flex justify-center my-10">
         <ProductForm product={product} />
       </div>
     </Container>

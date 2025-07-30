@@ -23,7 +23,7 @@ export const ChooseProductModal: React.FC<Props> = ({ product, className }) => {
       <DialogContent
         aria-describedby={undefined}
         className={cn(
-          'p-1 w-[280px] sm:w-[600px] md:w-[728px] lg:w-[980px] xl:max-w-[1240px] maw-w-[1500px] h-[calc(100vh-50px)] bg-white rounded-md invisible-scrollbar overflow-auto',
+          'p-1 w-[300px] sm:w-[500px] md:w-[600px] lg:w-[980px] xl:w-[1100px] h-[calc(100vh-70px)] bg-white rounded-md invisible-scrollbar overflow-auto',
           className,
         )}>
         <ProductForm product={product} onModalSubmit={() => router.back()} />
