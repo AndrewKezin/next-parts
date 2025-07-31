@@ -1,6 +1,5 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Trash } from 'lucide-react';
 import { CartItemProps } from './cart-item-details/cart-item-details.types';
 import * as CartItemDetails from './cart-item-details';
 import { Ingredient } from '@prisma/client';
@@ -30,46 +29,45 @@ export const CheckoutItem = ({
 }: Props) => {
   return (
     <div className="flex flex-col gap-1 border-b last:border-b-0 border-gray-200">
+      {/* предупреждение если достигнут лимит количества */}
       <div
         className={cn('hidden', {
           'flex justify-end items-center text-md text-red-500': quantity === availableQuantity,
         })}>
         Доступно для заказа {availableQuantity}шт
       </div>
-      <div
-        className={cn(
-          'flex items-center justify-between gap-3 mb-5 ',
-          { 'opacity-50 pointer-events-none': disabled },
-          className,
-        )}>
-        <div className="flex items-center gap-5 flex-1">
-          <CartItemDetails.Image src={imageUrl} />
-          <CartItemDetails.Info
-            name={name}
-            productItemId={productItemId}
-            details={details}
-            isExceeding={isExceeding}
-          />
-        </div>
 
-        <CartItemDetails.Price value={price / quantity} className="font-medium" endText="/шт" />
+      {/* информация о товаре (десктопная версия) */}
+      <CartItemDetails.BlockDesktop
+        name={name}
+        price={price}
+        productItemId={productItemId}
+        imageUrl={imageUrl}
+        availableQuantity={availableQuantity}
+        isExceeding={isExceeding}
+        quantity={quantity}
+        details={details}
+        disabled={disabled}
+        handleSetQuantity={handleSetQuantity}
+        onClickRemove={onClickRemove}
+        className={className}
+      />
 
-        <div className="flex items-center gap-5 ml-5">
-          <CartItemDetails.CountButton
-            availableQuantity={availableQuantity}
-            handleSetQuantity={(value) => {
-              handleSetQuantity(value);
-            }}
-            value={quantity}
-          />
-
-          <CartItemDetails.Price value={price} className="font-bold" />
-
-          <button type="button" onClick={onClickRemove}>
-            <Trash className="text-gray-400 cursor-pointer hover:text-gray-600" size={20} />
-          </button>
-        </div>
-      </div>
+      {/* информация о товаре (мобильная версия) */}
+      <CartItemDetails.BlockMobile
+        name={name}
+        price={price}
+        productItemId={productItemId}
+        imageUrl={imageUrl}
+        availableQuantity={availableQuantity}
+        isExceeding={isExceeding}
+        quantity={quantity}
+        details={details}
+        disabled={disabled}
+        handleSetQuantity={handleSetQuantity}
+        onClickRemove={onClickRemove}
+        className={className}
+      />
     </div>
   );
 };

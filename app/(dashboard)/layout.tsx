@@ -1,4 +1,4 @@
-import { Container, Header } from '@/components/shared';
+import { Container, Footer, Header } from '@/components/shared';
 import { getUserSession } from '@/lib/get-user-session';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
@@ -21,13 +21,14 @@ export default async function DashboardLayout({
   }
 
   return (
-    <main className="min-h-[calc(100vh-100px)] bg-[#f4f1ee] pb-10">
-      <Container>
-        <Suspense>
-          <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
-        </Suspense>
-        {children}
-      </Container>
-    </main>
+    <>
+      <Suspense>
+        <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
+      </Suspense>
+      <div className="min-h-[calc(100vh-100px-100px)] bg-[#f4f1ee] pb-10">
+        <Container>{children}</Container>
+      </div>
+      <Footer />
+    </>
   );
 }

@@ -77,7 +77,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
           {/* Список товаров в корзине */}
           {totalAmount > 0 && (
             <>
-              <div className="-mx-6 mt-5 overflow-auto flex-1">
+              <div className="-mx-6 mt-1 overflow-auto flex-1">
                 {items.map((item) => (
                   <div className="mb-2" key={item.id}>
                     <CartDrawerItem
@@ -107,9 +107,9 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                 ))}
               </div>
 
-              <SheetFooter className="-mx-6 bg-white p-3 md:p-6 xl:p-8">
+              <SheetFooter className="-mx-6 bg-white py-1 px-3 md:p-6 xl:p-8">
                 <div className="w-full">
-                  <div className="flex mb-4">
+                  <div className="flex mb-1">
                     <span className="flex flex-1 text-md md:text-lg  text-neutral-500">
                       Итого
                       <div className="flex-1 border-b border-dashed border-b-neutral-200 relative -top-1 mx-2" />

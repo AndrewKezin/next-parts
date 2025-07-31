@@ -1,7 +1,7 @@
 'use client';
 
 import { CheckoutAddressForm, CheckoutCart, CheckoutPersonalForm } from '@/components/checkout';
-import { CheckoutSidebar, Container, Title } from '@/components/shared';
+import { CheckoutSidebar, Container } from '@/components/shared';
 import { useCart } from '@/hooks';
 import { useForm, SubmitHandler, FormProvider } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -114,7 +114,7 @@ export default function CheckoutPage() {
   if (session.status === 'unauthenticated') {
     return (
       <Container>
-        <h2 className="text-3xl font-bold mt-20 mb-5 text-center">
+        <h2 className="text-xl lg:text-3xl font-bold mt-20 mb-5 text-center">
           Вы не авторизованы! Авторизуйтесь, пожалуйста!
         </h2>
       </Container>
@@ -122,12 +122,14 @@ export default function CheckoutPage() {
   }
 
   return (
-    <Container className="mt-10">
-      <Title text="Оформление заказа" className="font-extrabold mb-8 text-[36px]" />
+    <>
+      <h2 className="font-bold xl:font-extrabold pt-3 mb-3 xl:mb-8 text-2xl lg:text-2xl xl:text-[36px]">
+        Оформление заказа
+      </h2>
 
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex gap-40">
+          <div className="flex flex-col xl:flex-row xl:gap-10">
             {/* Левая часть */}
             <div className="flex flex-col gap-5 flex-1 mb-20">
               <CheckoutCart
@@ -148,7 +150,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Правая часть */}
-            <div className="w-[450px]">
+            <div className="w-full sm:w-[450px]">
               <CheckoutSidebar
                 totalAmount={totalAmount}
                 btnDisabled={isExceedingItems || !checkDeliveryAddress()}
@@ -159,6 +161,6 @@ export default function CheckoutPage() {
           </div>
         </form>
       </FormProvider>
-    </Container>
+    </>
   );
 }

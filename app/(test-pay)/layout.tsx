@@ -1,4 +1,4 @@
-import { Container, Header } from '@/components/shared';
+import { Container, Footer, Header } from '@/components/shared';
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 
@@ -9,13 +9,14 @@ export const metadata: Metadata = {
 
 export default function TestPayLayout({ children }: { children: React.ReactNode }) {
   return (
-    <main className="min-h-screen bg-[#f4f1ee]">
-      <Container>
-        <Suspense>
-          <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
-        </Suspense>
-        {children}
-      </Container>
-    </main>
+    <>
+      <Suspense>
+        <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
+      </Suspense>
+      <div className="min-h-[calc(100vh-100px-100px)] bg-[#f4f1ee]">
+        <Container>{children}</Container>
+      </div>
+      <Footer />
+    </>
   );
 }

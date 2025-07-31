@@ -8,7 +8,7 @@ interface Props {
 
 export const Footer: React.FC<Props> = ({ className }) => {
   return (
-    <div className="w-full min-h-[100px] bg-[#4D5053] flex items-center">
+    <footer className="w-full min-h-[100px] bg-[#4D5053] flex items-center">
       <Container>
         <div className="w-full flex flex-col items-start lg:flex-row lg:items-center lg:justify-between py-3 lg:py-5 px-5 gap-3 lg:gap-5">
           <p className="text-white text-base block  w-full lg:w-auto text-center">
@@ -28,6 +28,6 @@ export const Footer: React.FC<Props> = ({ className }) => {
           </p>
         </div>
       </Container>
-    </div>
+    </footer>
   );
 };

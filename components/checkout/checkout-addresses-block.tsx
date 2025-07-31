@@ -67,7 +67,7 @@ export const CheckoutAddressesBlock: React.FC<Props> = ({ addresses, className }
               <div
                 key={address.id}
                 className={cn(
-                  'w-full flex gap-5 rounded-md bg-gray-200 py-5 px-3 hover:text-primary hover:border-primary cursor-pointer transition ease-in-out',
+                  'w-full flex gap-5 rounded-md bg-gray-200 py-3 md:py-5 px-3 hover:text-primary hover:border-primary cursor-pointer transition ease-in-out',
                   { 'border-2 border-primary bg-white': currentAddress === address.id },
                 )}
                 onClick={() => handleChangeAddress(address.id, field.onChange)}>
