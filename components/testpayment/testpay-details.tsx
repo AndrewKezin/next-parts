@@ -9,8 +9,8 @@ interface Props {
 
 export const TestPayDetails: React.FC<Props> = ({ orderId, amount, isPaid, className }) => {
   return (
-    <div className="mb-7 text-3xl text-center">
-      <h2 className="text-3xl font-bold mb-3">Детали заказа:</h2>
+    <div className="w-full mb-7 text-2xl text-center">
+      <h2 className="text-xl sm:text-3xl font-bold mb-3">Детали заказа:</h2>
       <p>
         Заказ # <b>{orderId}</b>
       </p>

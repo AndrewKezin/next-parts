@@ -6,6 +6,7 @@ import * as CartItem from './cart-item-details';
 import { CartItemProps } from './cart-item-details/cart-item-details.types';
 import { CountButton } from './count-button';
 import { Trash2Icon } from 'lucide-react';
+import { CartDrawerItemImage } from './cart-drawer-item-image';
 
 interface Props extends CartItemProps {
   availableQuantity: number;
@@ -34,7 +35,7 @@ export const CartDrawerItem: React.FC<Props> = ({
         { 'opacity-50 pointer-events-none': disabled },
         className,
       )}>
-      <CartItem.Image src={imageUrl} />
+      <CartDrawerItemImage src={imageUrl} />
 
       <div className="flex-1">
         <CartItem.Info name={name} details={details} productItemId={productItemId} />

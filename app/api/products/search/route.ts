@@ -15,12 +15,32 @@ export async function GET(req: NextRequest) {
   // получить список всех товаров
   const products = await prisma.product.findMany({
     where: {
-      name: {
-        // содержит строку query или, если начинается с заглавной буквы, то искать со 2-го символа (это очень дурацкий код чтобы хоть как-то обойти неспособность Vercel с регистром в поисковых запросах на кириллице)
-        contains: modifiedQuery,
-        // не учитывает регистр
-        mode: 'insensitive',
-      },
+      OR: [
+        {
+          name: {
+            // содержит строку query или, если начинается с заглавной буквы, то искать со 2-го символа (это очень дурацкий код чтобы хоть как-то обойти неспособность Vercel с регистром в поисковых запросах на кириллице)
+            contains: modifiedQuery,
+            // не учитывает регистр
+            mode: 'insensitive',
+          },
+        },
+        {
+          id: {
+            contains: modifiedQuery,
+            mode: 'insensitive',
+          },
+        },
+        {
+          items: {
+            some: {
+              id: {
+                contains: modifiedQuery,
+                mode: 'insensitive',
+              },
+            },
+          },
+        },
+      ],
     },
     // вернуть первые 5 товаров
     // take: 5,

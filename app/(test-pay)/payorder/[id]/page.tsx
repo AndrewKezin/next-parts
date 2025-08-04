@@ -42,7 +42,9 @@ export default async function TestPayOrderPage({ params: { id } }: { params: { i
 
   return (
     <div className="flex flex-col items-center">
-      <h1 className="text-5xl font-bold mb-[50px] text-orange-500">Cтраница оплаты</h1>
+      <h1 className="text-3xl md:text-5xl font-bold mb-5 sm:mb-[50px] text-orange-500">
+        Cтраница оплаты
+      </h1>
 
       {/* Детали заказа */}
       <TestPayDetails orderId={metadata.order_id} amount={amount.value} isPaid={isPaid} />
@@ -57,7 +59,9 @@ export default async function TestPayOrderPage({ params: { id } }: { params: { i
             ((process.env.NEXT_PUBLIC_MAIN_PAGE_URL as string) +
               process.env.NEXT_PUBLIC_PAYORDER_CALLBACK_URL) as string
           }>
-          <Button className="w-[300px] h-[50px] font-bold text-xl">На главную</Button>
+          <Button className="w-[280px] h-[40px] sm:h-[50px] font-bold text-xl mb-3">
+            На главную
+          </Button>
         </Link>
       )}
     </div>

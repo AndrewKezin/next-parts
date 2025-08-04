@@ -114,7 +114,7 @@ export default function CheckoutPage() {
   if (session.status === 'unauthenticated') {
     return (
       <Container>
-        <h2 className="text-xl lg:text-3xl font-bold mt-20 mb-5 text-center">
+        <h2 className="text-xl lg:text-3xl font-bold pt-20 mb-5 text-center">
           Вы не авторизованы! Авторизуйтесь, пожалуйста!
         </h2>
       </Container>
@@ -129,9 +129,9 @@ export default function CheckoutPage() {
 
       <FormProvider {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex flex-col xl:flex-row xl:gap-10">
+          <div className="flex flex-col gap-5 xl:flex-row xl:gap-10 py-5">
             {/* Левая часть */}
-            <div className="flex flex-col gap-5 flex-1 mb-20">
+            <div className="flex flex-col gap-5 flex-1 xl:mb-20">
               <CheckoutCart
                 items={items}
                 updateItemQuantity={updateItemQuantity}
@@ -150,7 +150,7 @@ export default function CheckoutPage() {
             </div>
 
             {/* Правая часть */}
-            <div className="w-full sm:w-[450px]">
+            <div className="w-full xl:w-[400px]">
               <CheckoutSidebar
                 totalAmount={totalAmount}
                 btnDisabled={isExceedingItems || !checkDeliveryAddress()}

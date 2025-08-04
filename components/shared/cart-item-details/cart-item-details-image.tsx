@@ -7,5 +7,11 @@ interface Props {
 
 // рендерит картинку товара в корзине
 export const CartItemDetailsImage: React.FC<Props> = ({ src, className }) => {
-  return <img className={cn('w-[80px] sm:w-[150px]', className)} alt="image" src={src} />;
+  return (
+    <img
+      className={cn('w-[80px] sm:w-[150px] lg:w-[250px] xl:w-[150px]', className)}
+      alt="image"
+      src={src}
+    />
+  );
 };

@@ -27,7 +27,7 @@ export const CheckoutSidebar: React.FC<Props> = ({
   const totalPrice = totalAmount + deliveryPrice;
 
   return (
-    <WhiteBlock className="p-6 sticky top-4 mb-3">
+    <WhiteBlock className="w-full  xl:p-6 xl:sticky xl:top-4 xl:mb-3">
       <div className="flex flex-col gap-1">
         <span className="text-xl">Итого:</span>
         <span className="text-[34px] font-extrabold">
@@ -69,7 +69,7 @@ export const CheckoutSidebar: React.FC<Props> = ({
         type="submit"
         loading={loading}
         disabled={loading || btnDisabled}
-        className="w-full h-14 rounded-2xl mt-6 text-base font-bold">
+        className="w-full max-w-[400px] h-10 md:h-14 rounded-2xl mt-6 text-base font-bold">
         Перейти к оплате
         <ArrowRight className="w-5 ml-2" />
       </Button>

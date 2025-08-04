@@ -107,7 +107,7 @@ export const CartDrawer: React.FC<React.PropsWithChildren> = ({ children }) => {
                 ))}
               </div>
 
-              <SheetFooter className="-mx-6 bg-white py-1 px-3 md:p-6 xl:p-8">
+              <SheetFooter className="-mx-6 bg-white py-2 px-3">
                 <div className="w-full">
                   <div className="flex mb-1">
                     <span className="flex flex-1 text-md md:text-lg  text-neutral-500">

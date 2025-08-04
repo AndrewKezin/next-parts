@@ -37,7 +37,7 @@ export const CartItemBlockDesktop: React.FC<Props> = ({
   return (
     <div
       className={cn(
-        'hidden md:flex items-center justify-between gap-3 mb-5 ',
+        'hidden md:flex items-center justify-between gap-3 mb-5',
         { 'opacity-50 pointer-events-none': disabled },
         className,
       )}>
