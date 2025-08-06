@@ -53,7 +53,7 @@ const RangeSlider = React.forwardRef(
             <div
               className="absolute text-center"
               style={{
-                left: `calc(${((value - min) / (max - min)) * 100}% + 0px)`,
+                left: `calc(${((value - min) / (max - min)) * 85}% + 0px)`,
                 top: `10px`,
               }}>
               <span className="text-sm">{formatLabel ? formatLabel(value) : value}</span>

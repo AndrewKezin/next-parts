@@ -43,6 +43,8 @@ export { ProfileAddresses } from './profile-addresses';
 export { ProdItemCounter } from './prod-item-counter';
 export { UserDropdownMenu } from './user-dropdown-menu';
 export { CartDrawerItemImage } from './cart-drawer-item-image';
+export { FiltersDrawer } from './filters-drawer';
+export { MobileFiltersButton } from './mobile-filters-button';
 export * from './email-templates';
 export * from '../form';
 export * from './modals';

@@ -1,6 +1,15 @@
-import { Container, CookieBar, Filters, Title, TopBar } from '@/components/shared';
+import {
+  Container,
+  CookieBar,
+  Filters,
+  FiltersDrawer,
+  MobileFiltersButton,
+  Title,
+  TopBar,
+} from '@/components/shared';
 import { ProductsGroupList } from '@/components/shared/products-group-list';
 import { findParts, GetSearchParams } from '@/lib/find-parts';
+import { Settings2 } from 'lucide-react';
 import { Suspense } from 'react';
 
 export default async function Home({ searchParams }: { searchParams: GetSearchParams }) {
@@ -18,12 +27,22 @@ export default async function Home({ searchParams }: { searchParams: GetSearchPa
       <Container>
         <div className="flex lg:gap-[20px] xl:gap-[80px]">
           {/* Фильтрация (левая часть окна) */}
+          {/* Десктопный вариант */}
           <div className="hidden lg:block lg:w-[250px]">
             {/* Компонент Suspense необходим для рендеринга html на сервере */}
             <Suspense>
               <Filters />
             </Suspense>
           </div>
+
+          {/* Мобильный вариант */}
+          <Suspense>
+            <div className="block lg:hidden">
+              <FiltersDrawer>
+                <MobileFiltersButton className="ml-[-15px]" />
+              </FiltersDrawer>
+            </div>
+          </Suspense>
 
           {/* Список товаров (правая часть окна) */}
           <div className="flex-1">

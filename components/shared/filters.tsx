@@ -15,7 +15,7 @@ export const Filters: React.FC<Props> = ({ classname }) => {
   // кастомный хук для получения списка ингредиантов
   const { ingredients, loading } = useIngredients();
   // кастомный хук для получения списка производителей трансмиссии
-  const { manufacturers, loading: loadingManufacturers } = useManufacturers(); 
+  const { manufacturers, loading: loadingManufacturers } = useManufacturers();
   // кастомный хук для фильтров
   const filters = useFilters();
   // кастомный хук, вшивающий фильтрацию в url
@@ -26,7 +26,10 @@ export const Filters: React.FC<Props> = ({ classname }) => {
   const items = ingredients.map((item) => ({ value: String(item.id), text: item.name }));
 
   // список производителей трансмиссии для отображения
-  const manufacturersItems = manufacturers.map((item) => ({ value: String(item.id), text: item.name }));
+  const manufacturersItems = manufacturers.map((item) => ({
+    value: String(item.id),
+    text: item.name,
+  }));
 
   // функция обновления фильтра цен по слайдеру
   const updatePrices = (prices: number[]) => {
