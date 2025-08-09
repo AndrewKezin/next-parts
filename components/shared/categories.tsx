@@ -4,6 +4,7 @@ import { transliterate } from '@/lib/transliterate';
 import { cn } from '@/lib/utils';
 import { useCategoryStore } from '@/store';
 import { Category } from '@prisma/client';
+import Link from 'next/link';
 import React from 'react';
 
 interface Props {
@@ -18,7 +19,7 @@ export const Categories: React.FC<Props> = ({ items, className }) => {
   return (
     <div className={cn('inline-flex gap-1 bg-gray-50 p-1 rounded-2xl overflow-x-auto', className)}>
       {items.map(({ name, id }, index) => (
-        <a
+        <Link
           key={index}
           href={`/#${transliterate(name)}`}
           className={cn(
@@ -26,7 +27,7 @@ export const Categories: React.FC<Props> = ({ items, className }) => {
             categoryActiveId === id && 'bg-white shadow-md shadow-gray-200 text-primary',
           )}>
           <button>{name}</button>
-        </a>
+        </Link>
       ))}
     </div>
   );

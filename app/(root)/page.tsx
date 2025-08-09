@@ -9,11 +9,18 @@ import {
 } from '@/components/shared';
 import { ProductsGroupList } from '@/components/shared/products-group-list';
 import { findParts, GetSearchParams } from '@/lib/find-parts';
-import { Settings2 } from 'lucide-react';
 import { Suspense } from 'react';
 
 export default async function Home({ searchParams }: { searchParams: GetSearchParams }) {
   const categories = await findParts(searchParams);
+
+  if (!categories) {
+    return (
+      <h2 className="w-full p-8 text-2xl font-bold text-center">
+        Нет подключения к базе данных. Пожалуйста, повторите попытку позже
+      </h2>
+    );
+  }
 
   return (
     <>
@@ -39,7 +46,7 @@ export default async function Home({ searchParams }: { searchParams: GetSearchPa
           <Suspense>
             <div className="block lg:hidden">
               <FiltersDrawer>
-                <MobileFiltersButton className="ml-[-15px]" />
+                <MobileFiltersButton className="ml-[-15px] mr-[-35px]" />
               </FiltersDrawer>
             </div>
           </Suspense>

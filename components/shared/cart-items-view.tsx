@@ -10,7 +10,7 @@ interface Props {
 
 export const CartItemsView: React.FC<Props> = ({ items, className }) => {
   return (
-    <div className={cn('w-full mb-5', className)}>
+    <div className={cn('w-full mb-5 overflow-auto', className)}>
       {!items || items.length === 0 ? (
         <p className="text-xl mb-5 text-center">Нет товаров/услуг</p>
       ) : (

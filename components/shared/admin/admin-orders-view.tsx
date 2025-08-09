@@ -81,7 +81,7 @@ export const AdminOrdersView: React.FC<Props> = ({ fetchOrders, handleClearSearc
                   <td className="border border-black px-2">{order.comment}</td>
                   <td className="border border-black px-2">{order.phone}</td>
                   <td className="border border-black px-2">
-                    {new Date(order.createdAt).toLocaleString()}
+                    {new Date(order.createdAt).toLocaleString('ru-RU')}
                   </td>
                 </tr>
               ))}

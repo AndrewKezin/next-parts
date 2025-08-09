@@ -17,7 +17,7 @@ export const SearchInput: React.FC<Props> = ({ className }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState<Product[]>([]);
   const [focused, setFocused] = useState(false);
-  const ref = useRef(null);
+  const ref = useRef<HTMLDivElement>(null);
 
   // Ловим клик по оверлэю
   useClickAway(ref, () => {

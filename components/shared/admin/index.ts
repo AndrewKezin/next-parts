@@ -26,4 +26,5 @@ export { AdminDropdownMenu } from './admin-dropdown-menu';
 export { AdminMonitor } from './admin-monitor';
 export { AdminMonitorItem } from './admin-monitor-item';
 export { MonitorItemButton } from './mon-item-button';
+export { AdminUsersFilters } from './admin-users-filters';
 export * from './skeletons';

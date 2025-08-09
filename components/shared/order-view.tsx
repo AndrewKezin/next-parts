@@ -75,13 +75,13 @@ export const OrderView: React.FC<Props> = ({ order, paymentUrl, className }) => 
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Создан</td>
             <td className="px-4 py-2 border border-black">
-              {new Date(order?.createdAt).toLocaleString()}
+              {new Date(order?.createdAt).toLocaleString('ru-RU')}
             </td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Обновлен</td>
             <td className="px-4 py-2 border border-black">
-              {new Date(order?.updatedAt).toLocaleString()}
+              {new Date(order?.updatedAt).toLocaleString('ru-RU')}
             </td>
           </tr>
           <tr>

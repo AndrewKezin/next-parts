@@ -2,7 +2,6 @@
 
 import {
   AdminDatePicker,
-  AdminNavMenu,
   AdminOrdersView,
   AdminPagination,
   AdminSearchInput,
@@ -61,16 +60,18 @@ export default function DashboardOrders() {
     setCurrentOrderStatus(event.target.value as OrderStatus);
 
   if (loading) {
-    return <h3 className="text-xl font-bold mt-20 mb-5 text-center">Загрузка заказов...</h3>;
+    return <h3 className="text-xl font-bold pt-20 mb-5 text-center">Загрузка заказов...</h3>;
   }
 
   return (
     <div className="flex flex-col items-center w-full">
-      <h1 className="text-4xl font-bold mt-10 mb-7">Администрирование заказов</h1>
+      <h1 className="text-2xl xl:text-4xl font-bold mt-10 mb-3 xl:mb-7 text-center">
+        Администрирование заказов
+      </h1>
 
       {/* Фильтрация */}
       <div className="flex flex-col px-2 py-2 mb-5">
-        <div className="flex w-full justify-around gap-2 px-2 py-3 mb-5">
+        <div className="flex flex-col xl:flex-row w-full xl:justify-around items-center gap-2 px-2 py-3 mb-5">
           <AdminSearchInput
             searchQuery={orderId}
             title="Поиск по номеру заказа"
@@ -102,7 +103,7 @@ export default function DashboardOrders() {
           />
         </div>
 
-        <div className="flex w-full justify-around items-center gap-1 px-2 py-2">
+        <div className="flex  flex-col xl:flex-row w-full justify-around items-center gap-1 px-2 py-2">
           <Button
             variant={'outline'}
             className="w-[250px] mb-5 border-black text-black bg-slate-100"
@@ -123,7 +124,11 @@ export default function DashboardOrders() {
       </div>
 
       {/* Список заказов */}
-      <AdminOrdersView fetchOrders={orders} handleClearSearch={handleClearSearch} />
+      <AdminOrdersView
+        fetchOrders={orders}
+        handleClearSearch={handleClearSearch}
+        className="w-full overflow-auto"
+      />
 
       {/* Пагинация */}
       {orders && totalCount && totalCount > 1 && (
@@ -131,7 +136,7 @@ export default function DashboardOrders() {
           totalCount={totalCount}
           setStartIndex={setStartIndex}
           setItemsPerPage={setItemsPerPage}
-          className="flex items-center justify-center w-full gap-7 p-3 mb-5"
+          className="flex flex-col lg:flex-row items-center justify-center w-full gap-7 p-3 mb-5"
         />
       )}
     </div>

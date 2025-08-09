@@ -32,7 +32,7 @@ export const ProductsGroupList: React.FC<Props> = ({
   const { items: itemsInCart } = useCartStore((state) => state);
 
   // ref для intersection observer. Нужен для слежения за положением блока контента
-  const intersectionRef = useRef(null);
+  const intersectionRef = useRef<HTMLDivElement>(null);
   // слежение за положением блока контента на странице
   const intersection = useIntersection(intersectionRef, {
     threshold: 0.1,

@@ -79,7 +79,9 @@ export const AdminUsersView: React.FC<Props> = ({ fetchUsers, handleClearSearch,
               </td>
               <td className="border border-black px-2">{user.fullName}</td>
               <td className="border border-black px-2">{user.role}</td>
-              <td className="border border-black px-2">{new Date(user?.createdAt).toLocaleString()}</td>
+              <td className="border border-black px-2">
+                {new Date(user?.createdAt).toLocaleString('ru-RU')}
+              </td>
             </tr>
           ))}
         </tbody>

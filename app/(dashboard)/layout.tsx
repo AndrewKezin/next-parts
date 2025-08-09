@@ -25,7 +25,7 @@ export default async function DashboardLayout({
       <Suspense>
         <Header hasSearch={false} hasCart={false} className="border-b-gray-200" />
       </Suspense>
-      <div className="min-h-[calc(100vh-100px-100px)] bg-[#f4f1ee] pb-10">
+      <div className="min-h-[calc(100vh-100px-100px)] bg-[#f4f1ee] pb-5">
         <Container>{children}</Container>
       </div>
       <Footer />

@@ -54,7 +54,7 @@ export const AdminUserProfile: React.FC<Props> = ({ user, className }) => {
   };
 
   return (
-    <div className="w-full mb-5">
+    <div className="w-full mb-5 overflow-auto">
       <table className="w-full mb-3 border-collapse border border-black table-auto">
         <colgroup>
           <col className="w-1/4" />
@@ -158,17 +158,21 @@ export const AdminUserProfile: React.FC<Props> = ({ user, className }) => {
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Создан</td>
-            <td className="px-4 py-2 border border-black">{user?.createdAt?.toLocaleString()}</td>
+            <td className="px-4 py-2 border border-black">
+              {user?.createdAt?.toLocaleString('ru-RU')}
+            </td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Обновлен</td>
-            <td className="px-4 py-2 border border-black">{user?.updatedAt?.toLocaleString()}</td>
+            <td className="px-4 py-2 border border-black">
+              {user?.updatedAt?.toLocaleString('ru-RU')}
+            </td>
           </tr>
           <tr>
             <td className="px-4 py-2 border border-black font-bold">Подтвержден</td>
             <td className="px-4 py-2 border border-black">
               <div className="flex gap-2 items-center">
-                {user?.verified ? `Да: ${user?.verified?.toLocaleString()}` : `Нет`}
+                {user?.verified ? `Да: ${user?.verified?.toLocaleString('ru-RU')}` : `Нет`}
                 {!user?.verified && (
                   <div
                     className="px-4 inline-block underline text-blue-600 cursor-pointer"

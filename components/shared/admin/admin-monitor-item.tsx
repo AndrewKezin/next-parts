@@ -39,7 +39,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
       {item.warnEvent === WarnEvent.ORDER && (
         <>
           <Link href={`/dashboard/orders/${item.orderId}`} {...linkProps}>
-            {item.message} #{item.orderId} {new Date(item.createdAt).toLocaleString()}
+            {item.message} #{item.orderId} {new Date(item.createdAt).toLocaleString('ru-RU')}
           </Link>
 
           <div className="flex gap-2">
@@ -57,7 +57,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
       {item.warnEvent === WarnEvent.PRODUCT && (
         <>
           <Link href={`/product/${item.productId}`} {...linkProps}>
-            {item.message} {item.productId} {new Date(item.createdAt).toLocaleString()}
+            {item.message} {item.productId} {new Date(item.createdAt).toLocaleString('ru-RU')}
           </Link>
 
           <MonitorItemButton
@@ -72,7 +72,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
       {item.warnEvent === WarnEvent.USER && (
         <>
           <Link href={`/dashboard/users/${item.userId}`} {...linkProps}>
-            {item.message} {new Date(item.createdAt).toLocaleString()}
+            {item.message} {new Date(item.createdAt).toLocaleString('ru-RU')}
           </Link>
 
           <MonitorItemButton

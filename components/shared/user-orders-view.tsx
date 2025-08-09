@@ -69,11 +69,11 @@ export const UserOrdersView: React.FC<Props> = ({ orders, type, className }) => 
                 </td>
                 <td className="border border-black px-2">{order.comment}</td>
                 <td className="border border-black px-2">
-                  {new Date(order?.createdAt).toLocaleString()}
+                  {new Date(order?.createdAt).toLocaleString('ru-RU')}
                 </td>
                 {type === 'admin' && (
                   <td className="border border-black px-2">
-                    {new Date(order?.updatedAt).toLocaleString()}
+                    {new Date(order?.updatedAt).toLocaleString('ru-RU')}
                   </td>
                 )}
               </tr>

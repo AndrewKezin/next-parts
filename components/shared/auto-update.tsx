@@ -26,7 +26,7 @@ export const AutoUpdate: React.FC<Props> = ({
       setValue(1);
       return;
     }
-    
+
     if (Number(value) < 0 || Number(value) > 99) {
       setValue(1);
       return;
@@ -39,7 +39,7 @@ export const AutoUpdate: React.FC<Props> = ({
   return (
     <div
       className={cn(
-        'flex justify-center items-center w-[550px] gap-2 p-5 border border-gray-500 rounded',
+        'flex justify-center items-center w-[300px] sm:w-[500px] gap-2 p-3 border border-gray-500 rounded',
         className,
       )}>
       <input
@@ -48,9 +48,9 @@ export const AutoUpdate: React.FC<Props> = ({
         checked={autoUpdate}
         onChange={(e) => setAutoUpdate(e.target.checked)}
       />
-      {autoUpdate ? 'Автообновление включено' : 'Автообновление выключено'}
+      {autoUpdate ? 'Обновление' : 'Автообновление выключено'}
       {autoUpdate && (
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-center gap-3">
           <input
             type="text"
             value={value}

@@ -8,7 +8,7 @@ export default async function UserPage({ params: { id } }: { params: { id: strin
 
   return (
     <div className="flex flex-col items-center justify-center w-full">
-      <h1 className="text-4xl font-bold mt-10 mb-5">Просмотр профиля пользователя</h1>
+      <h1 className="text-2xl lg:text-4xl font-bold mt-10 mb-5">Просмотр профиля пользователя</h1>
 
       <AdminUserProfile user={user} />
 
