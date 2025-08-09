@@ -86,8 +86,8 @@ export const ProfileForm: React.FC<Props> = ({ data: userData }) => {
   }, [form]);
 
   return (
-    <Container className="my-10">
-      <Title text={`Профиль пользователя ${userData.fullName}`} size="md" className="font-bold" />
+    <>
+      <h2 className="text-2xl font-bold mb-5">Профиль пользователя {userData.fullName}</h2>
 
       <FormProvider {...form}>
         <form
@@ -134,6 +134,6 @@ export const ProfileForm: React.FC<Props> = ({ data: userData }) => {
       </FormProvider>
 
       <ProfileMenu />
-    </Container>
+    </>
   );
 };

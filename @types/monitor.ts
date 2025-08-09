@@ -15,8 +15,8 @@ export type EventIntervalsKeys = (typeof EventIntervals)[keyof typeof EventInter
 // порог остатка товаров
 export const thresholdQuantity = 3;
 
-// количество дней назад для добавления в монитор
-export const DAYSAGO = 3;
+// интервал дней для добавления в монитор
+export const DAYSAGO = 7;
 
 export const MessageArr = {
   NewProduct: 'Добавлен / обновлен товар',

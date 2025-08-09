@@ -30,7 +30,7 @@ export const AdminMonitorItem: React.FC<Props> = ({ item, className }) => {
   return (
     <div
       className={cn(
-        'flex justify-between items-center gap-5 px-2 w-[600px] h-[50px] rounded-[5px] bg-gray-200 font-semibold',
+        'flex justify-between items-center gap-5 px-2 w-[290px] sm:w-[600px] sm:h-[50px] rounded-[5px] bg-gray-200 font-semibold',
         { 'bg-green-200 animate-pulse': createdTime + EventIntervals.New > Date.now() },
         { 'bg-red-200 animate-pulse': createdTime + EventIntervals.Old < Date.now() },
         { 'bg-gray-300 bg-transparent': loading },
