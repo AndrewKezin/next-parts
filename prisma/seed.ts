@@ -1,4 +1,4 @@
-import { categories, gearboxManufacturers, ingredients, products } from './constants';
+import { categories, gearboxManufacturers, ingredients } from './constants';
 import { prisma } from './prisma-client';
 // import { seedUsers } from './seed-users';
 
@@ -24,11 +24,6 @@ async function up() {
   await prisma.gearboxManufacturer.createMany({
     data: gearboxManufacturers,
   });
-
-  // создаем тестовые продукты (через createMany не получится связать продукты с ингредиентами и производителями коробок передач)
-  //   await prisma.product.createMany({
-  //     data: products,
-  //   });
 
   // создаем тестовые продукты отдельно, чтобы через connect связать их с ингредиентами и производителями коробок передач
   const d194002a = await prisma.product.create({
@@ -1552,7 +1547,7 @@ async function up() {
   });
 }
 
-// удаление тестовых данных
+// очистка БД от старых данных
 async function down() {
   // если запустить скрипт ниже, то счетчики id не обнулятся
   // await prisma.user.deleteMany({});

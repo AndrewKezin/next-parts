@@ -1,4 +1,4 @@
-import { ProfileForm } from '@/components/shared';
+import { Container, ProfileForm } from '@/components/shared';
 import { getUserProfile } from '@/lib';
 import { getUserSession } from '@/lib/get-user-session';
 import { redirect } from 'next/navigation';
@@ -21,5 +21,9 @@ export default async function ProfilePage() {
     return redirect('/dashboard');
   }
 
-  return <ProfileForm data={user} />;
+  return (
+    <Container>
+      <ProfileForm data={user} />
+    </Container>
+  );
 }
